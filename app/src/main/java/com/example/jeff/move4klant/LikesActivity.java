@@ -6,15 +6,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class LikesActivity extends Activity {
     public CheckBox[] checkBoxList;
+
+    private ArrayList<Category> list;
 
     public static String[] categoryList = {
             "Accu gereedschap",
@@ -36,58 +40,57 @@ public class LikesActivity extends Activity {
             "Boren, bits en frezen",
             "Designproducts"};
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_likes);
-        TableLayout TL = (TableLayout) findViewById(R.id.tableLayoutCategory);
-        checkBoxList = new CheckBox[categoryList.length];
 
-        for (int i = 0; i < categoryList.length; i++) {
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
-            // table row
-            TableRow row= new TableRow(this);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-            row.setLayoutParams(lp);
+        list = new ArrayList<Category>();
 
-            // table cell
-            TextView tv = new TextView(this);
-            String category = categoryList[i];
-            tv.setText(category);
-            CheckBox ch = new CheckBox(this);
-            checkBoxList[i] = ch;
-            checkBoxList[i].setChecked(false);
+        final ListView listView = (ListView)findViewById(R.id.list_Category);
 
-            // add cell to row
-            row.addView(tv);
-            row.addView(checkBoxList[i]);
-            TL.addView(row,i);
+        // fill category list
+        for (int i = 0; i < categoryList.length-1; i++) {
+            list.add(new Category(i, categoryList[i]));
         }
 
-
+        listView.setAdapter(new ArrayAdapter<Category>(this, android.R.layout.simple_list_item_multiple_choice, list));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Category c = (Category)listView.getAdapter().getItem(i);
+                Toast.makeText(getApplicationContext(), c.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    public void onClickSave(View v)
+    public void onClick(View v)
     {
-        String message = "";
-        String checked;
-        for (int i = 0; i < categoryList.length; i++)
-        {
-            if (checkBoxList[i].isChecked()){
-                checked = "true";
-            }
-            else{
-                checked = "false";
-            }
-            message = message + categoryList[i] + ": " + checked + "\n";
+        switch(v.getId()){
+            case R.id.save:
+                String message = "";
+                String checked;
+                for (int i = 0; i < categoryList.length; i++)
+                {
+                    if (checkBoxList[i].isChecked()){
+                        checked = "true";
+                    }
+                    else{
+                        checked = "false";
+                    }
+                    message = message + categoryList[i] + ": " + checked + "\n";
+                }
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                break;
+            case R.id.cancel:
+                Intent intent = new Intent(this, ManageAccount.class);
+                startActivity(intent);
+                break;
         }
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    public void onClickCancel(View v){
-
-        Intent intent = new Intent(this, ManageAccount.class);
-        startActivity(intent);
     }
 
 
@@ -111,5 +114,10 @@ public class LikesActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onBackPressed(){
+        finish();
+        this.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
     }
 }

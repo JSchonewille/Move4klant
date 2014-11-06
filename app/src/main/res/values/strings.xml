@@ -9,6 +9,10 @@
     <string name="title_activity_manage_account">ManageAccount</string>
     <string name="introManageAccount">Account</string>
 
+    <string name="save">Opslaan</string>
+    <string name="cancel">Annuleer</string>
+    <string name="change">Wijzig</string>
+
 
     // Manage account
     <string name="labelName">Voornaam:</string>

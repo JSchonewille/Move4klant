@@ -208,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".6"
                 android:id="@+id/button_wijzig"
-                android:text="Wijzig"
+                android:text="@string/change"
                 android:onClick="onClickChangeAccount" />
         </LinearLayout>
 

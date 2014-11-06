@@ -36,7 +36,7 @@ public class SettingsActivity extends PreferenceActivity {
         Preference myPref = (Preference) findPreference("prefLikes");
         myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                Intent likes = new Intent(getApplicationContext(), LeosLikes.class);
+                Intent likes = new Intent(getApplicationContext(), LikesActivity.class);
                 startActivity(likes);
                 overridePendingTransition(R.anim.left_slide_in, R.anim.left_slide_out);
                 return true;

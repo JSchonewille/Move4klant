@@ -11,21 +11,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/tvIntroCategory" />
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvIntroCategory"
-        android:layout_above="@+id/linearLayout">
-
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tableLayoutCategory"
-            android:stretchColumns="1">
-        </TableLayout>
-    </ScrollView>
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -42,8 +27,8 @@
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
             android:layout_marginRight="20dp"
-            android:onClick="onClickCancel"
-            android:text="Cancel"/>
+            android:onClick="onClick"
+            android:text="@string/cancel"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -52,11 +37,17 @@
             android:layout_marginLeft="20dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:onClick="onClickSave"
-            android:text="Save"/>
+            android:onClick="onClick"
+            android:text="@string/save"/>
 
     </LinearLayout>
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_Category"
+        android:layout_below="@id/tvIntroCategory"
+        android:layout_above="@id/linearLayout"/>
 
 
 </RelativeLayout>
