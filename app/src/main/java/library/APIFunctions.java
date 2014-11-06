@@ -8,6 +8,7 @@ import android.content.Context;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,12 @@ public class APIFunctions {
      * Add here the URL of your PHP API, it should look like this:
      * private static String your_API_URL = "http://example.com/your_API/";
      **/
+
+    private static String checkinoutURL = "http://ibeacontest.herobo.com/checkinout.php";
+    private static String getcategoriesURL = "http://ibeacontest.herobo.com/getcategories.php";
+    private static String editlikesURL = "http://ibeacontest.herobo.com/editlikes.php";
+    private static String getlikesURL = "http://ibeacontest.herobo.com/getlikes.php";
+
     private static String loginURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
     private static String registerURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
     private static String forpassURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
@@ -129,6 +136,44 @@ public class APIFunctions {
         DatabaseHandler db = new DatabaseHandler(context);
         db.resetTables();
         return true;
+    }
+
+    /**
+     * function to check the user in or out
+     *
+     */
+
+    public JSONObject checkInOut(String costumerID)
+    {
+        List params = new ArrayList();
+        params.add(new BasicNameValuePair("costumerID",costumerID));
+        JSONObject json = jsonParser.getJSONFromUrl(checkinoutURL,params);
+        return json;
+    }
+
+    public JSONObject getCategories()
+    {
+        JSONObject json = jsonParser.getJSONFromUrl(getcategoriesURL);
+        return json;
+    }
+
+    public JSONObject editLikes(ArrayList<Integer> idlist ,String costumerID)
+    {
+        List params = new ArrayList();
+
+        params.add(new BasicNameValuePair("categories",idlist.toString()));
+        params.add(new BasicNameValuePair("costumerID",costumerID));
+        JSONObject json = jsonParser.getJSONFromUrl(editlikesURL,params);
+        return json;
+    }
+
+    public JSONObject getLikes(String costumerID)
+    {
+        List params = new ArrayList();
+
+        params.add(new BasicNameValuePair("costumerID", costumerID));
+        JSONObject json = jsonParser.getJSONFromUrl(getlikesURL,params);
+        return json;
     }
 
 
