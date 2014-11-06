@@ -24,14 +24,24 @@ public class SettingsActivity extends PreferenceActivity {
 
 
 
-        Preference myPref = (Preference) findPreference("prefDisconnectAccount");
-        myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference disconnectPref = (Preference) findPreference("prefDisconnectAccount");
+        disconnectPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                disconnectAccount();
                 return true;
             }
         });
 
+
+        Preference myPref = (Preference) findPreference("prefLikes");
+        myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Intent likes = new Intent(getApplicationContext(), LeosLikes.class);
+                startActivity(likes);
+                overridePendingTransition(R.anim.left_slide_in, R.anim.left_slide_out);
+                return true;
+            }
+        });
 
     }
 
