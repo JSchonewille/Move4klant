@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Move4klant</string>
-    <string name="hello_world">Hello world!</string>
+
     <string name="action_settings">Settings</string>
     <string name="title_activity_likes">LikesActivity</string>
     <string name="introCategory">Dit is een overzicht van categorieen die u kunt aangeven als favoriet</string>
@@ -19,5 +19,10 @@
     <string name="labelCity">Woonplaats:</string>
     <string name="labelCategory">Interesses:</string>
 
+
+
+    <string name="PREFS_LOGIN_USERNAME_KEY">__USERNAME__</string>
+    <string name="PREFS_LOGIN_PASSWORD_KEY">__PASSWORD__</string>
+    <string name="PREFS_AUTO_LOGIN_KEY">_AUTOLOGIN_</string>
 
 </resources>
