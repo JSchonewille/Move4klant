@@ -19,6 +19,21 @@ public class LikesActivity extends Activity {
     public static String[] categoryList = {
             "Accu gereedschap",
             "Boren, bits en frezen",
+            "Designproducts",
+            "Accu gereedschap",
+            "Boren, bits en frezen",
+            "Designproducts",
+            "Accu gereedschap",
+            "Boren, bits en frezen",
+            "Designproducts",
+            "Accu gereedschap",
+            "Boren, bits en frezen",
+            "Designproducts",
+            "Accu gereedschap",
+            "Boren, bits en frezen",
+            "Designproducts",
+            "Accu gereedschap",
+            "Boren, bits en frezen",
             "Designproducts"};
 
     @Override

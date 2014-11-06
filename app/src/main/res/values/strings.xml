@@ -5,5 +5,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_likes">LikesActivity</string>
-
+    <string name="introCategory">Dit is een overzicht van categorieen die u kunt aangeven als favoriet</string>
 </resources>
