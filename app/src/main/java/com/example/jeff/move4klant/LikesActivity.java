@@ -81,13 +81,12 @@ public class LikesActivity extends Activity {
             }
             message = message + categoryList[i] + ": " + checked + "\n";
         }
-
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     public void onClickCancel(View v){
 
-        Intent intent = new Intent(this, home.class);
+        Intent intent = new Intent(this, ManageAccount.class);
         startActivity(intent);
     }
 

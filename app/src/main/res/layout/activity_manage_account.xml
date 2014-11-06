@@ -1,0 +1,218 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.jeff.move4klant.ManageAccount">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/introManageAccount"
+        android:id="@+id/introManageAccount"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="30dp"
+        android:textIsSelectable="true" /> // header account
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/introManageAccount"
+        android:weightSum="1.0"
+        android:id="@+id/linearLayoutImage">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight=".3"
+            android:id="@+id/ivImage"/>
+    </LinearLayout> // image
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutImage"
+        android:weightSum="1.0"
+        android:id="@+id/linearLayoutName"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/labelName"
+            android:layout_weight=".3"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:id="@+id/tvName"/>
+        </LinearLayout> // name
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutName"
+        android:id="@+id/linearLayoutLastName"
+        android:weightSum="1.0"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/labelLastName"
+            android:layout_weight=".3"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:id="@+id/tvLastName"/>
+    </LinearLayout> // last name
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutLastName"
+        android:id="@+id/linearLayoutAddress"
+        android:weightSum="1.0"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/labelAddress"
+            android:layout_weight=".3"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:id="@+id/tvAdress"/>
+    </LinearLayout> // adress
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutAddress"
+        android:id="@+id/linearLayoutPostalCode"
+        android:weightSum="1.0"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/labelPostalCode"
+            android:layout_weight=".3"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:id="@+id/tvPostalCode"/>
+    </LinearLayout> // postal code
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutPostalCode"
+        android:id="@+id/linearLayoutCity"
+        android:weightSum="1.0"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/labelCity"
+            android:layout_weight=".3"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:id="@+id/tvCity"/>
+    </LinearLayout> // city
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutCity"
+        android:weightSum="1.0"
+        android:id="@+id/linearLayoutEmail"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/labelEmail"
+            android:layout_weight=".3"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:id="@+id/tvEmail"/>
+    </LinearLayout> // email
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutEmail"
+        android:id="@+id/linearLayoutCategoryTitle"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="2dp">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/labelCategory"
+            android:textSize="20dp"
+            android:textIsSelectable="false" />
+    </LinearLayout> // email
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollViewCategory"
+        android:layout_above="@+id/linearLayoutChange"
+        android:layout_below="@+id/linearLayoutCategoryTitle">
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        </TableLayout>
+
+    </ScrollView> // category
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1.0"
+        android:id="@+id/linearLayoutChange"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5">
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:id="@+id/button_annuleer"
+                android:text="Annuleer"
+                android:onClick="onClickCancelAccount" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5">
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:id="@+id/button_wijzig"
+                android:text="Wijzig"
+                android:onClick="onClickChangeAccount" />
+        </LinearLayout>
+
+    </LinearLayout> // buttons
+
+
+</RelativeLayout>

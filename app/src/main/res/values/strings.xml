@@ -6,4 +6,18 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_likes">LikesActivity</string>
     <string name="introCategory">Dit is een overzicht van categorieen die u kunt aangeven als favoriet</string>
+    <string name="title_activity_manage_account">ManageAccount</string>
+    <string name="introManageAccount">Account</string>
+
+
+    // Manage account
+    <string name="labelName">Voornaam:</string>
+    <string name="labelLastName">Achternaam:</string>
+    <string name="labelEmail">Emailadres:</string>
+    <string name="labelAddress">Straat:</string>
+    <string name="labelPostalCode">Postcode:</string>
+    <string name="labelCity">Woonplaats:</string>
+    <string name="labelCategory">Interesses:</string>
+
+
 </resources>

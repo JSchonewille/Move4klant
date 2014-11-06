@@ -20,6 +20,10 @@
             android:name="com.example.jeff.move4klant.LikesActivity"
             android:label="@string/title_activity_likes" >
         </activity>
+        <activity
+            android:name="com.example.jeff.move4klant.ManageAccount"
+            android:label="@string/title_activity_manage_account" >
+        </activity>
     </application>
 
 </manifest>

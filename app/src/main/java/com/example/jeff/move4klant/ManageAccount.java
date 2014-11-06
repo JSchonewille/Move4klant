@@ -8,18 +8,24 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-public class home extends Activity {
+public class ManageAccount extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_manage_account);
 
     }
 
-    public void onClickManageProfile(View v)
+    public void onClickCancelAccount(View v)
     {
-        Intent intent = new Intent(this, ManageAccount.class);
+        Intent intent = new Intent(this, home.class);
+        startActivity(intent);
+    }
+
+    public void onClickChangeAccount(View v)
+    {
+        Intent intent = new Intent(this, LikesActivity.class);
         startActivity(intent);
     }
 
@@ -27,7 +33,7 @@ public class home extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.menu_manage_account, menu);
         return true;
     }
 
@@ -37,9 +43,12 @@ public class home extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }
