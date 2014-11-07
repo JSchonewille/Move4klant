@@ -23,4 +23,20 @@
     </style>
 
 
+    <style name="AdMessage">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:capitalize">characters</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:textColor">#FFFFFF</item>/>
+        <item name="android:gravity" >center</item>
+        <item name="android:layout_margin" >3dp</item>
+        <item name="android:textSize" >15pt</item>
+        <item name="android:shadowColor" >#000000</item>
+    </style>
+
+
 </resources>

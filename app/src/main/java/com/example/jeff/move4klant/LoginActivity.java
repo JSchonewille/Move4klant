@@ -68,7 +68,17 @@ public class LoginActivity extends Activity {
             inputEmail.setText(loggedInUserName);
             inputPassword.setText(loggedInUserPassword);
 
-            NetAsync(findViewById(R.id.btnLogin));
+            //NetAsync(findViewById(R.id.btnLogin));
+
+            Intent upanel = new Intent(getApplicationContext(), home.class);
+            upanel.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            upanel.putExtra("USER_NAME", loggedInUserName);
+
+            startActivity(upanel);
+            /**
+             * Close Login Screen
+             **/
+            finish();
         }
         inputEmail.setText(loggedInUserName);
 

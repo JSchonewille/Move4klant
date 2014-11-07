@@ -5,13 +5,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+
 import java.util.ArrayList;
+import java.util.List;
+
+import library.Category;
+import library.CategoryRequest;
 
 
 public class LikesActivity extends Activity {
@@ -57,14 +65,28 @@ public class LikesActivity extends Activity {
             list.add(new Category(i, categoryList[i]));
         }
 
-        listView.setAdapter(new ArrayAdapter<Category>(this, android.R.layout.simple_list_item_multiple_choice, list));
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        CategoryRequest.getAllCategories(new Response.Listener<JSONArray>() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Category c = (Category)listView.getAdapter().getItem(i);
-                Toast.makeText(getApplicationContext(), c.toString(), Toast.LENGTH_LONG).show();
+            public void onResponse(JSONArray jsonArray) {
+                List<Category> list = Category.fromJSON(jsonArray);
+                listView.setAdapter(new ArrayAdapter<Category>(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice, list));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
             }
         });
+
+//        listView.setAdapter(new ArrayAdapter<Category>(this, android.R.layout.simple_list_item_multiple_choice, list));
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Category c = (Category)listView.getAdapter().getItem(i);
+//                Toast.makeText(getApplicationContext(), c.toString(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//
     }
 
     public void onClick(View v)
