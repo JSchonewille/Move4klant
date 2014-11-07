@@ -19,8 +19,7 @@
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        style="@style/HomeActivity"/>
-
+        style="@style/HomeActivity"/> // Header Homescreen
 
     <LinearLayout
         android:orientation="vertical"
@@ -39,7 +38,7 @@
             android:background="@drawable/circel_bg_white"/>
 
 
-    </LinearLayout>
+    </LinearLayout> // Picture Homescreen
 
 
 
