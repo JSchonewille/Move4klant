@@ -37,6 +37,9 @@ public class home extends Activity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.ad_test:
+                showAd();
+                return true;
             case R.id.action_settings:
                 Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(settings);
@@ -57,5 +60,10 @@ public class home extends Activity {
 
     private void StopscanLeDevice() {
         //stop scan
+    }
+
+    private void showAd() {
+        Intent i = new Intent(getApplicationContext(), OfferActivity.class);
+        startActivity(i);
     }
 }
