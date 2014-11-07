@@ -8,7 +8,6 @@ import android.content.Context;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,7 +170,7 @@ public class APIFunctions {
     {
         List params = new ArrayList();
 
-        params.add(new BasicNameValuePair("costumerID", costumerID));
+        params.add(new BasicNameValuePair("customerID", costumerID));
         JSONObject json = jsonParser.getJSONFromUrl(getlikesURL,params);
         return json;
     }

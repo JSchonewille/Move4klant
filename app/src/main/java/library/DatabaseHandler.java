@@ -20,6 +20,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ibeacon_login";
     // Login table name
     private static final String TABLE_LOGIN = "login";
+    private static final String TABLE_CATEGORY = "category";
     // Login Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_FIRSTNAME = "fname";
@@ -28,6 +29,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_USERNAME = "uname";
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
+    private static final String KEY_CATEGORYNAME = "categoryName";
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -43,6 +45,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_UID + " TEXT,"
                 + KEY_CREATED_AT + " TEXT" + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
+        String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_CATEGORYNAME + " TEXT" + ")";
+        db.execSQL(CREATE_CATEGORY_TABLE);
     }
     // Upgrading database
     @Override
@@ -114,5 +120,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Delete All Rows
         db.delete(TABLE_LOGIN, null, null);
         db.close();
+    }
+
+    /**
+     * Storing category in database
+     * */
+    public void addCategory(String id, String categoryName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_ID, id); // FirstName
+        values.put(KEY_CATEGORYNAME, categoryName); // LastName
+        // Inserting Row
+        db.insert(TABLE_CATEGORY, null, values);
+        db.close(); // Closing database connection
     }
 }
