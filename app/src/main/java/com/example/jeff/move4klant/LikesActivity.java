@@ -1,7 +1,6 @@
 package com.example.jeff.move4klant;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -87,8 +86,7 @@ public class LikesActivity extends Activity {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                 break;
             case R.id.cancel:
-                Intent intent = new Intent(this, ManageAccount.class);
-                startActivity(intent);
+                onBackPressed();
                 break;
         }
     }
@@ -103,18 +101,16 @@ public class LikesActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onBackPressed(){
         finish();
