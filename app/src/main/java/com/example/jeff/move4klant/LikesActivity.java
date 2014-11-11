@@ -3,7 +3,6 @@ package com.example.jeff.move4klant;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,10 +19,8 @@ import library.DatabaseHandler;
 public class LikesActivity extends Activity {
     private ArrayAdapter<Category> aa;
     private DatabaseHandler db;
-
-
     private ArrayList<Category> checkedList = new ArrayList<Category>();
-
+    private ArrayList<Category> savedList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,20 +28,12 @@ public class LikesActivity extends Activity {
         setContentView(R.layout.activity_likes);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+        db = new DatabaseHandler(getApplicationContext());
         final ListView listView = (ListView) findViewById(R.id.list_Category);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        // Total list
-        ArrayList<Category> savedList = db.getSavedCategories();
 
-        for (int i = 0; i < savedList.size(); i++){
-            Category c = savedList.get(i);
-            int id = c.getID();
-            String name = c.getName();
-            Category cT = new Category(id, name);
-            checkedList.add(cT);
-        }
-        // Checked list
+        savedList = db.getSavedCategories();
+
         final List<Category> list = new ArrayList<Category>();
         // dummy data
         Category a = new Category(1, "Spijkers");
@@ -55,35 +44,21 @@ public class LikesActivity extends Activity {
         listView.setAdapter(aa);
 
         // Check if there are already some prefs
-
+        // loop through saved list
         if (savedList.size() > 0) {
             for (int i = 0; i < savedList.size(); i++){
                 int id = savedList.get(i).getID();
+                // add saved category again to the checked list
+                checkedList.add(savedList.get(i));
+                // loop through total list to see if the saved if is present, if so, check the checkbox
                 for (int ii = 0; ii < list.size(); ii++){
                     if (list.get(ii).getID() == id){
                         listView.setItemChecked(ii, true);
-//                        View view = listView.getAdapter().getView(ii, listView, listView);
-//                        CheckedTextView check = ((CheckedTextView)view);
-//                        check.setChecked(true);
                     }
 
                 }
             }
-            aa.notifyDataSetChanged();
         }
-
-//        CategoryRequest.getAllCategories(new Response.Listener<JSONArray>() {
-//            @Override
-//            public void onResponse(JSONArray jsonArray) {
-//                List<Category> list = Category.fromJSON(jsonArray);
-//                listView.setAdapter(new ArrayAdapter<Category>(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice, list));
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError volleyError) {
-//
-//            }
-//        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -99,7 +74,7 @@ public class LikesActivity extends Activity {
                 }
                 else{
                     list.setItemChecked(i, false);
-                    checkedList.remove(c);
+                    checkedList.remove(checkedList.get(i));
                     aa.notifyDataSetChanged();
                 }
             }
@@ -109,30 +84,11 @@ public class LikesActivity extends Activity {
 
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_likes, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.saveLikes:
-                saveLikes();
-                onBackPressed();
-                return true;
-
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -143,10 +99,9 @@ public class LikesActivity extends Activity {
 
     public void saveLikes(){
         db = new DatabaseHandler(getApplicationContext());
-        if(checkedList.size() == 0)
-        {
-            db.resetCategory();
-        }
+        // clear database with all likes
+        db.resetCategory();
+        // fill db again with all the likes
         for (int i = 0 ; i < checkedList.size(); i++) {
 
             Category c = checkedList.get(i);
