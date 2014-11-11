@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import library.UpdateFromServer;
+
 
 public class home extends Activity {
 
@@ -14,7 +16,7 @@ public class home extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        UpdateFromServer.getInstance().updateOffers(getApplicationContext());
     }
 
     public void onClickManageProfile(View v)
@@ -38,7 +40,7 @@ public class home extends Activity {
                 onBackPressed();
                 return true;
             case R.id.ad_test:
-                showAd();
+                showAd(1);
                 return true;
             case R.id.action_settings:
                 Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -62,8 +64,9 @@ public class home extends Activity {
         //stop scan
     }
 
-    private void showAd() {
+    private void showAd(int id) {
         Intent i = new Intent(getApplicationContext(), OfferActivity.class);
+        i.putExtra("offerID", id);
         startActivity(i);
     }
 }

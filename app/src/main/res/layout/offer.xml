@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Aanbieding"
-        android:id="@+id/textView"
+        android:id="@+id/offerHeader"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         style="@style/HomeActivity"/>
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Aanbieding tekst"
-        android:id="@+id/textView2"
+        android:id="@+id/offerMessage"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         style="@style/AdMessage"/>

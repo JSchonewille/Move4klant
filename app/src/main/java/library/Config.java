@@ -6,13 +6,13 @@ package library;
 public class Config {
 
     public static String CATEGORYURL = "http://ibeacontest.herobo.com/getcategories.php";
-    private static String checkinoutURL = "http://ibeacontest.herobo.com/checkinout.php";
-    private static String getcategoriesURL = "http://ibeacontest.herobo.com/getcategories.php";
-    private static String editlikesURL = "http://ibeacontest.herobo.com/editlikes.php";
-    private static String getlikesURL = "http://ibeacontest.herobo.com/getlikes.php";
+    public static String CHECKINURL = "http://ibeacontest.herobo.com/checkinout.php";
+    public static String EDITLIKESURL = "http://ibeacontest.herobo.com/editlikes.php";
+    public static String GETLIKESURL = "http://ibeacontest.herobo.com/getlikes.php";
+    public static String GETALLOFFERS = "http://ibeacontest.herobo.com/getoffers.php";
 
-    private static String loginURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
-    private static String registerURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
-    private static String forpassURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
-    private static String chgpassURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
+    public static String LOGINURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
+    public static String REGISTERURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
+    public static String FORPASSURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
+    public static String CHGPASSURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
 }

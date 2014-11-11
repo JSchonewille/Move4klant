@@ -33,6 +33,12 @@
             android:title="Categorieën"
             android:summary="Beheer van welke categorieën je aanbiedingen ontvangt"
             />
+        <Preference
+            android:key="prefOffers"
+            android:title="Aanbiedingen"
+            android:summary="Bekijk beschikbare aanbiedingen"
+            />
+
 
     </PreferenceCategory>
 

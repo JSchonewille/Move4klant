@@ -4,15 +4,26 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import library.Offer;
+import library.PrefUtils;
 
 /**
  * Created by Sander on 7-11-2014.
  */
 public class OfferActivity extends Activity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.offer);
+        Bundle bundle = getIntent().getExtras();
+
+        int offerID = bundle.getInt("offerID");
+        Offer offer = PrefUtils.getOfferFromPrefs(getApplicationContext(),getString(R.string.PREFS_OFFERS), offerID);
+
+        TextView t = (TextView) findViewById(R.id.offerMessage);
+        t.setText(offer.getDescription());
     }
 
     @Override
