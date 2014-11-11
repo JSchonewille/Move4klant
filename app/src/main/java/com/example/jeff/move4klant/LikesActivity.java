@@ -19,11 +19,8 @@ import library.DatabaseHandler;
 public class LikesActivity extends Activity {
     private ArrayAdapter<Category> aa;
     private DatabaseHandler db;
-
-
     private ArrayList<Category> checkedList = new ArrayList<Category>();
     private ArrayList<Category> savedList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
