@@ -18,40 +18,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
-    private static final String DATABASE_NAME = "ibeacon_login";
-    // Login table name
+    private static final String DATABASE_NAME = "ibeacon";
+    // Table names
     private static final String TABLE_LOGIN = "login";
     private static final String TABLE_CATEGORY = "category";
-    // Login Table Columns names
+    private static final String TABLE_BEACONS = "beacons";
+    private static final String TABLE_OFFERS = "offers";
+    private static final String TABLE_PRODUCTS = "products";
+
+    // Login Table Column names
     private static final String KEY_ID = "id";
-    private static final String KEY_ID_Category = "id_Category";
     private static final String KEY_FIRSTNAME = "fname";
     private static final String KEY_LASTNAME = "lname";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_USERNAME = "uname";
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
+    //Category Table Column names
+    private static final String KEY_ID_Category = "id_Category";
     private static final String KEY_CATEGORYNAME = "categoryName";
+    //Offers Table Column names
+    private static final String KEY_ID_OFFER = "id_offer";
+    private static final String KEY_OFFERCATEGORY = "offer_category";
+    private static final String KEY_OFFERDESCRIPTION = "offer_description";
+    private static final String KEY_OFFERIMAGE = "offer_image";
+    //Beacon Table Column names
+    private static final String KEY_BEACON_ID = "id_beacon";
+    private static final String KEY_BEACON_PRODUCTID = "beaccon_product";
+    private static final String KEY_BEACON_OFFERID = "beacon_offer";
+    private static final String KEY_BEACON_MAJOR = "beacon_major";
+    private static final String KEY_BEACON_MINOR = "beacon_minor";
+
+
+
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
-                + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_FIRSTNAME + " TEXT,"
-                + KEY_LASTNAME + " TEXT,"
-                + KEY_EMAIL + " TEXT UNIQUE,"
-                + KEY_USERNAME + " TEXT,"
-                + KEY_UID + " TEXT,"
-                + KEY_CREATED_AT + " TEXT" + ")";
-        db.execSQL(CREATE_LOGIN_TABLE);
-        String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
-                + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_ID_Category + " TEXT,"
-                + KEY_CATEGORYNAME + " TEXT" + ")";
-        db.execSQL(CREATE_CATEGORY_TABLE);
+       createTables(db);
     }
     // Upgrading database
     @Override
@@ -60,22 +66,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
         // Create tables again
         onCreate(db);
-    }
-    /**
-     * Storing user details in database
-     * */
-    public void addUser(String fname, String lname, String email, String uname, String uid, String created_at) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_FIRSTNAME, fname); // FirstName
-        values.put(KEY_LASTNAME, lname); // LastName
-        values.put(KEY_EMAIL, email); // Email
-        values.put(KEY_USERNAME, uname); // UserName
-        values.put(KEY_UID, uid); // Email
-        values.put(KEY_CREATED_AT, created_at); // Created At
-        // Inserting Row
-        db.insert(TABLE_LOGIN, null, values);
-        db.close(); // Closing database connection
     }
 
     /**
@@ -116,6 +106,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Storing user details in database
+     * */
+    public void addUser(String fname, String lname, String email, String uname, String uid, String created_at) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_FIRSTNAME, fname); // FirstName
+        values.put(KEY_LASTNAME, lname); // LastName
+        values.put(KEY_EMAIL, email); // Email
+        values.put(KEY_USERNAME, uname); // UserName
+        values.put(KEY_UID, uid); // Email
+        values.put(KEY_CREATED_AT, created_at); // Created At
+        // Inserting Row
+        db.insert(TABLE_LOGIN, null, values);
+        db.close(); // Closing database connection
+    }
+
+    /**
      * Getting user data from database
      * */
     public HashMap getUserDetails(){
@@ -152,6 +159,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return row count
         return rowCount;
     }
+
+
+
+    /**
+     * Storing offer in database
+     * */
+    public void addOffer(int id, String categoryID, String description, String image) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_ID_OFFER, id); // OfferID
+        values.put(KEY_OFFERCATEGORY, categoryID); // Category ID
+        values.put(KEY_OFFERDESCRIPTION, description); // Offer Description
+        values.put(KEY_OFFERIMAGE, image); // Offer Image
+        // Inserting Row
+        db.insert(TABLE_OFFERS, null, values);
+        db.close(); // Closing database connection
+    }
+
+    /**
+     * Getting offers from database
+     * */
+    public ArrayList<Category> getSavedOffers(){
+        ArrayList<Category> list = new ArrayList<Category>();
+        String selectQuery = "SELECT  * FROM " + TABLE_OFFERS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            do {
+                int id = Integer.parseInt(cursor.getString(1));
+                String category = cursor.getString(2);
+                Category c = new Category(id, category);
+                list.add(c);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        // return category list
+        return list;
+    }
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Re create database
      * Delete all tables and create them again
@@ -171,6 +230,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Delete All Rows
         db.delete(TABLE_CATEGORY, null, null);
         db.close();
+    }
+
+    public void createTables(SQLiteDatabase db){
+        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_FIRSTNAME + " TEXT,"
+                + KEY_LASTNAME + " TEXT,"
+                + KEY_EMAIL + " TEXT UNIQUE,"
+                + KEY_USERNAME + " TEXT,"
+                + KEY_UID + " TEXT,"
+                + KEY_CREATED_AT + " TEXT" + ")";
+        db.execSQL(CREATE_LOGIN_TABLE);
+        String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_ID_Category + " TEXT,"
+                + KEY_CATEGORYNAME + " TEXT" + ")";
+        db.execSQL(CREATE_CATEGORY_TABLE);
+        String CREATE_OFFERS_TABLE = "CREATE TABLE " + TABLE_OFFERS + "("
+                + KEY_ID_OFFER + " INTEGER PRIMARY KEY,"
+                + KEY_OFFERCATEGORY + " TEXT,"
+                + KEY_OFFERDESCRIPTION + " TEXT,"
+                + KEY_OFFERIMAGE + " TEXT" + ")";
+        db.execSQL(CREATE_OFFERS_TABLE);
+        String CREATE_BEACONS_TABLE = "CREATE TABLE " + TABLE_BEACONS + "("
+                + KEY_BEACON_ID + " INTEGER PRIMARY KEY,"
+                + KEY_BEACON_PRODUCTID + " INTEGER,"
+                + KEY_BEACON_OFFERID + " INTEGER,"
+                + KEY_BEACON_MAJOR + " INTEGER,"
+                + KEY_BEACON_MINOR + " INTEGER" + ")";
+        db.execSQL(CREATE_BEACONS_TABLE);
     }
 
 

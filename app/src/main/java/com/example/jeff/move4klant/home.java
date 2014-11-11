@@ -16,7 +16,8 @@ public class home extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        UpdateFromServer.getInstance().updateOffers(getApplicationContext());
+        UpdateFromServer.getInstance(getApplicationContext()).updateOffers(getApplicationContext());
+        UpdateFromServer.getInstance(getApplicationContext()).updateBeacons(getApplicationContext());
     }
 
     public void onClickManageProfile(View v)

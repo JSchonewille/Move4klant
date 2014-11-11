@@ -10,6 +10,7 @@ public class Config {
     public static String EDITLIKESURL = "http://ibeacontest.herobo.com/editlikes.php";
     public static String GETLIKESURL = "http://ibeacontest.herobo.com/getlikes.php";
     public static String GETALLOFFERS = "http://ibeacontest.herobo.com/getoffers.php";
+    public static String GETALLBEACONS = "http://ibeacontest.herobo.com/getbeacons.php";
 
     public static String LOGINURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
     public static String REGISTERURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
