@@ -5,8 +5,6 @@
         <!-- Customize your theme here. -->
     </style>
 
-
-
     <style name="HomeActivity">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">38dp</item>

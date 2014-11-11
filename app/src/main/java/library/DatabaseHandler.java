@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
@@ -23,6 +24,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_CATEGORY = "category";
     // Login Table Columns names
     private static final String KEY_ID = "id";
+    private static final String KEY_ID_Category = "id_Category";
     private static final String KEY_FIRSTNAME = "fname";
     private static final String KEY_LASTNAME = "lname";
     private static final String KEY_EMAIL = "email";
@@ -47,6 +49,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_LOGIN_TABLE);
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_ID_Category + " TEXT,"
                 + KEY_CATEGORYNAME + " TEXT" + ")";
         db.execSQL(CREATE_CATEGORY_TABLE);
     }
@@ -74,6 +77,44 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_LOGIN, null, values);
         db.close(); // Closing database connection
     }
+
+    /**
+     * Storing category in database
+     * */
+    public void addCategory(String id, String categoryName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_ID_Category, id); // FirstName
+        values.put(KEY_CATEGORYNAME, categoryName); // LastName
+        // Inserting Row
+        db.insert(TABLE_CATEGORY, null, values);
+        db.close(); // Closing database connection
+    }
+
+    /**
+     * Getting Categories from database
+     * */
+    public ArrayList<Category> getSavedCategories(){
+        ArrayList<Category> list = new ArrayList<Category>();
+        String selectQuery = "SELECT  * FROM " + TABLE_CATEGORY;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            do {
+                int id = Integer.parseInt(cursor.getString(1));
+                String category = cursor.getString(2);
+                Category c = new Category(id, category);
+                list.add(c);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        // return category list
+        return list;
+    }
+
     /**
      * Getting user data from database
      * */
@@ -121,17 +162,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_LOGIN, null, null);
         db.close();
     }
-
     /**
-     * Storing category in database
+     * Re create database
+     * Delete all tables and create them again
      * */
-    public void addCategory(String id, String categoryName) {
+    public void resetCategory(){
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_ID, id); // FirstName
-        values.put(KEY_CATEGORYNAME, categoryName); // LastName
-        // Inserting Row
-        db.insert(TABLE_CATEGORY, null, values);
-        db.close(); // Closing database connection
+        // Delete All Rows
+        db.delete(TABLE_CATEGORY, null, null);
+        db.close();
     }
+
+
 }
