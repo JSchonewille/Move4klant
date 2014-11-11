@@ -1,5 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.jeff.move4klant.LikesActivity">
-
+    <item android:id="@+id/saveLikes"
+        android:title="save"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom" />
 </menu>

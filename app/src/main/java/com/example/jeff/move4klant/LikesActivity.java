@@ -1,9 +1,7 @@
 package com.example.jeff.move4klant;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +29,7 @@ public class LikesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_likes);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
         final ListView listView = (ListView) findViewById(R.id.list_Category);
@@ -42,10 +39,10 @@ public class LikesActivity extends Activity {
 
         for (int i = 0; i < savedList.size(); i++){
             Category c = savedList.get(i);
-            String id = String.valueOf(c.getID());
+            int id = c.getID();
             String name = c.getName();
-            Log.v("ID: ", id);
-            Log.v("Name: ", name);
+            Category cT = new Category(id, name);
+            checkedList.add(cT);
         }
         // Checked list
         final List<Category> list = new ArrayList<Category>();
@@ -127,6 +124,11 @@ public class LikesActivity extends Activity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.saveLikes:
+                saveLikes();
+                onBackPressed();
+                return true;
+
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -139,31 +141,20 @@ public class LikesActivity extends Activity {
         this.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
     }
 
-    public void onClick(View v){
+    public void saveLikes(){
         db = new DatabaseHandler(getApplicationContext());
-        switch(v.getId()){
-            case R.id.save:
-                if(checkedList.size() == 0)
-                {
-                    db.resetCategory();
-                }
-                for (int i = 0 ; i < checkedList.size(); i++) {
+        if(checkedList.size() == 0)
+        {
+            db.resetCategory();
+        }
+        for (int i = 0 ; i < checkedList.size(); i++) {
 
-                    Category c = checkedList.get(i);
-                    String id = "" + c.getID();
-                    String value = c.getName();
+            Category c = checkedList.get(i);
+            String id = "" + c.getID();
+            String value = c.getName();
 
-                   db.addCategory(id, value);
-                }
-                Toast.makeText(getApplicationContext(), "Saved succesful", Toast.LENGTH_SHORT).show();
-                Intent inn = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(inn);
-                break;
-            case R.id.cancel:
-                Intent in = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(in);
-                finish();
-                break;
+           db.addCategory(id, value);
         }
     }
+
 }
