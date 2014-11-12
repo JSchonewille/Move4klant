@@ -38,7 +38,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
     //Category Table Column names
-    private static final String KEY_ID_Category = "id";
+    private static final String KEY_CATEGORYID = "id";
     private static final String KEY_CATEGORYNAME = "categoryName";
     private static final String KEY_CATEGORYLIKED = "liked";
     //Offers Table Column names
@@ -245,6 +245,33 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         // return category list
         return o;
     }
+    public ArrayList<Offer> getOffersByLikedCategories(){
+        ArrayList<Offer> list = new ArrayList<Offer>();
+        String selectQuery = "SELECT  * FROM " + TABLE_OFFERS +
+                             " WHERE " + KEY_OFFERCATEGORY + " IN (" +
+                             " SELECT " + KEY_CATEGORYID +
+                             " FROM " + TABLE_CATEGORY +
+                             " WHERE " + KEY_CATEGORYLIKED + " = 1 )";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Offer o;
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            do {
+                int id = cursor.getInt(0);
+                int categoryID= cursor.getInt(1);
+                String description = cursor.getString(2);
+                String image = cursor.getString(3);
+                o = new Offer(id, categoryID,description,image);
+                list.add(o);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        // return category list
+        return list;
+    }
 
 
     /**
@@ -352,7 +379,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
                 + KEY_CREATED_AT + " TEXT" + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
-                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_CATEGORYID + " INTEGER PRIMARY KEY,"
                 + KEY_CATEGORYNAME + " TEXT,"
                 + KEY_CATEGORYLIKED + " INTEGER"+ ")";
         db.execSQL(CREATE_CATEGORY_TABLE);
@@ -370,6 +397,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
                 + KEY_BEACON_MINOR + " INTEGER" + ")";
         db.execSQL(CREATE_BEACONS_TABLE);
     }
+
 
 
 }
