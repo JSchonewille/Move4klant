@@ -16,7 +16,7 @@ public class home extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        DatabaseHandler.getInstance(getApplicationContext()).updateOffers(getApplicationContext());
+        DatabaseHandler.getInstance(getApplicationContext()).updateOffers();
         DatabaseHandler.getInstance(getApplicationContext()).updateBeacons();
     }
 

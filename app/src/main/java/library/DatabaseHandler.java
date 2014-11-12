@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.example.jeff.move4klant.R;
 
 import org.json.JSONArray;
 
@@ -36,13 +35,26 @@ public class DatabaseHandler {
     }
 
 
-    //update offers
-    public void updateOffers(final Context context){
+    //OFFER FUNCTIONS
+    public void updateOffers(){
         ServerRequestHandler.getAllOffers(new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray jsonArray) {
+
+                db.resetOfferTable();
                 List<Offer> list = Offer.fromJSON(jsonArray);
-                PrefUtils.saveToPrefs(context, context.getString(R.string.PREFS_OFFERS), list);
+
+                Log.d("Offer Update", jsonArray.toString());
+                for (int i = 0; i<list.size();i++ ){
+                    try {
+                        db.addOffer(list.get(i).getID(), list.get(i).getCategoryID(), list.get(i).getDescription(), list.get(i).getImage());
+                        Log.d("Offer Update", "SUCCES");
+                    }
+                    catch (Exception e){
+                        Log.d("exception", e.toString());
+                    }
+
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -50,8 +62,11 @@ public class DatabaseHandler {
             }
         });
     }
+    public Offer getOfferById(int offerID){
+        return db.getOfferByID(offerID);
+    }
 
-    //update beacons
+    //BEACON FUNCTIONS
     public void updateBeacons(){
         ServerRequestHandler.getAllBeacons(new Response.Listener<JSONArray>() {
             @Override
@@ -80,8 +95,10 @@ public class DatabaseHandler {
             }
         });
     }
-
     public ArrayList<ibeacon> getAllBeacons(){
         return db.getAllBeacons();
+    }
+    public ibeacon getBeaconByMinor(int minorID){
+      return db.getBeaconByMinor(minorID);
     }
 }

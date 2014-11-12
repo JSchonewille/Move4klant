@@ -5,8 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import library.DatabaseHandler;
 import library.Offer;
-import library.PrefUtils;
 
 /**
  * Created by Sander on 7-11-2014.
@@ -20,7 +21,7 @@ public class OfferActivity extends Activity {
         Bundle bundle = getIntent().getExtras();
 
         int offerID = bundle.getInt("offerID");
-        Offer offer = PrefUtils.getOfferFromPrefs(getApplicationContext(),getString(R.string.PREFS_OFFERS), offerID);
+        Offer offer = DatabaseHandler.getInstance(getApplicationContext()).getOfferById(offerID);
 
         TextView t = (TextView) findViewById(R.id.offerMessage);
         t.setText(offer.getDescription());

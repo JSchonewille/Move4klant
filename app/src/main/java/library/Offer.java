@@ -15,11 +15,11 @@ import java.util.ArrayList;
  */
 public class Offer {
     private int ID;
-    private String categoryID;
+    private int categoryID;
     private String description;
     private String image;
 
-    public Offer(int ID, String categoryID, String description, String image){
+    public Offer(int ID, int categoryID, String description, String image){
         this.ID = ID;
         this.categoryID=categoryID;
         this.description=description;
@@ -30,7 +30,7 @@ public class Offer {
 
         try {
             this.ID = object.getInt("id");
-            this.categoryID=object.getString("category");
+            this.categoryID=object.getInt("category");
             this.description=object.getString("description");
             this.image=object.getString("image");
         }
@@ -61,11 +61,11 @@ public class Offer {
         this.ID = ID;
     }
 
-    public String getCategoryID() {
+    public int getCategoryID() {
         return categoryID;
     }
 
-    public void setCategoryID(String categoryID) {
+    public void setCategoryID(int categoryID) {
         this.categoryID = categoryID;
     }
 

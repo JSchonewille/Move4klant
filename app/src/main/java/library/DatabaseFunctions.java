@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DatabaseFunctions extends SQLiteOpenHelper {
+
+
+    //region Table and column names
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -25,7 +28,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     private static final String TABLE_BEACONS = "beacons";
     private static final String TABLE_OFFERS = "offers";
     private static final String TABLE_PRODUCTS = "products";
-
     // Login Table Column names
     private static final String KEY_ID = "id";
     private static final String KEY_FIRSTNAME = "fname";
@@ -48,6 +50,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     private static final String KEY_BEACON_OFFERID = "beacon_offer";
     private static final String KEY_BEACON_MAJOR = "beacon_major";
     private static final String KEY_BEACON_MINOR = "beacon_minor";
+    //endregion
 
 
 
@@ -161,11 +164,10 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     }
 
 
-
     /**
-     * Storing offer in database
+     * Offer functions
      * */
-    public void addOffer(int id, String categoryID, String description, String image) {
+    public void addOffer(int id, int categoryID, String description, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_ID_OFFER, id); // OfferID
@@ -176,10 +178,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.insert(TABLE_OFFERS, null, values);
         db.close(); // Closing database connection
     }
-
-    /**
-     * Getting offers from database
-     * */
     public ArrayList<Category> getSavedOffers(){
         ArrayList<Category> list = new ArrayList<Category>();
         String selectQuery = "SELECT  * FROM " + TABLE_OFFERS;
@@ -200,10 +198,29 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         // return category list
         return list;
     }
+    public Offer getOfferByID(int offerID){
+        Offer o = null;
+        String selectQuery = "SELECT  * FROM " + TABLE_OFFERS + " WHERE " + KEY_ID_OFFER + " = " + offerID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            int id = cursor.getInt(0);
+            int categoryID= cursor.getInt(1);
+            String description = cursor.getString(2);
+            String image = cursor.getString(3);
+            o = new Offer(id, categoryID,description,image);
+        }
+        cursor.close();
+        db.close();
+        // return category list
+        return o;
+    }
 
 
     /**
-     * Storing category in database
+     * Beacon functions
      * */
     public void addBeacon(int beaconID, int productID, int offerID, int minor, int major) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -218,10 +235,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.insert(TABLE_BEACONS, null, values);
         db.close(); // Closing database connection
     }
-
-    /**
-     * Getting Categories from database
-     * */
     public ArrayList<ibeacon> getAllBeacons(){
         ArrayList<ibeacon> list = new ArrayList<ibeacon>();
         String selectQuery = "SELECT  * FROM " + TABLE_BEACONS;
@@ -245,23 +258,32 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         // return category list
         return list;
     }
+    public ibeacon getBeaconByMinor(int minorID){
+        ibeacon b = null;
+        String selectQuery = "SELECT  * FROM " + TABLE_BEACONS + " WHERE " + KEY_BEACON_MINOR + " = " + minorID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+
+                int id = cursor.getInt(1);
+                int productID= cursor.getInt(2);
+                int offerID= cursor.getInt(3);
+                int major= cursor.getInt(4);
+                int minor= cursor.getInt(5);
+                b = new ibeacon(id, offerID,productID,major,minor);
 
 
-
-
-
-
-
-
-
-
-
-
-
+        }
+        cursor.close();
+        db.close();
+        // return category list
+        return b;
+    }
 
     /**
-     * Re create database
-     * Delete all tables and create them again
+     * Empty tables
      * */
     public void resetTables(){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -275,10 +297,12 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.delete(TABLE_BEACONS, null, null);
         db.close();
     }
-    /**
-     * Re create database
-     * Delete all tables and create them again
-     * */
+    public void resetOfferTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete All Rows
+        db.delete(TABLE_OFFERS, null, null);
+        db.close();
+    }
     public void resetCategory(){
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
@@ -286,6 +310,9 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Create tables
+     * */
     public void createTables(SQLiteDatabase db){
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
