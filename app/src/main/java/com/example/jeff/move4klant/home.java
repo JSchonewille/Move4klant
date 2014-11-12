@@ -18,6 +18,7 @@ public class home extends Activity {
         setContentView(R.layout.activity_home);
         DatabaseHandler.getInstance(getApplicationContext()).updateOffers();
         DatabaseHandler.getInstance(getApplicationContext()).updateBeacons();
+        DatabaseHandler.getInstance(getApplicationContext()).updateCategories();
     }
 
     public void onClickManageProfile(View v)

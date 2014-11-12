@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class DatabaseFunctions extends SQLiteOpenHelper {
 
@@ -37,8 +38,9 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
     //Category Table Column names
-    private static final String KEY_ID_Category = "id_Category";
+    private static final String KEY_ID_Category = "id";
     private static final String KEY_CATEGORYNAME = "categoryName";
+    private static final String KEY_CATEGORYLIKED = "liked";
     //Offers Table Column names
     private static final String KEY_ID_OFFER = "id_offer";
     private static final String KEY_OFFERCATEGORY = "offer_category";
@@ -72,22 +74,19 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     }
 
     /**
-     * Storing category in database
+     * Category functions
      * */
-    public void addCategory(String id, String categoryName) {
+    public void addCategory(int id, String categoryName, int liked) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_ID_Category, id); // FirstName
-        values.put(KEY_CATEGORYNAME, categoryName); // LastName
+        values.put(KEY_ID, id); //
+        values.put(KEY_CATEGORYNAME, categoryName); //
+        values.put(KEY_CATEGORYLIKED, liked); //
         // Inserting Row
         db.insert(TABLE_CATEGORY, null, values);
         db.close(); // Closing database connection
     }
-
-    /**
-     //Getting Categories from database
-     * */
-    public ArrayList<Category> getSavedCategories(){
+    public ArrayList<Category> getAllCategories(){
         ArrayList<Category> list = new ArrayList<Category>();
         String selectQuery = "SELECT  * FROM " + TABLE_CATEGORY;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -96,9 +95,10 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
             do {
-                int id = Integer.parseInt(cursor.getString(1));
-                String category = cursor.getString(2);
-                Category c = new Category(id, category);
+                int id = Integer.parseInt(cursor.getString(0));
+                String category = cursor.getString(1);
+                int liked = cursor.getInt(2);
+                Category c = new Category(id, category, liked);
                 list.add(c);
             } while (cursor.moveToNext());
         }
@@ -106,6 +106,31 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.close();
         // return category list
         return list;
+    }
+    public ArrayList<Category> getLikedCategories(){
+        ArrayList<Category> list = new ArrayList<Category>();
+        String selectQuery = "SELECT  * FROM " + TABLE_CATEGORY + " WHERE " + KEY_CATEGORYLIKED + " =  1" ;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            do {
+                int id = Integer.parseInt(cursor.getString(0));
+                String category = cursor.getString(1);
+                int liked = cursor.getInt(2);
+                Category c = new Category(id, category, liked);
+                list.add(c);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        // return category list
+        return list;
+    }
+    public void saveLikedCategories (List<Category> list){
+
+
     }
 
     /**
@@ -178,19 +203,22 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.insert(TABLE_OFFERS, null, values);
         db.close(); // Closing database connection
     }
-    public ArrayList<Category> getSavedOffers(){
-        ArrayList<Category> list = new ArrayList<Category>();
+    public ArrayList<Offer> getSavedOffers(){
+        ArrayList<Offer> list = new ArrayList<Offer>();
         String selectQuery = "SELECT  * FROM " + TABLE_OFFERS;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
+        Offer o;
         // Move to first row
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
             do {
-                int id = Integer.parseInt(cursor.getString(1));
-                String category = cursor.getString(2);
-                Category c = new Category(id, category);
-                list.add(c);
+                int id = cursor.getInt(0);
+                int categoryID= cursor.getInt(1);
+                String description = cursor.getString(2);
+                String image = cursor.getString(3);
+                o = new Offer(id, categoryID,description,image);
+                list.add(o);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -325,8 +353,8 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.execSQL(CREATE_LOGIN_TABLE);
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_ID_Category + " TEXT,"
-                + KEY_CATEGORYNAME + " TEXT" + ")";
+                + KEY_CATEGORYNAME + " TEXT,"
+                + KEY_CATEGORYLIKED + " INTEGER"+ ")";
         db.execSQL(CREATE_CATEGORY_TABLE);
         String CREATE_OFFERS_TABLE = "CREATE TABLE " + TABLE_OFFERS + "("
                 + KEY_ID_OFFER + " INTEGER PRIMARY KEY,"

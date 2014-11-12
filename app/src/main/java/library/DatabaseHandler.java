@@ -34,6 +34,63 @@ public class DatabaseHandler {
         return _instance;
     }
 
+    //categories FUNCTIONS
+    public void updateCategories(){
+        ServerRequestHandler.getAllCategories(new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                List<Category> catList = db.getLikedCategories();
+                db.resetCategory();
+                List<Category> list = Category.fromJSON(jsonArray);
+
+                Log.d("Categorie Update", jsonArray.toString());
+                for (Category cat : list) {
+                    try {
+                        int liked = 0;
+                        for (Category c : catList) {
+                            if (c.getName().equals(cat.getName()))
+                            {liked = 1;}
+                        }
+                        db.addCategory(cat.getID(), cat.getName(), liked);
+
+                    } catch (Exception e) {
+                        Log.d("exception", e.toString());
+                    }
+                    Log.d("Categorie Update", "SUCCES");
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+            }
+        });
+    }
+    public ArrayList<Category> getAllCategories(){
+        return db.getAllCategories();
+    }
+    public List<Category> getLikedCategories(){
+        return db.getLikedCategories();
+    }
+    public void saveLikedCategories(List<Category> likes){
+        List<Category> list = db.getAllCategories();
+        db.resetCategory();
+        for (Category cat : list) {
+            try {
+                int liked = 0;
+                for (Category c : likes) {
+                    if (c.getName().equals(cat.getName()))
+                    {liked = 1;}
+                }
+                db.addCategory(cat.getID(), cat.getName(), liked);
+
+            } catch (Exception e) {
+                Log.d("exception", e.toString());
+            }
+            Log.d("Offer Update", "SUCCES");
+
+        }
+    }
 
     //OFFER FUNCTIONS
     public void updateOffers(){
@@ -101,4 +158,7 @@ public class DatabaseHandler {
     public ibeacon getBeaconByMinor(int minorID){
       return db.getBeaconByMinor(minorID);
     }
+
+    //CHECKIN AND CHECKOUT FUNCTIONS
+    public void checkinout(int userid){}
 }

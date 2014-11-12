@@ -13,16 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import library.Category;
-import library.DatabaseFunctions;
+import library.DatabaseHandler;
 
 
 public class LikesActivity extends Activity {
     private ArrayAdapter<Category> aa;
-    private DatabaseFunctions db;
 
 
     private ArrayList<Category> checkedList = new ArrayList<Category>();
-    private ArrayList<Category> savedList;
+    private List<Category> savedList;
 
 
     @Override
@@ -31,19 +30,16 @@ public class LikesActivity extends Activity {
         setContentView(R.layout.activity_likes);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        DatabaseFunctions db = new DatabaseFunctions(getApplicationContext());
+
         final ListView listView = (ListView) findViewById(R.id.list_Category);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        savedList = db.getSavedCategories();
+        savedList = DatabaseHandler.getInstance(getApplicationContext()).getLikedCategories();
 
         // Checked list
-        final List<Category> list = new ArrayList<Category>();
+        final ArrayList<Category> list = (ArrayList) DatabaseHandler.getInstance(getApplicationContext()).getAllCategories();
         // dummy data
-        Category a = new Category(1, "Spijkers");
-        Category b = new Category(2, "Hout");
-        list.add(a);
-        list.add(b);
+
         aa = new ArrayAdapter<Category>(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice, list);
         listView.setAdapter(aa);
 
@@ -117,17 +113,7 @@ public class LikesActivity extends Activity {
         this.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
     }
 
-    public void saveLikes(){
-        db = new DatabaseFunctions(getApplicationContext());
-        // clear database with all likes
-        db.resetCategory();
-        // fill db again with all the likes
-        for (int i = 0 ; i < checkedList.size(); i++) {
-            Category c = checkedList.get(i);
-            String id = "" + c.getID();
-            String value = c.getName();
-           db.addCategory(id, value);
-        }
+    public void saveLikes() {
+        DatabaseHandler.getInstance(getApplicationContext()).saveLikedCategories(checkedList);
     }
-
 }
