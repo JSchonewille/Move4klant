@@ -8,6 +8,9 @@ import android.graphics.Color;
 public class ibeacon {
     private int major;
     private int minor;
+    private int beaconID;
+    private int productID;
+    private int offerID;
     private int kleur = Color.WHITE;
     private int counter = 0;
     private int seconds = 0;
@@ -15,9 +18,12 @@ public class ibeacon {
    // Qrmaker qmaker;
    // private Bitmap Qr;
 
-    public ibeacon(int majorid, int minorid) {
+    public ibeacon(int beaconID, int offerID, int productID, int majorid, int minorid) {
         major = majorid;
         minor = minorid;
+        this.beaconID=beaconID;
+        this.productID = productID;
+        this.offerID=offerID;
        // qmaker = new Qrmaker();
        // try
       //  {

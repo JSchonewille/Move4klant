@@ -24,7 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import library.APIFunctions;
-import library.DatabaseHandler;
+import library.DatabaseFunctions;
 import library.PrefUtils;
 
 public class LoginActivity extends Activity {
@@ -219,7 +219,7 @@ public class LoginActivity extends Activity {
                             String res = json.getString(KEY_SUCCESS);
                             if (Integer.parseInt(res) == 1) {
                                 nDialog.setTitle("Getting data");
-                                DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                                DatabaseFunctions db = new DatabaseFunctions(getApplicationContext());
                                 JSONObject json_user = json.getJSONObject("user");
                                 /**
                                  * Clear all previous data in SQlite database.

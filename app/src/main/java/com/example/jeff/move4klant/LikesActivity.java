@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import library.Category;
-import library.DatabaseHandler;
+import library.DatabaseFunctions;
 
 
 public class LikesActivity extends Activity {
     private ArrayAdapter<Category> aa;
-    private DatabaseHandler db;
+    private DatabaseFunctions db;
 
 
     private ArrayList<Category> checkedList = new ArrayList<Category>();
@@ -31,7 +31,7 @@ public class LikesActivity extends Activity {
         setContentView(R.layout.activity_likes);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+        DatabaseFunctions db = new DatabaseFunctions(getApplicationContext());
         final ListView listView = (ListView) findViewById(R.id.list_Category);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
@@ -118,7 +118,7 @@ public class LikesActivity extends Activity {
     }
 
     public void saveLikes(){
-        db = new DatabaseHandler(getApplicationContext());
+        db = new DatabaseFunctions(getApplicationContext());
         // clear database with all likes
         db.resetCategory();
         // fill db again with all the likes

@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import library.UpdateFromServer;
+import library.DatabaseHandler;
 
 
 public class home extends Activity {
@@ -16,8 +16,8 @@ public class home extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        UpdateFromServer.getInstance(getApplicationContext()).updateOffers(getApplicationContext());
-        UpdateFromServer.getInstance(getApplicationContext()).updateBeacons(getApplicationContext());
+        DatabaseHandler.getInstance(getApplicationContext()).updateOffers(getApplicationContext());
+        DatabaseHandler.getInstance(getApplicationContext()).updateBeacons();
     }
 
     public void onClickManageProfile(View v)

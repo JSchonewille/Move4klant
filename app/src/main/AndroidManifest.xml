@@ -35,7 +35,10 @@
             android:name="com.example.jeff.move4klant.ManageAccount"
             android:label="@string/title_activity_manage_account" >
         </activity>
-
+        <activity
+            android:name=".OfferActivity"
+            android:label="Aanbieding" >
+        </activity>
 
         <activity
             android:name=".LoginActivity"
