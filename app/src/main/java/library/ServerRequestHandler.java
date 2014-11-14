@@ -61,7 +61,7 @@ public class ServerRequestHandler {
     }
 
     public static void uploadUserImage(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID,  final byte[] image){
-        String URL = Config.EDITLIKESURL;
+        String URL = Config.UPLOADIMAGE;
 
         JsonArrayRequest req = new JsonArrayRequest(URL, l, el){
             @Override
