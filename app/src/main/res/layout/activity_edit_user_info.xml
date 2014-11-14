@@ -1,61 +1,67 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
-    android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.jeff.move4klant.ManageAccount">
-
+    tools:context="com.example.jeff.move4klant.EditUserInfoActivity">
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/introManageAccount"
-            android:id="@+id/introManageAccount"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="30dp"
-            android:textIsSelectable="true" /> // header account
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="15dp">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/introManageAccount"
-            android:weightSum="1.0"
-            android:id="@+id/linearLayoutImage">
+            android:id="@+id/llTitle">
+
+            <TextView
+                android:text="@string/acccountInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llTitle"
+            android:id="@+id/llProfilePicture">
+
             <ImageView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="100dp"
-                android:layout_weight=".3"
                 android:src="@drawable/emptyprofile"
-                android:id="@+id/ivImage"/>
-        </LinearLayout> // image
+                android:id="@+id/ivProfileImageEdit"
+                android:clickable="false"
+                android:onClick="onClick"
+                android:layout_gravity="left" />
+
+        </LinearLayout> // picture
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutImage"
+            android:layout_below="@id/llProfilePicture"
             android:weightSum="1.0"
             android:id="@+id/linearLayoutName"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/labelName"
+                android:layout_weight=".3"
                 android:textSize="16dp"
-                android:layout_weight=".3"/>
-            <TextView
+                android:textIsSelectable="false" />
+            <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
-                android:textSize="16dp"
-                android:id="@+id/tvName"/>
-            </LinearLayout> // name
+                android:id="@+id/etName"/>
+        </LinearLayout> // name
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -63,20 +69,19 @@
             android:layout_below="@id/linearLayoutName"
             android:id="@+id/linearLayoutLastName"
             android:weightSum="1.0"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/labelLastName"
                 android:textSize="16dp"
                 android:layout_weight=".3"/>
-            <TextView
+            <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
-                android:textSize="16dp"
-                android:id="@+id/tvLastName"/>
+                android:id="@+id/etLastName"/>
         </LinearLayout> // last name
 
         <LinearLayout
@@ -85,22 +90,43 @@
             android:layout_below="@id/linearLayoutLastName"
             android:id="@+id/linearLayoutAddress"
             android:weightSum="1.0"
-            android:layout_marginTop="2dp"
-            android:textSize="18dp"
-            android:layout_marginBottom="2dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/labelAddress"
                 android:textSize="16dp"
+                android:text="@string/labelAddress"
                 android:layout_weight=".3"/>
-            <TextView
+            <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
-                android:id="@+id/tvAdress"
-                android:textSize="16dp" />
-        </LinearLayout> // adress
+                android:id="@+id/etStreet"/>
+        </LinearLayout> // street
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linearLayoutAddress"
+            android:id="@+id/linearLayoutHouseNumber"
+            android:weightSum="1.0"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/labelHouseNumber"
+                android:textSize="16dp"
+                android:layout_weight=".3"
+                android:layout_gravity="left|center_vertical"
+                />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".7"
+                android:id="@+id/etHouseNumber"/>
+        </LinearLayout> // houseNumber
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -108,20 +134,19 @@
             android:layout_below="@id/linearLayoutAddress"
             android:id="@+id/linearLayoutPostalCode"
             android:weightSum="1.0"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"
                 android:text="@string/labelPostalCode"
+                android:textSize="16dp"
                 android:layout_weight=".3"/>
-            <TextView
+            <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
-                android:textSize="16dp"
-                android:id="@+id/tvPostalCode"/>
+                android:id="@+id/etPostalCode"/>
         </LinearLayout> // postal code
 
         <LinearLayout
@@ -130,20 +155,19 @@
             android:layout_below="@id/linearLayoutPostalCode"
             android:id="@+id/linearLayoutCity"
             android:weightSum="1.0"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/labelCity"
                 android:textSize="16dp"
+                android:text="@string/labelCity"
                 android:layout_weight=".3"/>
-            <TextView
+            <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
-                android:textSize="16dp"
-                android:id="@+id/tvCity"/>
+                android:id="@+id/etCity"/>
         </LinearLayout> // city
 
         <LinearLayout
@@ -152,45 +176,72 @@
             android:layout_below="@id/linearLayoutCity"
             android:weightSum="1.0"
             android:id="@+id/linearLayoutEmail"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/labelEmail"
                 android:textSize="16dp"
+                android:text="@string/labelEmail"
                 android:layout_weight=".3"/>
-            <TextView
+            <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
-                android:textSize="16dp"
-                android:id="@+id/tvEmail"/>
+                android:id="@+id/etEmail"/>
         </LinearLayout> // email
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/linearLayoutEmail"
+            android:weightSum="1.0"
             android:id="@+id/linearLayoutCategoryTitle"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="2dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/labelCategory"
-                android:textSize="25dp"
-                android:textIsSelectable="false" />
-        </LinearLayout> // email
+                android:text="@string/title_Category"
+                android:textSize="25dp"/>
 
-        <TableLayout
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/table_ManageAccount_Category">
+            android:layout_below="@id/linearLayoutCategoryTitle"
+            android:weightSum="1.0"
+            android:id="@+id/linearLayoutTable"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
+                <TableLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tableViewCategory_EditUserInfo">
+                </TableLayout>
 
-            </TableLayout>
+        </LinearLayout> // table categories
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutTable"
+        android:weightSum="1.0"
+        android:id="@+id/linearLayoutButtonChangeCategories"
+        android:layout_weight="1"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btChangeCategory"
+            android:layout_weight=".4"
+            android:text="@string/changeCategory"
+            android:textSize="14dp"
+            android:onClick="onClick" />
 
     </LinearLayout>
 
+    </LinearLayout>
 </ScrollView>
-

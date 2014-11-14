@@ -39,6 +39,7 @@ public class ServerRequestHandler {
         RequestController.getInstance().addToRequestQueue(req);
     }
 
+
     public static void getAllBeacons(Response.Listener<JSONArray> l, Response.ErrorListener el){
         String URL = Config.GETALLBEACONS;
         //HashMap<String, String> params  = new HashMap<String, String>();
@@ -70,7 +71,7 @@ public class ServerRequestHandler {
     public static void uploadUserImage(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID,  final byte[] image){
         String URL = Config.UPLOADIMAGE;
         Log.e("user", customerID + "");
-        Log.e("Image", new String(image));
+        Log.e("Image", encodeImage(image));
         JsonArrayRequest req = new JsonArrayRequest(URL, l, el)
         {
             @Override
@@ -82,7 +83,7 @@ public class ServerRequestHandler {
             }
             @Override
             public int getMethod() {
-                return 1;
+                return Method.POST;
             }
 
         };

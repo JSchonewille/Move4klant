@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.jeff.move4klant.EditUserInfoActivity">
+    <item android:id="@+id/saveUserInfo" android:title="@string/save"
+        android:orderInCategory="100" android:showAsAction="ifRoom" />
+</menu>

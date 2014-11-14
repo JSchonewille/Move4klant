@@ -69,8 +69,10 @@
             android:name=".ProductInfoActivity"
             android:label="Info" >
         </activity>
-
-
+        <activity
+            android:name=".EditUserInfoActivity"
+            android:label="Account informatie" >
+        </activity>
 
 
 

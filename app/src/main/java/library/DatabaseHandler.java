@@ -204,7 +204,10 @@ public class DatabaseHandler {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.d("Image Upload", volleyError.toString());
+                if(volleyError.networkResponse != null)
+               Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
+                else
+                    Log.e("NETWORKERROR" , volleyError.getMessage());
             }
         }, userID, image);
     }

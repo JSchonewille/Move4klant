@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    // actionBar
     <string name="app_name">Move4klant</string>
-
     <string name="action_settings">Settings</string>
     <string name="title_activity_likes">LikesActivity</string>
+    <string name="editUserInfo">Wijzig persoonsinformatie</string>
+
     <string name="introCategory">Dit is een overzicht van categorieen die u kunt aangeven als favoriet</string>
     <string name="title_activity_manage_account">ManageAccount</string>
     <string name="introManageAccount">Account</string>
-
     <string name="save">Opslaan</string>
     <string name="cancel">Annuleer</string>
     <string name="change">Wijzig</string>
     <string name="reset">Reset</string>
 
-
     // Manage account
+    <string name="acccountInfo">Account informatie</string>
     <string name="labelName">Voornaam:</string>
     <string name="labelLastName">Achternaam:</string>
     <string name="labelEmail">Emailadres:</string>
     <string name="labelAddress">Straat:</string>
+    <string name="labelHouseNumber">Huisnummer, toevoeging:</string>
     <string name="labelPostalCode">Postcode:</string>
     <string name="labelCity">Woonplaats:</string>
     <string name="labelCategory">Interesses:</string>
-
-
-
     <string name="PREFS_LOGIN_USERNAME_KEY">__USERNAME__</string>
     <string name="PREFS_LOGIN_PASSWORD_KEY">__PASSWORD__</string>
     <string name="PREFS_AUTO_LOGIN_KEY">_AUTOLOGIN_</string>
     <string name="PREFS_OFFERS">_OFFERS_</string>
+    <string name="title_activity_upload_picture">UploadPicture</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_edit_user_info">Wijzig gegevens</string>
+    <string name="title_Category">Interesses</string>
+    <string name="changeCategory">Wijzig interesses</string>
 
 </resources>

@@ -30,21 +30,20 @@ public class SettingsActivity extends PreferenceActivity {
             }
         });
 
-
-        Preference likesPref = (Preference) findPreference("prefLikes");
-        likesPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                Intent likes = new Intent(getApplicationContext(), LikesActivity.class);
-                startActivity(likes);
-                overridePendingTransition(R.anim.left_slide_in, R.anim.left_slide_out);
-                return true;
-            }
-        });
-
         Preference offersPref = (Preference) findPreference("prefOffers");
         offersPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
 
+                return true;
+            }
+        });
+
+        Preference manageAccountPref = (Preference) findPreference("prefManageAccount");
+        manageAccountPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Intent manAcc = new Intent(getApplicationContext(), ManageAccount.class);
+                startActivity(manAcc);
+                overridePendingTransition(R.anim.left_slide_in, R.anim.left_slide_out);
                 return true;
             }
         });

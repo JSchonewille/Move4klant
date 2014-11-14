@@ -18,6 +18,12 @@
             android:summary="Log uit en vergeet het account"
             />
 
+        <Preference
+            android:key="prefManageAccount"
+            android:title="Manage account"
+            android:summary="Wijzig je accountgegevens"
+            />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Meldingen" >
@@ -28,11 +34,6 @@
             android:title="Aanbiedingen" >
         </CheckBoxPreference>
 
-        <Preference
-            android:key="prefLikes"
-            android:title="Categorieën"
-            android:summary="Beheer van welke categorieën je aanbiedingen ontvangt"
-            />
         <Preference
             android:key="prefOffers"
             android:title="Aanbiedingen"

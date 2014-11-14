@@ -1,6 +1,7 @@
 package com.example.jeff.move4klant;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,7 +101,9 @@ public class LikesActivity extends Activity {
                 return true;
             case R.id.saveLikes:
                 saveLikes();
-                onBackPressed();
+                Intent i = new Intent(getApplicationContext(), ManageAccount.class);
+                startActivity(i);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -116,4 +119,5 @@ public class LikesActivity extends Activity {
     public void saveLikes() {
         DatabaseHandler.getInstance(getApplicationContext()).saveLikedCategories(checkedList);
     }
+
 }
