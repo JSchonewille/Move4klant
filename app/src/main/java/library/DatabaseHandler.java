@@ -152,6 +152,7 @@ public class DatabaseHandler {
         });
     }
 
+
     //BEACON FUNCTIONS
     public void updateBeacons(){
         ServerRequestHandler.getAllBeacons(new Response.Listener<JSONArray>() {
