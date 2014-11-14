@@ -60,6 +60,23 @@ public class ServerRequestHandler {
         RequestController.getInstance().addToRequestQueue(req);
     }
 
+    public static void uploadUserImage(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID,  final byte[] image){
+        String URL = Config.EDITLIKESURL;
+
+        JsonArrayRequest req = new JsonArrayRequest(URL, l, el){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params  = new HashMap<String, String>();
+                params.put("customerID", Integer.toString(customerID));
+                params.put("categories", image.toString());
+                return params;
+            }
+        };
+
+        RequestController.getInstance().addToRequestQueue(req);
+    }
+
+
     public static void checkinout(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID){
         String URL = Config.EDITLIKESURL;
 

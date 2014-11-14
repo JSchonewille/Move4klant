@@ -34,7 +34,7 @@ public class DatabaseHandler {
         return _instance;
     }
 
-    //categories FUNCTIONS
+    //CATEGORIES FUNCTIONS
     public void updateCategories(){
         ServerRequestHandler.getAllCategories(new Response.Listener<JSONArray>() {
             @Override
@@ -158,6 +158,38 @@ public class DatabaseHandler {
       return db.getBeaconByMinor(minorID);
     }
 
-    //CHECKIN AND CHECKOUT FUNCTIONS
+    //USER FUNCTIONS
     public void checkinout(int userid){}
+    public void uploadUserImage(int userID, byte[] image){
+        ServerRequestHandler.uploadUserImage(new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                List<Category> catList = db.getLikedCategories();
+                db.resetCategory();
+                List<Category> list = Category.fromJSON(jsonArray);
+
+                Log.d("Image Upload", jsonArray.toString());
+                for (Category cat : list) {
+                    try {
+                        int liked = 0;
+                        for (Category c : catList) {
+                            if (c.getName().equals(cat.getName()))
+                            {liked = 1;}
+                        }
+                        db.addCategory(cat.getID(), cat.getName(), liked);
+
+                    } catch (Exception e) {
+                        Log.d("exception", e.toString());
+                    }
+                    Log.d("Image Upload", "SUCCES");
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+            }
+        }, userID, image);
+    }
+
 }
