@@ -164,30 +164,13 @@ public class DatabaseHandler {
         ServerRequestHandler.uploadUserImage(new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray jsonArray) {
-                List<Category> catList = db.getLikedCategories();
-                db.resetCategory();
-                List<Category> list = Category.fromJSON(jsonArray);
-
                 Log.d("Image Upload", jsonArray.toString());
-                for (Category cat : list) {
-                    try {
-                        int liked = 0;
-                        for (Category c : catList) {
-                            if (c.getName().equals(cat.getName()))
-                            {liked = 1;}
-                        }
-                        db.addCategory(cat.getID(), cat.getName(), liked);
-
-                    } catch (Exception e) {
-                        Log.d("exception", e.toString());
-                    }
-                    Log.d("Image Upload", "SUCCES");
-
+                Log.d("Image Upload", "SUCCES");
                 }
-            }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                Log.d("Image Upload", volleyError.toString());
             }
         }, userID, image);
     }
