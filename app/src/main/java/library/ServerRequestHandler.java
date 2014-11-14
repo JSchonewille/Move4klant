@@ -1,5 +1,7 @@
 package library;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -62,13 +64,13 @@ public class ServerRequestHandler {
 
     public static void uploadUserImage(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID,  final byte[] image){
         String URL = Config.UPLOADIMAGE;
-
+        Log.e("");
         JsonArrayRequest req = new JsonArrayRequest(URL, l, el){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params  = new HashMap<String, String>();
                 params.put("customerID", Integer.toString(customerID));
-                params.put("file", image.toString());
+                params.put("file",new String(image));
                 return params;
             }
 
