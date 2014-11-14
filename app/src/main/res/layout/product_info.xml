@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="ProductTitel"
-        android:id="@+id/ProductTitle"
+        android:id="@+id/Product_Title"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         style="@style/HomeActivity"/>
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Product informatie. \n Hier staat veel productinformatie. Dit bericht ontvangt de gebruiker wanneer hij zijn telefoon dichtbij een beacon houd die bij een specifiek product of productgroep hoort. In plaats van een plaatje kan hierboven ook een filmpje of iets dergelijks verschijnen."
-        android:id="@+id/offerMessage"
+        android:id="@+id/product_description"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         style="@style/DetailInfo"/>

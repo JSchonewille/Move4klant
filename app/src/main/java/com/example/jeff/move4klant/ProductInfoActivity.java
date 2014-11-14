@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import library.DatabaseHandler;
+import library.Product;
 
 /**
  * Created by Sander on 7-11-2014.
@@ -16,11 +20,16 @@ public class ProductInfoActivity extends Activity {
         setContentView(R.layout.product_info);
         Bundle bundle = getIntent().getExtras();
 
-        int offerID = bundle.getInt("productID");
-      //  Offer offer = DatabaseHandler.getInstance(getApplicationContext()).g;
+        int productID = bundle.getInt("productID");
+        Product product = DatabaseHandler.getInstance(getApplicationContext()).getProductByID(productID);
 
-       // TextView t = (TextView) findViewById(R.id.offerMessage);
-       // t.setText(offer.getDescription());
+        if (product!=null) {
+            TextView t = (TextView) findViewById(R.id.Product_Title);
+            t.setText(product.getName());
+
+            TextView t2 = (TextView) findViewById(R.id.product_description);
+            t2.setText(product.getDescription());
+        }
     }
 
     @Override

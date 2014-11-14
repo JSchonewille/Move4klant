@@ -46,6 +46,12 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     private static final String KEY_OFFERCATEGORY = "offer_category";
     private static final String KEY_OFFERDESCRIPTION = "offer_description";
     private static final String KEY_OFFERIMAGE = "offer_image";
+    //Product Table Column names
+    private static final String KEY_PRODUCT_ID = "productID";
+    private static final String KEY_PRODUCT_NAME = "name";
+    private static final String KEY_PRODUCT_CATEGORYID = "categoryID";
+    private static final String KEY_PRODUCT_IMAGE = "image";
+    private static final String KEY_PRODUCT_DESCRIPTION = "description";
     //Beacon Table Column names
     private static final String KEY_BEACON_ID = "id_beacon";
     private static final String KEY_BEACON_PRODUCTID = "beaccon_product";
@@ -134,7 +140,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     }
 
     /**
-     * Storing user details in database
+     * uSER FUNCTIONS
      * */
     public void addUser(String fname, String lname, String email, String uname, String uid, String created_at) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -149,10 +155,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.insert(TABLE_LOGIN, null, values);
         db.close(); // Closing database connection
     }
-
-    /**
-     * Getting user data from database
-     * */
     public HashMap getUserDetails(){
         HashMap user = new HashMap();
         String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
@@ -173,10 +175,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         // return user
         return user;
     }
-    /**
-     * Getting user login status
-     * return true if rows are there in table
-     * */
     public int getRowCount() {
         String countQuery = "SELECT  * FROM " + TABLE_LOGIN;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -273,7 +271,71 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Product functions
+     * */
 
+    public void addProduct(int id, String name, int categoryID, String image, String description) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_PRODUCT_ID, id); //
+        values.put(KEY_PRODUCT_NAME, name); //
+        values.put(KEY_PRODUCT_CATEGORYID, categoryID); //
+        values.put(KEY_PRODUCT_IMAGE, image); //
+        values.put(KEY_PRODUCT_DESCRIPTION, description); //
+        // Inserting Row
+        db.insert(TABLE_PRODUCTS, null, values);
+        db.close(); // Closing database connection
+    }
+    public ArrayList<Product> getAllProducts(){
+        ArrayList<Product> list = new ArrayList<Product>();
+        String selectQuery = "SELECT  * FROM " + TABLE_PRODUCTS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            do {
+                int id = Integer.parseInt(cursor.getString(0));
+                String name = cursor.getString(1);
+                int categoryID = Integer.parseInt(cursor.getString(2));
+                String image = cursor.getString(3);
+                String description = cursor.getString(4);
+
+                Product p = new Product(id, name, categoryID, image, description);
+                list.add(p);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        // return category list
+        return list;
+    }
+    public Product getProductByID(int id){
+        Product p = null;
+        String selectQuery = "SELECT * FROM " + TABLE_PRODUCTS +
+                             " WHERE " + KEY_PRODUCT_ID + " = " + id;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            do {
+                int pid = Integer.parseInt(cursor.getString(0));
+                String name = cursor.getString(1);
+                int categoryID = Integer.parseInt(cursor.getString(2));
+                String image = cursor.getString(3);
+                String description = cursor.getString(4);
+
+                p = new Product(pid, name, categoryID, image, description);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        // return category list
+        return p;
+    }
     /**
      * Beacon functions
      * */
@@ -358,6 +420,12 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.delete(TABLE_OFFERS, null, null);
         db.close();
     }
+    public void resetProductsTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete All Rows
+        db.delete(TABLE_PRODUCTS, null, null);
+        db.close();
+    }
     public void resetCategory(){
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
@@ -396,6 +464,13 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
                 + KEY_BEACON_MAJOR + " INTEGER,"
                 + KEY_BEACON_MINOR + " INTEGER" + ")";
         db.execSQL(CREATE_BEACONS_TABLE);
+        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
+                + KEY_PRODUCT_ID + " INTEGER PRIMARY KEY,"
+                + KEY_PRODUCT_NAME + " TEXT, "
+                + KEY_PRODUCT_CATEGORYID + " INTEGER,"
+                + KEY_PRODUCT_IMAGE + " TEXT,"
+                + KEY_PRODUCT_DESCRIPTION + " TEXT" + ")";
+        db.execSQL(CREATE_PRODUCTS_TABLE);
     }
 
 

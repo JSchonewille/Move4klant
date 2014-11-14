@@ -16,9 +16,7 @@ public class home extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        DatabaseHandler.getInstance(getApplicationContext()).updateOffers();
-        DatabaseHandler.getInstance(getApplicationContext()).updateBeacons();
-        DatabaseHandler.getInstance(getApplicationContext()).updateCategories();
+        DatabaseHandler.getInstance(getApplicationContext()).updateAll();
     }
 
     public void onClickManageProfile(View v)
@@ -43,6 +41,8 @@ public class home extends Activity {
                 return true;
             case R.id.ad_test:
                 showAd(1);
+                return true; case R.id.product_test:
+                showProduct(1);
                 return true;
             case R.id.action_settings:
                 Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -69,6 +69,10 @@ public class home extends Activity {
     private void showAd(int id) {
         Intent i = new Intent(getApplicationContext(), OfferActivity.class);
         i.putExtra("offerID", id);
+        startActivity(i);
+    } private void showProduct(int id) {
+        Intent i = new Intent(getApplicationContext(), ProductInfoActivity.class);
+        i.putExtra("productID", id);
         startActivity(i);
     }
 }
