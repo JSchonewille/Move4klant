@@ -360,11 +360,11 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
             do {
-                int id = cursor.getInt(1);
-                int productID= cursor.getInt(2);
-                int offerID= cursor.getInt(3);
-                int major= cursor.getInt(4);
-                int minor= cursor.getInt(5);
+                int id = cursor.getInt(0);
+                int productID= cursor.getInt(1);
+                int offerID= cursor.getInt(2);
+                int major= cursor.getInt(3);
+                int minor= cursor.getInt(4);
                 ibeacon b = new ibeacon(id, offerID,productID,major,minor);
                 list.add(b);
             } while (cursor.moveToNext());

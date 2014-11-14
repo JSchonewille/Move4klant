@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -19,13 +20,14 @@ import java.util.List;
 import library.DatabaseHandler;
 import library.Offer;
 import library.PrefUtils;
+import library.Smoothener;
 import library.ibeacon;
 
 public class Bluetoothscanner extends Service {
     // array used to decode BLE byte array
     static final char[] hexArray = "0123456789ABCDEF".toCharArray();
     // the TX of when the phone is held to the beacon
-    private static final Integer DISTANCE_CLOSE = -70;
+    private static final Integer DISTANCE_CLOSE = -63;
     // time passive scanning goes into sleeping mode
     private static final Integer TIMEOUTTIME = 30 * 1000;
     // string used for our broadcast listener
@@ -41,7 +43,7 @@ public class Bluetoothscanner extends Service {
     // the scanmode , 0 means pasive , 1 means active , 99 is default value
     private int SCANMODE = 99;
     // the major of our beacons
-    private int ACTIVEMAJOR = 31691;
+    private int ACTIVEMAJOR = 31690;
     // counter used for passive mode
     private int counter = 0;
     // counter used for passive mode
@@ -51,6 +53,7 @@ public class Bluetoothscanner extends Service {
     // list with all the offers related to the users likes
     private List<Offer> offerList;
     // the implementation of our bluetooth scan
+    private Smoothener smooth;
 
     //region bluetooth LE callback
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -93,37 +96,40 @@ public class Bluetoothscanner extends Service {
                     minor = (scanRecord[startByte + 22] & 0xff) * 0x100 + (scanRecord[startByte + 23] & 0xff);
                     tx = (scanRecord[startByte + 24]);
                 }
+
+                Integer adjrssi = smooth.smoothen(Irssi,major,minor);
                 // logica for beacons detected comes here
                 // if major and minor in beacon list
 
                 if (major != ACTIVEMAJOR) {
                     counter++;
-                    Log.d("bluetooth action", "major not found , counter = " + counter);
+                    //Log.d("bluetooth action", "major not found , counter = " + counter);
                 }
 
                 if (major == ACTIVEMAJOR) {
                     SCANMODE = 1;
                     counter = 0;
-                    Log.d("bluetooth action", "major found, set scan to active");
+                   // Log.d("bluetooth action", "major found, set scan to active");
                     for (ibeacon i : ibeaconList) {
                         if (major == i.getMajor() && minor == i.getMinor()) {
-                            if (tx > DISTANCE_CLOSE) {
-                                if (!AppActive())
-
-                                    Log.d("bluetooth result", "Holding phone to beacon");
-                                Intent j = new Intent(getApplicationContext(), OfferActivity.class);
+                            if (adjrssi > DISTANCE_CLOSE && !AppActive()) {
+                                Log.d("bluetooth result" + tx, "Holding phone to beacon");
+                                Intent j = new Intent(getApplicationContext(), ProductInfoActivity.class);
                                 j.putExtra("productID", i.getProductID());
+                                j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(j);
                             }
                             // far away action
-                            else if (tx < DISTANCE_CLOSE) {
+                            else  {
                                 // check if we already used this offer
+                                Date i4 = Usedoffers.get(i.getOfferID());
                                 if (Usedoffers.get(i.getOfferID()) == null) {
                                     for (Offer o : offerList) {
                                         if (o.getID() == i.getOfferID()) {
                                             Log.d("bluetooth result", "far away action");
                                             Intent j = new Intent(getApplicationContext(), OfferActivity.class);
                                             j.putExtra("offerID", i.getOfferID());
+                                            j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                             Usedoffers.put(i.getOfferID(), new Date());
                                             startActivity(j);
                                         }
@@ -226,6 +232,7 @@ public class Bluetoothscanner extends Service {
             registerReceiver(serviceReceiver, intentFilter);
         }
         getconfigs();
+        smooth =  new Smoothener(8);
         Usedoffers = new HashMap<Integer, Date>();
     }
 
@@ -278,13 +285,13 @@ public class Bluetoothscanner extends Service {
 
     public void getconfigs() {
         ibeaconList = DatabaseHandler.getInstance(getApplicationContext()).getAllBeacons();
-        offerList = DatabaseHandler.getInstance(getApplicationContext()).getOfferByLikedCategories();
-
+        //offerList = DatabaseHandler.getInstance(getApplicationContext()).getOfferByLikedCategories();
+        offerList = DatabaseHandler.getInstance(getApplicationContext()).getAllOffers();
     }
 
     public boolean AppActive() {
         // checks if the app is running, so we wont refresh it if its active
-        String class1 = "";
+        String class1 = "com.example.jeff.move4klant.ProductInfoActivity";
         String class2 = "";
         String class3 = "";
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
