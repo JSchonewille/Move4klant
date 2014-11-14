@@ -18,6 +18,19 @@
         android:label="@string/app_name"
         android:name="com.example.jeff.move4klant.RequestController"
         android:theme="@android:style/Theme.DeviceDefault">
+        <receiver android:name=".BroadcastReciever" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".Bluetoothscanner"
+            android:enabled="true"
+            android:exported="true">
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+        </service>
+
         <activity
             android:name=".home"
             android:label="@string/app_name" >

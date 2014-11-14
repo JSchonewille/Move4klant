@@ -18,6 +18,38 @@ public class ibeacon {
    // Qrmaker qmaker;
    // private Bitmap Qr;
 
+    public int getMajor() {
+        return major;
+    }
+
+    public void setMajor(int major) {
+        this.major = major;
+    }
+
+    public int getMinor() {
+        return minor;
+    }
+
+    public void setMinor(int minor) {
+        this.minor = minor;
+    }
+
+    public int getOfferID() {
+        return offerID;
+    }
+
+    public void setOfferID(int offerID) {
+        this.offerID = offerID;
+    }
+
+    public int getProductID() {
+        return productID;
+    }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
+    }
+
     public ibeacon(int beaconID, int offerID, int productID, int majorid, int minorid) {
         major = majorid;
         minor = minorid;
