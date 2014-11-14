@@ -273,7 +273,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     /**
      * Product functions
      * */
-
     public void addProduct(int id, String name, int categoryID, String image, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -335,6 +334,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         // return category list
         return p;
     }
+
     /**
      * Beacon functions
      * */
