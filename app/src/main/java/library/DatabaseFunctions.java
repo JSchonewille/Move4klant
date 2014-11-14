@@ -200,7 +200,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.insert(TABLE_OFFERS, null, values);
         db.close(); // Closing database connection
     }
-    public ArrayList<Offer> getSavedOffers(){
+    public ArrayList<Offer> getAllOffers(){
         ArrayList<Offer> list = new ArrayList<Offer>();
         String selectQuery = "SELECT  * FROM " + TABLE_OFFERS;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -273,7 +273,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     /**
      * Product functions
      * */
-
     public void addProduct(int id, String name, int categoryID, String image, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -335,6 +334,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         // return category list
         return p;
     }
+
     /**
      * Beacon functions
      * */
