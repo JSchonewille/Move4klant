@@ -119,9 +119,8 @@ public class DatabaseHandler {
             }
         });
     }
-    public Offer getOfferById(int offerID){
-        return db.getOfferByID(offerID);
-    }
+    public Offer getOfferById(int offerID){return db.getOfferByID(offerID);}
+    public ArrayList<Offer> getOfferByLikedCategories (){return db.getOffersByLikedCategories();}
 
     //BEACON FUNCTIONS
     public void updateBeacons(){
