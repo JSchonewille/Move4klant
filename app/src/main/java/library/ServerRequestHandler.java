@@ -64,7 +64,7 @@ public class ServerRequestHandler {
 
     public static void uploadUserImage(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID,  final byte[] image){
         String URL = Config.UPLOADIMAGE;
-        Log.e("");
+        Log.e("Image", new String(image));
         JsonArrayRequest req = new JsonArrayRequest(URL, l, el){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
