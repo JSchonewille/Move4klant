@@ -68,9 +68,10 @@ public class ServerRequestHandler {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params  = new HashMap<String, String>();
                 params.put("customerID", Integer.toString(customerID));
-                params.put("categories", image.toString());
+                params.put("file", image.toString());
                 return params;
             }
+
         };
 
         RequestController.getInstance().addToRequestQueue(req);
