@@ -47,9 +47,14 @@ public class ServerRequestHandler {
         RequestController.getInstance().addToRequestQueue(req);
     }
 
+    public static void getAllProducts(Response.Listener<JSONArray> l, Response.ErrorListener el){
+        String URL = Config.GETALLPRODUCTS;
+        JsonArrayRequest req = new JsonArrayRequest(URL, l, el);
+        RequestController.getInstance().addToRequestQueue(req);
+    }
+
     public static void uploadLikes(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID,  final Integer[]categories){
         String URL = Config.EDITLIKESURL;
-
         JsonArrayRequest req = new JsonArrayRequest(URL, l, el){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -73,6 +78,10 @@ public class ServerRequestHandler {
                 params.put("customerID", Integer.toString(customerID));
                 params.put("file", encodeImage(image));
                 return params;
+            }
+            @Override
+            public int getMethod() {
+                return Method.POST;
             }
 
         };
@@ -100,5 +109,7 @@ public class ServerRequestHandler {
     public static String encodeImage(byte[] imageByteArray) {
         return Base64.encodeToString(imageByteArray, 1);
     }
+
+
 
 }
