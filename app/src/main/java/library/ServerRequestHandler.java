@@ -1,5 +1,6 @@
 package library;
 
+import android.util.Base64;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -70,7 +71,7 @@ public class ServerRequestHandler {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params  = new HashMap<String, String>();
                 params.put("customerID", Integer.toString(customerID));
-                params.put("file",new String(image));
+                params.put("file", encodeImage(image));
                 return params;
             }
 
@@ -94,6 +95,10 @@ public class ServerRequestHandler {
         };
 
         RequestController.getInstance().addToRequestQueue(req);
+    }
+
+    public static String encodeImage(byte[] imageByteArray) {
+        return Base64.encodeToString(imageByteArray, 1);
     }
 
 }
