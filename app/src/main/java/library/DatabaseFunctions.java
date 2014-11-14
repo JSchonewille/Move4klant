@@ -136,11 +136,10 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     }
     public void saveLikedCategories (List<Category> list){
 
-
     }
 
     /**
-     * uSER FUNCTIONS
+     * User functions
      * */
     public void addUser(String fname, String lname, String email, String uname, String uid, String created_at) {
         SQLiteDatabase db = this.getWritableDatabase();
