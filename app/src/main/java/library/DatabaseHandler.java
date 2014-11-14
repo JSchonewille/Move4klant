@@ -34,7 +34,7 @@ public class DatabaseHandler {
         return _instance;
     }
 
-    //categories FUNCTIONS
+    //CATEGORIES FUNCTIONS
     public void updateCategories(){
         ServerRequestHandler.getAllCategories(new Response.Listener<JSONArray>() {
             @Override
@@ -122,6 +122,36 @@ public class DatabaseHandler {
     public Offer getOfferById(int offerID){return db.getOfferByID(offerID);}
     public ArrayList<Offer> getOfferByLikedCategories (){return db.getOffersByLikedCategories();}
 
+    //PRODUCTS FUNCTIONS
+    public ArrayList<Product> getAllProducts(){return db.getAllProducts();}
+    public Product getProductByID(int id){return db.getProductByID(id);}
+    public void updateProducts(){
+        ServerRequestHandler.getAllProducts(new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+
+                db.resetProductsTable();
+                List<Product> list = Product.fromJSON(jsonArray);
+
+                Log.d("Products Update", jsonArray.toString());
+                for (int i = 0; i<list.size();i++ ){
+                    try {
+                        db.addProduct(list.get(i).getProductID(), list.get(i).getName(), list.get(i).getCategoryID(),list.get(i).getImage(),  list.get(i).getDescription());
+                        Log.d("Product Update", "SUCCES");
+                    }
+                    catch (Exception e){
+                        Log.d("exception", e.toString());
+                    }
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+            }
+        });
+    }
+
     //BEACON FUNCTIONS
     public void updateBeacons(){
         ServerRequestHandler.getAllBeacons(new Response.Listener<JSONArray>() {
@@ -158,6 +188,30 @@ public class DatabaseHandler {
       return db.getBeaconByMinor(minorID);
     }
 
-    //CHECKIN AND CHECKOUT FUNCTIONS
+    //USER FUNCTIONS
     public void checkinout(int userid){}
+    public void uploadUserImage(int userID, byte[] image){
+        ServerRequestHandler.uploadUserImage(new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                Log.d("Image Upload", jsonArray.toString());
+                Log.d("Image Upload", "SUCCES");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d("Image Upload", volleyError.toString());
+            }
+        }, userID, image);
+    }
+
+
+    //OTHER FUNCTIONS
+    public void updateAll(){
+        updateProducts();
+        updateCategories();
+        updateBeacons();
+        updateOffers();
+    }
+
 }

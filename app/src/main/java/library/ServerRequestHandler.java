@@ -1,5 +1,8 @@
 package library;
 
+import android.util.Base64;
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -44,9 +47,14 @@ public class ServerRequestHandler {
         RequestController.getInstance().addToRequestQueue(req);
     }
 
+    public static void getAllProducts(Response.Listener<JSONArray> l, Response.ErrorListener el){
+        String URL = Config.GETALLPRODUCTS;
+        JsonArrayRequest req = new JsonArrayRequest(URL, l, el);
+        RequestController.getInstance().addToRequestQueue(req);
+    }
+
     public static void uploadLikes(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID,  final Integer[]categories){
         String URL = Config.EDITLIKESURL;
-
         JsonArrayRequest req = new JsonArrayRequest(URL, l, el){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -59,6 +67,28 @@ public class ServerRequestHandler {
 
         RequestController.getInstance().addToRequestQueue(req);
     }
+
+    public static void uploadUserImage(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID,  final byte[] image){
+        String URL = Config.UPLOADIMAGE;
+        Log.e("Image", new String(image));
+        JsonArrayRequest req = new JsonArrayRequest(URL, l, el){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params  = new HashMap<String, String>();
+                params.put("customerID", Integer.toString(customerID));
+                params.put("file", encodeImage(image));
+                return params;
+            }
+            @Override
+            public int getMethod() {
+                return Method.POST;
+            }
+
+        };
+
+        RequestController.getInstance().addToRequestQueue(req);
+    }
+
 
     public static void checkinout(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID){
         String URL = Config.EDITLIKESURL;
@@ -75,5 +105,11 @@ public class ServerRequestHandler {
 
         RequestController.getInstance().addToRequestQueue(req);
     }
+
+    public static String encodeImage(byte[] imageByteArray) {
+        return Base64.encodeToString(imageByteArray, 1);
+    }
+
+
 
 }
