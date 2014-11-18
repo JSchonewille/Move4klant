@@ -228,7 +228,7 @@ public class LoginActivity extends Activity {
                                 logout.logoutUser(getApplicationContext());
 
                                 // TODO add full user info to db (street, postalcode ect)
-                                db.addUser(json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), "", "", "", "", "", json_user.getString(KEY_EMAIL));
+                                db.addUser(json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), "", "", "", "",json_user.getString(KEY_EMAIL), "" );
                                 /**
                                  *If JSON array details are stored in SQlite it launches the User Panel.
                                  **/

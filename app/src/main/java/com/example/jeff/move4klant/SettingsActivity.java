@@ -77,7 +77,7 @@ public class SettingsActivity extends PreferenceActivity {
     public void disconnectAccount() {
         PrefUtils.saveToPrefs(SettingsActivity.this, getString(R.string.PREFS_LOGIN_USERNAME_KEY), "");
         PrefUtils.saveToPrefs(SettingsActivity.this, getString(R.string.PREFS_LOGIN_PASSWORD_KEY), "");
-        PrefUtils.getFromPrefs(SettingsActivity.this, getString(R.string.PREFS_AUTO_LOGIN_KEY), "false");
+        PrefUtils.saveToPrefs(SettingsActivity.this, getString(R.string.PREFS_AUTO_LOGIN_KEY), "false");
 
         Toast.makeText(getApplicationContext(),"Account ontkoppeld", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(getApplicationContext(), LoginActivity.class);
