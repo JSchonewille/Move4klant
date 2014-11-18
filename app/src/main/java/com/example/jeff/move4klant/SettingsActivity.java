@@ -63,16 +63,11 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
-
     @Override
     public void onBackPressed(){
         finish();
         this.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
     }
-
-
-
-
 
     public void disconnectAccount() {
         PrefUtils.saveToPrefs(SettingsActivity.this, getString(R.string.PREFS_LOGIN_USERNAME_KEY), "");
@@ -84,5 +79,4 @@ public class SettingsActivity extends PreferenceActivity {
         startActivity(i);
         finish();
     }
-
 }

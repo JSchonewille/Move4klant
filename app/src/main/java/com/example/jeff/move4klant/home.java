@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
+
+import java.lang.reflect.Field;
 
 import library.DatabaseHandler;
 
@@ -17,6 +20,7 @@ public class home extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         DatabaseHandler.getInstance(getApplicationContext()).updateAll();
+        getOverflowMenu();
     }
 
     public void onClickManageProfile(View v)
@@ -74,5 +78,20 @@ public class home extends Activity {
         Intent i = new Intent(getApplicationContext(), ProductInfoActivity.class);
         i.putExtra("productID", id);
         startActivity(i);
+    }
+
+
+    private void getOverflowMenu() {
+
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
