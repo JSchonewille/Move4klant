@@ -24,19 +24,22 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "ibeacon";
     // Table names
-    private static final String TABLE_LOGIN = "login";
+    private static final String TABLE_USER = "user";
     private static final String TABLE_CATEGORY = "category";
     private static final String TABLE_BEACONS = "beacons";
     private static final String TABLE_OFFERS = "offers";
     private static final String TABLE_PRODUCTS = "products";
-    // Login Table Column names
+    // User Table Column names
     private static final String KEY_ID = "id";
     private static final String KEY_FIRSTNAME = "fname";
     private static final String KEY_LASTNAME = "lname";
+    private static final String KEY_STREET = "street";
+    private static final String KEY_HOUSENUMBER = "houseNumber";
+    private static final String KEY_POSTALCODE = "postalCode";
+    private static final String KEY_CITY = "city";
     private static final String KEY_EMAIL = "email";
-    private static final String KEY_USERNAME = "uname";
-    private static final String KEY_UID = "uid";
-    private static final String KEY_CREATED_AT = "created_at";
+    private static final String KEY_FILEPATH = "filePath";
+
     //Category Table Column names
     private static final String KEY_CATEGORYID = "id";
     private static final String KEY_CATEGORYNAME = "categoryName";
@@ -70,11 +73,13 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
        createTables(db);
     }
+
     // Upgrading database
     @Override
+    //TODO Moeten hier nog mee tabellen bij?
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         // Create tables again
         onCreate(db);
     }
@@ -141,22 +146,25 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     /**
      * User functions
      * */
-    public void addUser(String fname, String lname, String email, String uname, String uid, String created_at) {
+    public void addUser(String fname, String lname, String street, String postalCode, String houseNumber, String city, String email, String filePath) {
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_FIRSTNAME, fname); // FirstName
         values.put(KEY_LASTNAME, lname); // LastName
+        values.put(KEY_STREET, street); // Street
+        values.put(KEY_POSTALCODE, postalCode); // PostalCode
+        values.put(KEY_HOUSENUMBER, houseNumber); // HouseNumber
+        values.put(KEY_CITY, city); // City
         values.put(KEY_EMAIL, email); // Email
-        values.put(KEY_USERNAME, uname); // UserName
-        values.put(KEY_UID, uid); // Email
-        values.put(KEY_CREATED_AT, created_at); // Created At
+        values.put(KEY_FILEPATH, filePath); // filePath
         // Inserting Row
-        db.insert(TABLE_LOGIN, null, values);
+        db.insert(TABLE_USER, null, values);
         db.close(); // Closing database connection
     }
-    public HashMap getUserDetails(){
+    public HashMap getUser(){
         HashMap user = new HashMap();
-        String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
+        String selectQuery = "SELECT  * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // Move to first row
@@ -164,10 +172,12 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         if(cursor.getCount() > 0){
             user.put("fname", cursor.getString(1));
             user.put("lname", cursor.getString(2));
-            user.put("email", cursor.getString(3));
-            user.put("uname", cursor.getString(4));
-            user.put("uid", cursor.getString(5));
-            user.put("created_at", cursor.getString(6));
+            user.put("street", cursor.getString(3));
+            user.put("houseNumber", cursor.getString(4));
+            user.put("postalCode", cursor.getString(5));
+            user.put("city", cursor.getString(6));
+            user.put("email", cursor.getString(7));
+            user.put("filePath", cursor.getString(8));
         }
         cursor.close();
         db.close();
@@ -175,7 +185,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         return user;
     }
     public int getRowCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_LOGIN;
+        String countQuery = "SELECT  * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         int rowCount = cursor.getCount();
@@ -401,10 +411,10 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     /**
      * Empty tables
      * */
-    public void resetTables(){
+    public void resetUser(){
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
-        db.delete(TABLE_LOGIN, null, null);
+        db.delete(TABLE_USER, null, null);
         db.close();
     }
     public void resetBeaconTable(){
@@ -436,15 +446,17 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
      * Create tables
      * */
     public void createTables(SQLiteDatabase db){
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
+        String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_FIRSTNAME + " TEXT,"
                 + KEY_LASTNAME + " TEXT,"
+                + KEY_STREET + " TEXT,"
+                + KEY_HOUSENUMBER + " TEXT,"
+                + KEY_POSTALCODE + " TEXT,"
+                + KEY_CITY + " TEXT,"
                 + KEY_EMAIL + " TEXT UNIQUE,"
-                + KEY_USERNAME + " TEXT,"
-                + KEY_UID + " TEXT,"
-                + KEY_CREATED_AT + " TEXT" + ")";
-        db.execSQL(CREATE_LOGIN_TABLE);
+                + KEY_FILEPATH + " TEXT" + ")";
+        db.execSQL(CREATE_USER_TABLE);
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
                 + KEY_CATEGORYID + " INTEGER PRIMARY KEY,"
                 + KEY_CATEGORYNAME + " TEXT,"

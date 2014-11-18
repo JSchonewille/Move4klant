@@ -11,22 +11,22 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
 
 import library.Category;
+import library.DatabaseFunctions;
 import library.DatabaseHandler;
 
 
 public class ManageAccount extends Activity {
 
     private TextView tv_firstName, tv_lastName, tv_street, tv_postalCode, tv_city, tv_email;
-    private DatabaseHandler db;
     private List<Category> savedLikes;
     private ImageView profileImage;
 
 
     //dummy data
-    private int db_User_ID       = 1;
     private String db_FirstName  = "Leo";
     private String db_LastName   = "van der Zee";
     private String db_Street     = "Zuiderkerkstraat";
@@ -42,14 +42,31 @@ public class ManageAccount extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_account);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        user = new User(getApplicationContext(), db_User_ID, db_FirstName,db_LastName,db_Street,db_HouseNumber,db_PostalCode,db_City,db_email);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // TODO Moet dit een nieuwe zijn? of een verwijzing naar een eerder gecreerde
+        DatabaseFunctions db = new DatabaseFunctions(getApplicationContext());
+
+        try {
+            db.getUser().get("fname");
+            HashMap userDetails = db.getUser();
+            user = new User(getApplication(),userDetails.get("fname").toString(), userDetails.get("lname").toString(), userDetails.get("street").toString(), userDetails.get("houseNumber").toString(), userDetails.get("postalCode").toString(), userDetails.get("city").toString(), userDetails.get("email").toString());
+            Log.v("Er was al een user.", "");
+        }
+        catch (Exception e){
+            user = new User(getApplicationContext(), db_FirstName,db_LastName,db_Street,db_HouseNumber,db_PostalCode,db_City,db_email);
+            db.addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(),  user.getEmail(), "");
+            Log.v("Er was nog geen user", ".");
+        }
+
+
+
+
 
         TableLayout table = (TableLayout)findViewById(R.id.table_ManageAccount_Category);
         profileImage = (ImageView)findViewById(R.id.ivImage);
         profileImage.setImageBitmap(user.getImage());
 
-        db = new DatabaseHandler();
 
 
         tv_firstName    = (TextView)findViewById(R.id.tvName);

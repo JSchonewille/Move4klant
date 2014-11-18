@@ -133,7 +133,7 @@ public class APIFunctions {
      * */
     public boolean logoutUser(Context context){
         DatabaseFunctions db = new DatabaseFunctions(context);
-        db.resetTables();
+        db.resetUser();
         return true;
     }
 

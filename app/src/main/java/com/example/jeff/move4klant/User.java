@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import java.io.File;
-
 /**
  * Created by Leo on 12-11-14.
  */
@@ -21,13 +19,10 @@ public class User {
     private String email;
     private Bitmap image;
     private Byte[] byteArray;
-    private File filePath;
+    private String filePath;
 
-    public User(Context c, int user_ID, String name, String lastName, String street, String houseNumber,
+    public User(Context c, String name, String lastName, String street, String houseNumber,
                               String postalCode, String city, String email){
-
-        // WIJZIG USER ID NOG NAAR HOOGSTE IN ONLINE DB
-        this.userID = user_ID;
         this.setName(name);
         this.setLastName(lastName);
         this.setStreet(street);
@@ -37,11 +32,18 @@ public class User {
         this.setEmail(email);
         Bitmap bmp = BitmapFactory.decodeResource(c.getResources(), R.drawable.emptyprofile);
         this.image = bmp;
-
+        this.filePath = "";
     }
 
-    public void setImage(Bitmap bitmap, File filePath){
+    public void setImage(Bitmap bitmap){
         this.image = bitmap;
+    }
+
+    public String getFilePath(){
+        return filePath;
+    }
+
+    public void setFilePath(String filePath){
         this.filePath = filePath;
     }
 
@@ -103,6 +105,10 @@ public class User {
 
     public Bitmap getImage() {
         return image;
+    }
+
+    public void setUserID (int user_ID){
+        this.userID = user_ID;
     }
 
     public int getUserID() {

@@ -222,7 +222,12 @@ public class RegisterActivity extends Activity {
                                  **/
                                 APIFunctions logout = APIFunctions.getInstance();
                                 logout.logoutUser(getApplicationContext());
-                                db.addUser(json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), json_user.getString(KEY_EMAIL), json_user.getString(KEY_USERNAME), json_user.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
+                                db.addUser(json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), "", "", "", "", json_user.getString(KEY_EMAIL), "");
+
+                                //TODO get additional info from user login (street, postalcode ect)
+                                //User user = new User(getApplication(), json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), ??, ??, ??, ??, json_user.getString(KEY_EMAIL));
+                                // TODO set userID after getting ID from server
+                                //user.setUserID(?????);
 
                                 PrefUtils.saveToPrefs(RegisterActivity.this, getString(R.string.PREFS_LOGIN_USERNAME_KEY), inputEmail.getText().toString());
                                 PrefUtils.saveToPrefs(RegisterActivity.this, getString(R.string.PREFS_LOGIN_PASSWORD_KEY), inputPassword.getText().toString());
@@ -247,7 +252,7 @@ public class RegisterActivity extends Activity {
                                 Toast.makeText(context, "Invalid email",  Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                           Toast.makeText(context, "Error occured in registration", Toast.LENGTH_SHORT).show();
+                           Toast.makeText(context, "Error occurred in registration", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (JSONException e) {

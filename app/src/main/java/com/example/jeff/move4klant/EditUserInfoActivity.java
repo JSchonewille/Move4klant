@@ -21,13 +21,17 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 
 import library.Category;
+import library.DatabaseFunctions;
 import library.DatabaseHandler;
 
 
@@ -40,17 +44,8 @@ public class EditUserInfoActivity extends Activity {
     private byte[] byteArray;
     private List<Category> savedLikes;
     private Button changeCategory;
-
-
-    //dummy data
-    private int db_User_ID       = 1;
-    private String db_FirstName  = "Leo";
-    private String db_LastName   = "van der Zee";
-    private String db_Street     = "Zuiderkerkstraat";
-    private String db_HouseNumber= "27F";
-    private String db_PostalCode = "8011 HE";
-    private String db_City       = "Zwolle";
-    private String db_email      = "lzee100@gmail.com";
+    private Boolean response = false;
+    private DatabaseFunctions db;
 
     User user;
 
@@ -58,11 +53,16 @@ public class EditUserInfoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_info);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         TableLayout table = (TableLayout)findViewById(R.id.tableViewCategory_EditUserInfo);
-        user = new User(getApplication(), db_User_ID, db_FirstName,db_LastName,db_Street,db_HouseNumber,db_PostalCode,db_City,db_email);
+
+        db = new DatabaseFunctions(getApplicationContext());
+
+        HashMap userDetails = db.getUser();
+
+        user = new User(getApplication(),userDetails.get("fname").toString(), userDetails.get("lname").toString(), userDetails.get("street").toString(), userDetails.get("houseNumber").toString(), userDetails.get("postalCode").toString(), userDetails.get("city").toString(), userDetails.get("email").toString());
 
         etName          = (EditText)findViewById(R.id.etName);
         etLastName      = (EditText)findViewById(R.id.etLastName);
@@ -149,12 +149,15 @@ public class EditUserInfoActivity extends Activity {
                 if (email.matches("")){
                     email = etEmail.getHint().toString();
                 }
+                Log.v("filePath: ", user.getFilePath());
 
                 // reset values of the user
-                user = new User(getApplicationContext(), db_User_ID, name, lastName, street, houseNumber, postalCode, city, email);
-                //user.setImage(bitmap);
-                // send user to db and update server
-                DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
+                user = new User(getApplicationContext(), name, lastName, street, houseNumber, postalCode, city, email);
+                db.resetUser();
+                db.addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), user.getFilePath());
+                user.setImage(bitmap);
+                //TODO send user to db and update server
+                //DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
 
 
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);
@@ -188,49 +191,31 @@ public class EditUserInfoActivity extends Activity {
 
         if (resultCode == RESULT_OK){
             Uri targetUri = data.getData();
-            // save image to sd card
-            boolean success = false;
-            File sdCardDirectory = Environment.getExternalStorageDirectory();
-            File image = new File(sdCardDirectory, "ProfileImage.png");
-            FileOutputStream outStream;
             try {
+                // get image from selection
                 bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
                 imageView.setImageBitmap(bitmap);
-                //saveImageToSD(bitmap);
+
+                // save to sd
+                saveImageToSD(bitmap);
+
+                // if correctly saved, show message
+                if (response) {
+                    // Show a toast message on successful save
+                    Toast.makeText(getApplicationContext(), "Image Saved to SD Card",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                // set image to this view
+                user.setImage(bitmap);
+                user.setFilePath(targetUri.toString());
 
 
 
-
-                //user.setImage(bitmap);
-
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-//                byteArray = stream.toByteArray();
-//
-//                // save image to sd-card
-//                outStream = new FileOutputStream(image);
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-//        /* 100 to keep full quality of the image */
-//
-//                outStream.flush();
-//                outStream.close();
-//                success = true;
-//
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-//            catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            if (success) {
-//                Toast.makeText(getApplicationContext(), "Image saved with success",
-//                        Toast.LENGTH_LONG).show();
-//            } else {
-//                Toast.makeText(getApplicationContext(),
-//                        "Error during image saving", Toast.LENGTH_LONG).show();
-//            }
         }
     }
 
@@ -240,48 +225,44 @@ public class EditUserInfoActivity extends Activity {
         this.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
     }
 
-//    public String[] saveImageToSD(Bitmap b){
-//        String[] response;
-//
-//            response[0] = "0";
-//            Bitmap bitmap;
-//            OutputStream output;
-//
-//            // Retrieve the image from the res folder
-//            bitmap = b;
-//
-//            // Find the SD Card path
-//            File filepath = Environment.getExternalStorageDirectory();
-//
-//            // Create a new folder in SD Card
-//            File dir = new File(filepath.getAbsolutePath()
-//                    + "/Save Image Tutorial/");
-//            dir.mkdirs();
-//
-//            // Create a name for the saved image
-//            File file = new File(dir, "myimage.png");
-//
-//            // Show a toast message on successful save
-//            Toast.makeText(MainActivity.this, "Image Saved to SD Card",
-//                    Toast.LENGTH_SHORT).show();
-//            try {
-//
-//                output = new FileOutputStream(file);
-//
-//                // Compress into png format image from 0% - 100%
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
-//                output.flush();
-//                output.close();
-//                response[0] = "1";
-//            }
-//
-//            catch (Exception e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return response;
-//    }
+    public boolean saveImageToSD(Bitmap b){
+
+            Bitmap bitmap;
+            OutputStream output;
+
+            // Retrieve the image from the res folder
+            bitmap = b;
+
+            // Find the SD Card path
+            File filePath = Environment.getExternalStorageDirectory();
+
+            // Create a new folder in SD Card
+            File dir = new File(filePath.getAbsolutePath()
+                    + "/ProfileImage/");
+            dir.mkdirs();
+
+            // Create a name for the saved image
+            File file = new File(dir, "ProfileImage.png");
+            Log.v("FilePath:  ", file.toString());
+
+            try {
+
+                output = new FileOutputStream(file);
+
+                // Compress into png format image from 0% - 100%
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+                output.flush();
+                output.close();
+                user.setFilePath(file.toString());
+                response = true;
+            }
+
+            catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        return response;
+    }
+
 }
 
