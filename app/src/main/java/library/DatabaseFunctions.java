@@ -184,17 +184,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         // return user
         return user;
     }
-    public int getRowCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_USER;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        int rowCount = cursor.getCount();
-        db.close();
-        cursor.close();
-        // return row count
-        return rowCount;
-    }
-
 
     /**
      * Offer functions
