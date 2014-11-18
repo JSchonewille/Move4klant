@@ -10,7 +10,7 @@
         android:orderInCategory="100"
         android:showAsAction="collapseActionView" />
     <item android:id="@+id/product_test"
-    android:title="Detail test"
+    android:title="Status test"
     android:orderInCategory="100"
     android:showAsAction="collapseActionView" />
 </menu>

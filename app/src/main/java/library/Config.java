@@ -13,6 +13,7 @@ public class Config {
     public static String GETALLBEACONS = "http://ibeacontest.herobo.com/getbeacons.php";
     public static String UPLOADIMAGE = "http://ibeacontest.herobo.com/imagecontroller.php";
     public static String GETALLPRODUCTS = "http://ibeacontest.herobo.com/getproductinfo.php";
+    public static String CHECKINGSTATUS = "http://ibeacontest.herobo.com/checkinstatus.php";
 
     public static String LOGINURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
     public static String REGISTERURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";

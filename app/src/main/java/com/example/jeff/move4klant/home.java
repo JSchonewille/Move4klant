@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
@@ -46,7 +47,7 @@ public class home extends Activity {
             case R.id.ad_test:
                 showAd(1);
                 return true; case R.id.product_test:
-                showProduct(1);
+                checkStatus(1);
                 return true;
             case R.id.action_settings:
                 Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -74,10 +75,17 @@ public class home extends Activity {
         Intent i = new Intent(getApplicationContext(), OfferActivity.class);
         i.putExtra("offerID", id);
         startActivity(i);
-    } private void showProduct(int id) {
+    }
+    private void showProduct(int id) {
         Intent i = new Intent(getApplicationContext(), ProductInfoActivity.class);
         i.putExtra("productID", id);
         startActivity(i);
+    }
+    private void checkStatus(int id) {
+        if (DatabaseHandler.getInstance(getApplicationContext()).checkinstatus(1)){
+            Toast.makeText(getApplicationContext(),"ja", Toast.LENGTH_SHORT).show();
+        }
+        else{Toast.makeText(getApplicationContext(),"nee", Toast.LENGTH_SHORT).show();}
     }
 
 

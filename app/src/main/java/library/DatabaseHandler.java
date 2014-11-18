@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.List;
 public class DatabaseHandler {
     private static DatabaseHandler _instance = null;
     private static DatabaseFunctions db;
+
+    public boolean checkinstatus;
 
    public DatabaseHandler() {
 
@@ -162,17 +165,16 @@ public class DatabaseHandler {
             public void onResponse(JSONArray jsonArray) {
                 db.resetBeaconTable();
                 Log.d("Beacon UPdate", jsonArray.toString());
-                for (int i = 0; i<jsonArray.length();i++ ){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     try {
-                        int id = (Integer)jsonArray.getJSONObject(i).getInt("beaconID");
-                        int product = (Integer)jsonArray.getJSONObject(i).getInt("productID");
-                        int offer = (Integer)jsonArray.getJSONObject(i).getInt("offerID");
-                        int minor = (Integer)jsonArray.getJSONObject(i).getInt("minor");
-                        int major = (Integer)jsonArray.getJSONObject(i).getInt("major");
-                        db.addBeacon(id,product,offer,minor,major);
+                        int id = (Integer) jsonArray.getJSONObject(i).getInt("beaconID");
+                        int product = (Integer) jsonArray.getJSONObject(i).getInt("productID");
+                        int offer = (Integer) jsonArray.getJSONObject(i).getInt("offerID");
+                        int minor = (Integer) jsonArray.getJSONObject(i).getInt("minor");
+                        int major = (Integer) jsonArray.getJSONObject(i).getInt("major");
+                        db.addBeacon(id, product, offer, minor, major);
                         Log.d("Beacon Update", "SUCCES");
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         Log.d("exception", e.toString());
                     }
 
@@ -193,8 +195,31 @@ public class DatabaseHandler {
 
     //USER FUNCTIONS
     public void checkinout(int userid){}
+    public boolean checkinstatus(int userID){
 
+        ServerRequestHandler.checkinstatus(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonArray) {
+                Log.d("CHECKIN STATUS", jsonArray.toString());
+                try {
+                    checkinstatus = jsonArray.getBoolean("returnvalue");
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError.networkResponse != null)
+                    Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
+                else
+                    Log.e("NETWORKERROR", volleyError.getMessage());
+            }
+        }, userID);
 
+        return checkinstatus;
+    }
     public void uploadUserImage(int userID, byte[] image){
         ServerRequestHandler.uploadUserImage(new Response.Listener<JSONObject>() {
             @Override

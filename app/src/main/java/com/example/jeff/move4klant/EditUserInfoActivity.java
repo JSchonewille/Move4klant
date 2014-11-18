@@ -4,6 +4,7 @@ package com.example.jeff.move4klant;
 //<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -57,6 +58,8 @@ public class EditUserInfoActivity extends Activity {
     private String db_PostalCode = "8011 HE";
     private String db_City       = "Zwolle";
     private String db_email      = "lzee100@gmail.com";
+
+    private ProgressDialog nDialog;
 
     User user;
 
@@ -187,6 +190,7 @@ public class EditUserInfoActivity extends Activity {
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -197,7 +201,7 @@ public class EditUserInfoActivity extends Activity {
         switch (v.getId()) {
             case R.id.ivProfileImageEdit:
                 Intent intent = new Intent(Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 0);
                 break;
             case R.id.btChangeCategory:
@@ -211,15 +215,24 @@ public class EditUserInfoActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        nDialog = new ProgressDialog(EditUserInfoActivity.this);
+        nDialog.setTitle("Verwerken");
+        nDialog.setMessage("Loading..");
+        nDialog.setIndeterminate(false);
+        nDialog.setCancelable(true);
+        nDialog.show();
+
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK){
+
+
             Uri targetUri = data.getData();
             // save image to sd card
             boolean success = false;
             File sdCardDirectory = Environment.getExternalStorageDirectory();
-            File image = new File(sdCardDirectory, "ProfileImage.png");
+            File image = new File(sdCardDirectory, "ProfileImage.jpeg");
             FileOutputStream outStream;
             try {
                 // get image from selection
@@ -261,6 +274,7 @@ public class EditUserInfoActivity extends Activity {
 //                Toast.makeText(getApplicationContext(),
 //                        "Error during image saving", Toast.LENGTH_LONG).show();
 //            }
+            nDialog.dismiss();
         }
     }
 
@@ -287,7 +301,7 @@ public class EditUserInfoActivity extends Activity {
             dir.mkdirs();
 
             // Create a name for the saved image
-            File file = new File(dir, "ProfileImage.png");
+            File file = new File(dir, "ProfileImage.jpeg");
             Log.v("FilePath:  ", file.toString());
             Log.v("ABSOLUUT filePath: ", file.getAbsolutePath().toString());
             Log.v("ABSOLUUT filePath2: ", file.getPath());
@@ -298,7 +312,7 @@ public class EditUserInfoActivity extends Activity {
                 output = new FileOutputStream(file);
 
                 // Compress into png format image from 0% - 100%
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
                 output.flush();
                 output.close();
                 response = true;

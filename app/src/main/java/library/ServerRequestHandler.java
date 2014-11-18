@@ -9,6 +9,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jeff.move4klant.RequestController;
 
 import org.json.JSONArray;
@@ -76,66 +77,60 @@ public class ServerRequestHandler {
 
     public static void uploadUserImage(Response.Listener<JSONObject> l, Response.ErrorListener el, final int customerID,  final byte[] image){
         String URL = Config.UPLOADIMAGE;
-        Log.e("user", customerID + "");
-        Log.e("Image", encodeImage(image));
+        Log.e("user",String.valueOf(customerID));
+        Log.e("image", encodeImage(image));
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("customerID", Integer.toString(customerID));
-        params.put("file", encodeImage(image));
+        params.put("customerID", String.valueOf(customerID));
+        params.put("image", encodeImage(image));
 
-        CustomRequest request = new CustomRequest(URL, params, l, el);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params), l, el);
         //JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params), l, el);
 
         RequestController.getInstance().addToRequestQueue(request);
     }
 
 
-    public static void checkinout(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID){
-        String URL = Config.EDITLIKESURL;
+    public static void checkinout(Response.Listener<JSONObject> l, Response.ErrorListener el, final int customerID){
+        String URL = Config.CHECKINURL;
 
-        JsonArrayRequest req = new JsonArrayRequest(URL, l, el){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params  = new HashMap<String, String>();
-                params.put("customerID", Integer.toString(customerID));
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("customerID", String.valueOf(customerID));
 
-                return params;
-            }
-        };
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params), l, el);
 
-        RequestController.getInstance().addToRequestQueue(req);
+        RequestController.getInstance().addToRequestQueue(request);
     }
+    public static void checkinstatus(Response.Listener<JSONObject> l, Response.ErrorListener el, final int customerID){
+        String URL = Config.CHECKINGSTATUS;
 
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("customerID", String.valueOf(customerID));
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params), l, el);
+
+        RequestController.getInstance().addToRequestQueue(request);
+    }
     public static String encodeImage(byte[] imageByteArray) {
         return Base64.encodeToString(imageByteArray, 1);
     }
-
-
-
 }
 
 class CustomRequest extends Request<JSONObject> {
 
     private Response.Listener<JSONObject> listener;
-    private Map<String, String> params;
+    private String params;
 
-    public CustomRequest(String url, Map<String, String> params, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+    public CustomRequest(String url, String params, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         this.listener = responseListener;
         this.params = params;
     }
 
-    public CustomRequest(int method, String url, Map<String, String> params, Response.Listener<JSONObject> reponseListener, Response.ErrorListener errorListener) {
+    public CustomRequest(int method, String url, String params, Response.Listener<JSONObject> reponseListener, Response.ErrorListener errorListener) {
         super(method, url, errorListener);
         this.listener = reponseListener;
         this.params = params;
     }
-
-    @Override
-    protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
-        return params;
-    }
-
-    ;
 
     @Override
     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
@@ -156,9 +151,7 @@ class CustomRequest extends Request<JSONObject> {
     }
 }
 
-
-
- class CustomJsonArrayRequest extends com.android.volley.toolbox.JsonRequest<org.json.JSONArray> {
+class CustomJsonArrayRequest extends com.android.volley.toolbox.JsonRequest<org.json.JSONArray> {
     public CustomJsonArrayRequest(String url, Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
         super(Method.POST, url, null, listener, errorListener);
      /*   super(method, url, (jsonRequest == null) ? null : jsonRequest.toString(),
