@@ -155,7 +155,6 @@ public class DatabaseHandler {
         });
     }
 
-
     //BEACON FUNCTIONS
     public void updateBeacons(){
         ServerRequestHandler.getAllBeacons(new Response.Listener<JSONArray>() {
@@ -194,6 +193,8 @@ public class DatabaseHandler {
 
     //USER FUNCTIONS
     public void checkinout(int userid){}
+
+
     public void uploadUserImage(int userID, byte[] image){
         ServerRequestHandler.uploadUserImage(new Response.Listener<JSONObject>() {
             @Override
@@ -210,7 +211,9 @@ public class DatabaseHandler {
             }
         }, userID, image);
     }
+
     public User getUser(){return db.getUser();}
+
     public void addUser(String fname, String lname, String street, String postalCode, String houseNumber, String city, String email, String filePath){
         db.resetUser();
         db.addUser(fname,  lname,  street,  postalCode,  houseNumber,  city,  email, filePath);

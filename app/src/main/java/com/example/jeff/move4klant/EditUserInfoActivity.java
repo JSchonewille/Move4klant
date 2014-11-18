@@ -45,6 +45,7 @@ public class EditUserInfoActivity extends Activity {
     private List<Category> savedLikes;
     private Button changeCategory;
     private Boolean response = false;
+    private String filePath;
 
 
     //dummy data
@@ -64,6 +65,7 @@ public class EditUserInfoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_info);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        imageView = (ImageView)findViewById(R.id.ivProfileImageEdit);
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         TableLayout table = (TableLayout)findViewById(R.id.tableViewCategory_EditUserInfo);
@@ -92,8 +94,19 @@ public class EditUserInfoActivity extends Activity {
         etCity.setHint(user.getCity());
         etEmail.setHint(user.getEmail());
 
-        imageView = (ImageView)findViewById(R.id.ivProfileImageEdit);
-        imageView.setImageBitmap(user.getImage());
+        if (user.getFilePath().equals("")){
+            imageView.setImageResource(R.drawable.emptyprofile);
+        }
+        else {
+            File imgFile = new  File(user.getFilePath());
+
+            if(imgFile.exists()){
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                user.setImage(myBitmap);
+                imageView.setImageBitmap(user.getImage());
+            }
+        }
+
         changeCategory = (Button)findViewById(R.id.btChangeCategory);
 
         savedLikes = DatabaseHandler.getInstance(getApplicationContext()).getLikedCategories();
@@ -164,13 +177,15 @@ public class EditUserInfoActivity extends Activity {
 
                 // reset values of the user
                 user = new User(getApplicationContext(),db_User_ID, name, lastName, street, houseNumber, postalCode, city, email);
+                user.setFilePath(filePath);
                 DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), user.getFilePath());
                 user.setImage(bitmap);
                 //TODO send user to db and update server
                 //DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
-                DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(1, byteArray);
+                //DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(1, byteArray);
 
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
                 return true;
             default:
@@ -224,10 +239,9 @@ public class EditUserInfoActivity extends Activity {
 
                 // set image to this view
                 user.setImage(bitmap);
-                user.setFilePath(targetUri.toString());
-                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                 byteArray = stream.toByteArray();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byteArray = stream.toByteArray();
 
                 //user.setImage(bitmap);
 
@@ -265,16 +279,19 @@ public class EditUserInfoActivity extends Activity {
             bitmap = b;
 
             // Find the SD Card path
-            File filePath = Environment.getExternalStorageDirectory();
+            File thisfilePath = Environment.getExternalStorageDirectory();
 
             // Create a new folder in SD Card
-            File dir = new File(filePath.getAbsolutePath()
+            File dir = new File(thisfilePath.getAbsolutePath()
                     + "/ProfileImage/");
             dir.mkdirs();
 
             // Create a name for the saved image
             File file = new File(dir, "ProfileImage.png");
             Log.v("FilePath:  ", file.toString());
+            Log.v("ABSOLUUT filePath: ", file.getAbsolutePath().toString());
+            Log.v("ABSOLUUT filePath2: ", file.getPath());
+            filePath = file.getAbsolutePath().toString();
 
             try {
 
@@ -284,7 +301,6 @@ public class EditUserInfoActivity extends Activity {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
                 output.flush();
                 output.close();
-                user.setFilePath(file.toString());
                 response = true;
             }
 

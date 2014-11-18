@@ -146,6 +146,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
      * User functions
      * */
     public void addUser(String fname, String lname, String street, String postalCode, String houseNumber, String city, String email, String filePath) {
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_FIRSTNAME, fname); // FirstName

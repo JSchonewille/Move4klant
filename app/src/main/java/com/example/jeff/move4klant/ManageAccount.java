@@ -2,6 +2,8 @@ package com.example.jeff.move4klant;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.List;
 
 import library.Category;
@@ -41,7 +44,8 @@ public class ManageAccount extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_account);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        profileImage = (ImageView) findViewById(R.id.ivImage);
 
         try {
             User userDetails = DatabaseHandler.getInstance(getApplicationContext()).getUser();
@@ -50,7 +54,7 @@ public class ManageAccount extends Activity {
         }
         catch (Exception e){
             user = new User(getApplicationContext(),1, db_FirstName,db_LastName,db_Street,db_HouseNumber,db_PostalCode,db_City,db_email);
-            DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(),  user.getEmail(), "");
+            DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), "");
             Log.v("Er was nog geen user", ".");
         }
 
@@ -59,8 +63,18 @@ public class ManageAccount extends Activity {
 
 
         TableLayout table = (TableLayout)findViewById(R.id.table_ManageAccount_Category);
-        profileImage = (ImageView)findViewById(R.id.ivImage);
-        profileImage.setImageBitmap(user.getImage());
+        if (user.getFilePath().equals("")){
+            profileImage.setImageResource(R.drawable.emptyprofile);
+        }
+        else {
+            File imgFile = new  File(user.getFilePath());
+
+            if(imgFile.exists()){
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                user.setImage(myBitmap);
+                profileImage.setImageBitmap(user.getImage());
+            }
+        }
 
 
 
