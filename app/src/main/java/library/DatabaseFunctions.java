@@ -11,7 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class DatabaseFunctions extends SQLiteOpenHelper {
@@ -30,7 +29,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     private static final String TABLE_OFFERS = "offers";
     private static final String TABLE_PRODUCTS = "products";
     // User Table Column names
-    private static final String KEY_ID = "id";
+    private static final String KEY_USERID = "id";
     private static final String KEY_FIRSTNAME = "fname";
     private static final String KEY_LASTNAME = "lname";
     private static final String KEY_STREET = "street";
@@ -90,7 +89,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     public void addCategory(int id, String categoryName, int liked) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_ID, id); //
+        values.put(KEY_CATEGORYID, id); //
         values.put(KEY_CATEGORYNAME, categoryName); //
         values.put(KEY_CATEGORYLIKED, liked); //
         // Inserting Row
@@ -147,7 +146,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
      * User functions
      * */
     public void addUser(String fname, String lname, String street, String postalCode, String houseNumber, String city, String email, String filePath) {
-
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_FIRSTNAME, fname); // FirstName
@@ -162,22 +160,22 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.insert(TABLE_USER, null, values);
         db.close(); // Closing database connection
     }
-    public HashMap getUser(){
-        HashMap user = new HashMap();
+    public User getUser(){
+        User user = new User();
         String selectQuery = "SELECT  * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // Move to first row
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
-            user.put("fname", cursor.getString(1));
-            user.put("lname", cursor.getString(2));
-            user.put("street", cursor.getString(3));
-            user.put("houseNumber", cursor.getString(4));
-            user.put("postalCode", cursor.getString(5));
-            user.put("city", cursor.getString(6));
-            user.put("email", cursor.getString(7));
-            user.put("filePath", cursor.getString(8));
+            user.setName(cursor.getString(1));
+            user.setLastName(cursor.getString(2));
+            user.setStreet(cursor.getString(3));
+            user.setHouseNumber(cursor.getString(4));
+            user.setPostalCode( cursor.getString(5));
+            user.setCity(cursor.getString(6));
+            user.setEmail(cursor.getString(7));
+            user.setFilePath(cursor.getString(8));
         }
         cursor.close();
         db.close();
@@ -436,7 +434,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
      * */
     public void createTables(SQLiteDatabase db){
         String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
-                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_USERID + " INTEGER PRIMARY KEY,"
                 + KEY_FIRSTNAME + " TEXT,"
                 + KEY_LASTNAME + " TEXT,"
                 + KEY_STREET + " TEXT,"

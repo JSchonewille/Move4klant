@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,12 +138,11 @@ public class DatabaseHandler {
                 List<Product> list = Product.fromJSON(jsonArray);
 
                 Log.d("Products Update", jsonArray.toString());
-                for (int i = 0; i<list.size();i++ ){
+                for (int i = 0; i < list.size(); i++) {
                     try {
-                        db.addProduct(list.get(i).getProductID(), list.get(i).getName(), list.get(i).getCategoryID(),list.get(i).getImage(),  list.get(i).getDescription());
+                        db.addProduct(list.get(i).getProductID(), list.get(i).getName(), list.get(i).getCategoryID(), list.get(i).getImage(), list.get(i).getDescription());
                         Log.d("Product Update", "SUCCES");
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         Log.d("exception", e.toString());
                     }
 
@@ -195,11 +195,10 @@ public class DatabaseHandler {
     //USER FUNCTIONS
     public void checkinout(int userid){}
     public void uploadUserImage(int userID, byte[] image){
-        ServerRequestHandler.uploadUserImage(new Response.Listener<JSONArray>() {
+        ServerRequestHandler.uploadUserImage(new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray jsonArray) {
+            public void onResponse(JSONObject jsonArray) {
                 Log.d("Image Upload", jsonArray.toString());
-                Log.d("Image Upload", "SUCCES");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -210,6 +209,12 @@ public class DatabaseHandler {
                     Log.e("NETWORKERROR" , volleyError.getMessage());
             }
         }, userID, image);
+    }
+    public User getUser(){return db.getUser();}
+    public void addUser(String fname, String lname, String street, String postalCode, String houseNumber, String city, String email, String filePath){
+        db.resetUser();
+        db.addUser(fname,  lname,  street,  postalCode,  houseNumber,  city,  email, filePath);
+
     }
 
 

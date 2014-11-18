@@ -1,8 +1,10 @@
-package com.example.jeff.move4klant;
+package library;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.example.jeff.move4klant.R;
 
 /**
  * Created by Leo on 12-11-14.
@@ -21,8 +23,11 @@ public class User {
     private Byte[] byteArray;
     private String filePath;
 
-    public User(Context c, String name, String lastName, String street, String houseNumber,
+    public User(){}
+
+    public User(Context c, int id, String name, String lastName, String street, String houseNumber,
                               String postalCode, String city, String email){
+        this.setUserID(id);
         this.setName(name);
         this.setLastName(lastName);
         this.setStreet(street);

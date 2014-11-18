@@ -23,16 +23,16 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
 
 import library.Category;
-import library.DatabaseFunctions;
 import library.DatabaseHandler;
+import library.User;
 
 
 public class EditUserInfoActivity extends Activity {
@@ -45,7 +45,17 @@ public class EditUserInfoActivity extends Activity {
     private List<Category> savedLikes;
     private Button changeCategory;
     private Boolean response = false;
-    private DatabaseFunctions db;
+
+
+    //dummy data
+    private int db_User_ID       = 1;
+    private String db_FirstName  = "Leo";
+    private String db_LastName   = "van der Zee";
+    private String db_Street     = "Zuiderkerkstraat";
+    private String db_HouseNumber= "27F";
+    private String db_PostalCode = "8011 HE";
+    private String db_City       = "Zwolle";
+    private String db_email      = "lzee100@gmail.com";
 
     User user;
 
@@ -53,16 +63,17 @@ public class EditUserInfoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_info);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         TableLayout table = (TableLayout)findViewById(R.id.tableViewCategory_EditUserInfo);
+        user = new User(getApplicationContext(), db_User_ID, db_FirstName,db_LastName,db_Street,db_HouseNumber,db_PostalCode,db_City,db_email);
 
-        db = new DatabaseFunctions(getApplicationContext());
 
-        HashMap userDetails = db.getUser();
 
-        user = new User(getApplication(),userDetails.get("fname").toString(), userDetails.get("lname").toString(), userDetails.get("street").toString(), userDetails.get("houseNumber").toString(), userDetails.get("postalCode").toString(), userDetails.get("city").toString(), userDetails.get("email").toString());
+        User userDetails = DatabaseHandler.getInstance(getApplicationContext()).getUser();
+
+        user = userDetails;
 
         etName          = (EditText)findViewById(R.id.etName);
         etLastName      = (EditText)findViewById(R.id.etLastName);
@@ -152,13 +163,12 @@ public class EditUserInfoActivity extends Activity {
                 Log.v("filePath: ", user.getFilePath());
 
                 // reset values of the user
-                user = new User(getApplicationContext(), name, lastName, street, houseNumber, postalCode, city, email);
-                db.resetUser();
-                db.addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), user.getFilePath());
+                user = new User(getApplicationContext(),db_User_ID, name, lastName, street, houseNumber, postalCode, city, email);
+                DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), user.getFilePath());
                 user.setImage(bitmap);
                 //TODO send user to db and update server
                 //DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
-
+                DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(1, byteArray);
 
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);
                 startActivity(i);
@@ -191,10 +201,16 @@ public class EditUserInfoActivity extends Activity {
 
         if (resultCode == RESULT_OK){
             Uri targetUri = data.getData();
+            // save image to sd card
+            boolean success = false;
+            File sdCardDirectory = Environment.getExternalStorageDirectory();
+            File image = new File(sdCardDirectory, "ProfileImage.png");
+            FileOutputStream outStream;
             try {
                 // get image from selection
                 bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
                 imageView.setImageBitmap(bitmap);
+                //saveImageToSD(bitmap);
 
                 // save to sd
                 saveImageToSD(bitmap);
@@ -209,13 +225,28 @@ public class EditUserInfoActivity extends Activity {
                 // set image to this view
                 user.setImage(bitmap);
                 user.setFilePath(targetUri.toString());
+                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                 byteArray = stream.toByteArray();
 
+                //user.setImage(bitmap);
 
 
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+//            catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            if (success) {
+//                Toast.makeText(getApplicationContext(), "Image saved with success",
+//                        Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(getApplicationContext(),
+//                        "Error during image saving", Toast.LENGTH_LONG).show();
+//            }
         }
     }
 
