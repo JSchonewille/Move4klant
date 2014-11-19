@@ -220,7 +220,23 @@ public class DatabaseHandler {
     }
 
     //USER FUNCTIONS
-    public void checkinout(int userid){}
+    public void checkinout(int userid){
+        ServerRequestHandler.checkinout(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonArray) {
+                Log.d("CHECK-in/out", jsonArray.toString());
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError.networkResponse != null)
+                    Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
+                else
+                    Log.e("NETWORKERROR", volleyError.getMessage());
+            }
+        }, userid);
+    }
     public boolean checkinstatus(int userID){
 
         ServerRequestHandler.checkinstatus(new Response.Listener<JSONObject>() {
