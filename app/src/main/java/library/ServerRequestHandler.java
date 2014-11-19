@@ -4,7 +4,6 @@ package library;
 import android.util.Base64;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -17,8 +16,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Sander on 11-11-2014.
@@ -60,17 +59,14 @@ public class ServerRequestHandler {
         RequestController.getInstance().addToRequestQueue(req);
     }
 
-    public static void uploadLikes(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID,  final Integer[]categories){
+    public static void uploadLikes(Response.Listener<JSONObject> l, Response.ErrorListener el, final int customerID,  final Integer[]categories){
         String URL = Config.EDITLIKESURL;
-        JsonArrayRequest req = new JsonArrayRequest(URL, l, el){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params  = new HashMap<String, String>();
-                params.put("customerID", Integer.toString(customerID));
-                params.put("categories", categories.toString());
-                return params;
-            }
-        };
+
+        HashMap<String, String> params  = new HashMap<String, String>();
+        params.put("customerID", Integer.toString(customerID));
+        params.put("categories", Arrays.toString(categories));
+        Log.e("LIKES", Arrays.toString(categories));
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),l, el);
 
         RequestController.getInstance().addToRequestQueue(req);
     }

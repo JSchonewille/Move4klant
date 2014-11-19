@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -184,8 +185,7 @@ public class EditUserInfoActivity extends Activity {
                 DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), user.getFilePath());
                 user.setImage(bitmap);
                 //TODO send user to db and update server
-                //DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
-                //DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(1, byteArray);
+                DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
 
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -200,8 +200,18 @@ public class EditUserInfoActivity extends Activity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivProfileImageEdit:
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        .setType("image/*")
+                        .putExtra("crop", "true")
+                        .putExtra("aspectX", 1)
+                        .putExtra("aspectY", 1)
+                        .putExtra("outputX", 200)
+                        .putExtra("outputY", 200)
+                        .putExtra("scale", "true")
+                        .putExtra(MediaStore.EXTRA_OUTPUT, Environment.getExternalStorageDirectory()
+                                + "/Android/data/"
+                                + "/Move4Klant")
+                        .putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
                 startActivityForResult(intent, 0);
                 break;
             case R.id.btChangeCategory:
@@ -215,18 +225,13 @@ public class EditUserInfoActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        nDialog = new ProgressDialog(EditUserInfoActivity.this);
-        nDialog.setTitle("Verwerken");
-        nDialog.setMessage("Loading..");
-        nDialog.setIndeterminate(false);
-        nDialog.setCancelable(true);
-        nDialog.show();
+
 
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK){
 
+        if (resultCode == RESULT_OK){
 
             Uri targetUri = data.getData();
             // save image to sd card
@@ -274,8 +279,11 @@ public class EditUserInfoActivity extends Activity {
 //                Toast.makeText(getApplicationContext(),
 //                        "Error during image saving", Toast.LENGTH_LONG).show();
 //            }
-            nDialog.dismiss();
+
+
+
         }
+
     }
 
     @Override
@@ -292,12 +300,10 @@ public class EditUserInfoActivity extends Activity {
             // Retrieve the image from the res folder
             bitmap = b;
 
-            // Find the SD Card path
-            File thisfilePath = Environment.getExternalStorageDirectory();
-
             // Create a new folder in SD Card
-            File dir = new File(thisfilePath.getAbsolutePath()
-                    + "/ProfileImage/");
+            File dir = new File(Environment.getExternalStorageDirectory()
+                    + "/Android/data/"
+                    + "/Move4Klant");
             dir.mkdirs();
 
             // Create a name for the saved image
@@ -312,7 +318,7 @@ public class EditUserInfoActivity extends Activity {
                 output = new FileOutputStream(file);
 
                 // Compress into png format image from 0% - 100%
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+              //  bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
                 output.flush();
                 output.close();
                 response = true;

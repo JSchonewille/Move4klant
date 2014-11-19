@@ -76,11 +76,21 @@ public class DatabaseHandler {
     public List<Category> getLikedCategories(){
         return db.getLikedCategories();
     }
-    public void saveLikedCategories(List<Category> likes){
+    public void saveLikedCategories(int userID, List<Category> likes){
+
         List<Category> list = db.getAllCategories();
+        Integer[] categoryids = new Integer[likes.size()];
         db.resetCategory();
+        int i =0;
+        for ( Category l : likes) {
+            categoryids[i]=l.getID();
+            i++;
+        }
         for (Category cat : list) {
+
             try {
+
+                i++;
                 int liked = 0;
                 for (Category c : likes) {
                     if (c.getName().equals(cat.getName()))
@@ -91,9 +101,25 @@ public class DatabaseHandler {
             } catch (Exception e) {
                 Log.d("exception", e.toString());
             }
-            Log.d("Offer Update", "SUCCES");
 
+
+            Log.d("Like Update", "SUCCES");
         }
+
+        ServerRequestHandler.uploadLikes(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonArray) {
+                Log.d("Likes Upload", jsonArray.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if(volleyError.networkResponse != null)
+                    Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
+                else
+                    Log.e("NETWORKERROR" , volleyError.getMessage());
+            }
+        }, userID, categoryids);
     }
 
     //OFFER FUNCTIONS
@@ -236,9 +262,7 @@ public class DatabaseHandler {
             }
         }, userID, image);
     }
-
     public User getUser(){return db.getUser();}
-
     public void addUser(String fname, String lname, String street, String postalCode, String houseNumber, String city, String email, String filePath){
         db.resetUser();
         db.addUser(fname,  lname,  street,  postalCode,  houseNumber,  city,  email, filePath);

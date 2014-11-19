@@ -117,7 +117,8 @@ public class LikesActivity extends Activity {
     }
 
     public void saveLikes() {
-        DatabaseHandler.getInstance(getApplicationContext()).saveLikedCategories(checkedList);
+       int id =DatabaseHandler.getInstance(getApplicationContext()).getUser().getUserID();
+       DatabaseHandler.getInstance(getApplicationContext()).saveLikedCategories(id, checkedList);
     }
 
 }
