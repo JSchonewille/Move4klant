@@ -58,18 +58,18 @@ public class ManageAccount extends Activity {
 
         tv_firstName    = (TextView)findViewById(R.id.tvName);
         tv_lastName     = (TextView)findViewById(R.id.tvLastName);
-        tv_street       = (TextView)findViewById(R.id.tvAdress);
+      /*  tv_street       = (TextView)findViewById(R.id.tvAdress);
         tv_postalCode   = (TextView)findViewById(R.id.tvPostalCode);
-        tv_city         = (TextView)findViewById(R.id.tvCity);
+        tv_city         = (TextView)findViewById(R.id.tvCity);*/
         tv_email        = (TextView)findViewById(R.id.tvEmail);
 
         String streetAndHouseNumber = user.getStreet() + " " + user.getHouseNumber();
 
         tv_firstName.setText(user.getName());
         tv_lastName.setText(user.getLastName());
-        tv_street.setText(streetAndHouseNumber);
+/*        tv_street.setText(streetAndHouseNumber);
         tv_postalCode.setText(user.getPostalCode());
-        tv_city.setText(user.getCity());
+        tv_city.setText(user.getCity());*/
         tv_email.setText(user.getEmail());
 
         savedLikes = DatabaseHandler.getInstance(getApplicationContext()).getLikedCategories();
