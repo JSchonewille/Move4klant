@@ -22,7 +22,8 @@ public class BroadcastReciever extends BroadcastReceiver {
         PendingIntent P = PendingIntent.getService(context, 0, i, 0);
 
         AlarmManager ALS = (AlarmManager)context.getSystemService(context.ALARM_SERVICE);
-        ALS.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),80 * 1000 ,P);
+        // change 20 to 80
+        ALS.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),15 * 1000 ,P);
     }
 }
 

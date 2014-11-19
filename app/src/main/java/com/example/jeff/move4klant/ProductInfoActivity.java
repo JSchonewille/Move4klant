@@ -17,7 +17,7 @@ public class ProductInfoActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manage_account);
+        setContentView(R.layout.product_info);
         Bundle bundle = getIntent().getExtras();
 
         int productID = bundle.getInt("productID");

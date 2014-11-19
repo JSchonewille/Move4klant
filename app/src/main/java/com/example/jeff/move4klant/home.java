@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
@@ -15,6 +16,8 @@ import library.DatabaseHandler;
 
 
 public class home extends Activity {
+    Button b4;
+    Button b5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,23 @@ public class home extends Activity {
         setContentView(R.layout.activity_home);
         DatabaseHandler.getInstance(getApplicationContext()).updateAll();
         getOverflowMenu();
+
+        b4 = (Button) findViewById(R.id.button4);
+        b5 = (Button) findViewById(R.id.button5);
+
+        b4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHandler.getInstance(getApplicationContext()).checkinout(0);
+            }
+        });
+
+        b5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHandler.getInstance(getApplicationContext()).checkinstatus(0);
+            }
+        });
     }
 
     public void onClickManageProfile(View v)

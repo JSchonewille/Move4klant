@@ -20,7 +20,7 @@ public class DatabaseHandler {
     private static DatabaseHandler _instance = null;
     private static DatabaseFunctions db;
 
-    public boolean checkinstatus;
+    private boolean checkinstatus;
 
    public DatabaseHandler() {
 
@@ -232,8 +232,12 @@ public class DatabaseHandler {
             public void onErrorResponse(VolleyError volleyError) {
                 if (volleyError.networkResponse != null)
                     Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
-                else
+                else {
+                    if(volleyError.getMessage() == null)
+                        Log.e("NETWORKERROR","timeout");
+                    else
                     Log.e("NETWORKERROR", volleyError.getMessage());
+                }
             }
         }, userid);
     }
@@ -274,7 +278,12 @@ public class DatabaseHandler {
                 if(volleyError.networkResponse != null)
                Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
                 else
-                    Log.e("NETWORKERROR" , volleyError.getMessage());
+                {
+                    if(volleyError.getMessage() == null)
+                        Log.e("NETWORKERROR","timeout");
+                    else
+                        Log.e("NETWORKERROR", volleyError.getMessage());
+                }
             }
         }, userID, image);
     }
