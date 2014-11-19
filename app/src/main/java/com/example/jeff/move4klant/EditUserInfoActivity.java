@@ -38,12 +38,15 @@ public class EditUserInfoActivity extends Activity {
 
     private EditText etName, etLastName, etStreet, etPostalCode, etHouseNumber, etCity, etEmail;
     private Bitmap bitmap;
+    private Bitmap croppedImage;
     private ImageView imageView;
     private User user;
     private int userID;
+    private String oldFilePath;
     private String name, lastName, street, postalCode, houseNumber, city, email;
     private byte[] byteArray;
     private List<Category> savedLikes;
+    private Boolean imageChanged = false;
     private Button changeCategory;
     private Boolean response = false;
     private String filePath;
@@ -64,6 +67,7 @@ public class EditUserInfoActivity extends Activity {
         user = DatabaseHandler.getInstance(getApplicationContext()).getUser();
         userID = user.getUserID();
 
+
         etName          = (EditText)findViewById(R.id.etName);
         etLastName      = (EditText)findViewById(R.id.etLastName);
 //        etStreet        = (EditText)findViewById(R.id.etStreet);
@@ -82,14 +86,17 @@ public class EditUserInfoActivity extends Activity {
         etEmail.setHint(user.getEmail());
 
         if (user.getFilePath().equals("")){
+            oldFilePath = "";
             imageView.setImageResource(R.drawable.emptyprofile);
         }
         else {
             File imgFile = new  File(user.getFilePath());
 
             if(imgFile.exists()){
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                user.setImage(myBitmap);
+                bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                user.setImage(bitmap);
+                croppedImage = bitmap;
+                oldFilePath = user.getFilePath();
                 imageView.setImageBitmap(user.getImage());
             }
         }
@@ -160,18 +167,25 @@ public class EditUserInfoActivity extends Activity {
                 if (email.matches("")){
                     email = etEmail.getHint().toString();
                 }
-                Log.v("filePath: ", user.getFilePath());
+
 
                 // reset values of the user
                 user = new User(getApplicationContext(),userID, name, lastName, "", "", "", "", email);
-                user.setFilePath(filePath);
+                if (imageChanged){
+                    user.setFilePath(filePath);
+                    user.setImage(croppedImage);
+                }else {
+                    user.setFilePath(oldFilePath);
+                }
+
                 DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getFilePath());
-                user.setImage(bitmap);
+
                 //TODO send user to db and update server
                 //DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
 
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                imageChanged = false;
                 startActivity(i);
                 finish();
                 return true;
@@ -207,11 +221,8 @@ public class EditUserInfoActivity extends Activity {
                             Bitmap.CompressFormat.JPEG.toString());
                     startActivityForResult(pickCropImageIntent,
                             REQUEST_PICK_CROP_IMAGE);
-                }else{
-
                 }
-
-
+                imageChanged = true;
                 break;
             case R.id.btChangeCategory:
                 Intent intent2 = new Intent(getApplicationContext(), LikesActivity.class);
@@ -226,10 +237,10 @@ public class EditUserInfoActivity extends Activity {
         switch (requestCode) {
 
             case REQUEST_PICK_CROP_IMAGE:
-                Bitmap selectedImage = BitmapFactory.decodeFile(Environment
+                croppedImage = BitmapFactory.decodeFile(Environment
                         .getExternalStorageDirectory() + "/temp.jpg");
-                imageView.setImageBitmap(selectedImage);
-                saveImageToSD(selectedImage);
+                imageView.setImageBitmap(croppedImage);
+                saveImageToSD(croppedImage);
                 break;
         }
     }
@@ -309,7 +320,7 @@ public class EditUserInfoActivity extends Activity {
 
     public boolean saveImageToSD(Bitmap b){
 
-            Bitmap bitmap = b;
+            bitmap = b;
             OutputStream output;
 
             // Create a new folder in SD Card
