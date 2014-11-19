@@ -180,8 +180,6 @@ public class EditUserInfoActivity extends Activity {
                 }
 
                 DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getFilePath());
-
-                //TODO send user to db and update server
                 DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
 
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);

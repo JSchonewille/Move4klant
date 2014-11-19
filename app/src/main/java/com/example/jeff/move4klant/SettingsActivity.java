@@ -30,13 +30,7 @@ public class SettingsActivity extends PreferenceActivity {
             }
         });
 
-        Preference offersPref = (Preference) findPreference("prefOffers");
-        offersPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
 
-                return true;
-            }
-        });
 
         Preference manageAccountPref = (Preference) findPreference("prefManageAccount");
         manageAccountPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -47,7 +41,6 @@ public class SettingsActivity extends PreferenceActivity {
                 return true;
             }
         });
-
     }
 
 

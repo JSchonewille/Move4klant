@@ -48,6 +48,13 @@ public class PrefUtils {
         editor.apply();
     }
 
+    public static void saveToPrefs(Context context, String key, Boolean bool) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(key,bool);
+        editor.apply();
+    }
+
 
     /**
      * Called to retrieve required value from shared preferences, identified by given key.
@@ -61,6 +68,16 @@ public class PrefUtils {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         try {
             return sharedPrefs.getString(key, defaultValue);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+    public static Boolean getFromPrefs(Context context, String key, Boolean defaultValue) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        try {
+            return sharedPrefs.getBoolean(key, defaultValue);
         } catch (Exception e) {
             e.printStackTrace();
             return defaultValue;

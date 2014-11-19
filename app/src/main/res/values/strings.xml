@@ -25,12 +25,21 @@
     <string name="labelPostalCode">Postcode:</string>
     <string name="labelCity">Woonplaats:</string>
     <string name="labelCategory">Interesses:</string>
+
+
     <string name="PREFS_LOGIN_USERNAME_KEY">__USERNAME__</string>
     <string name="PREFS_LOGIN_PASSWORD_KEY">__PASSWORD__</string>
     <string name="PREFS_AUTO_LOGIN_KEY">_AUTOLOGIN_</string>
     <string name="PREFS_OFFERS">_OFFERS_</string>
+    <string name="PREFS_CHECKEDIN">_CHECKEDIN_</string>
+
+
+
+
+
+
+
     <string name="title_activity_upload_picture">UploadPicture</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_edit_user_info">Wijzig gegevens</string>
     <string name="title_Category">Interesses</string>
     <string name="changeCategory">Wijzig interesses</string>

@@ -13,12 +13,6 @@
             />
 
         <Preference
-            android:key="prefDisconnectAccount"
-            android:title="Ontkoppel Account"
-            android:summary="Log uit en vergeet het account"
-            />
-
-        <Preference
             android:key="prefManageAccount"
             android:title="Manage account"
             android:summary="Wijzig je accountgegevens"
@@ -26,21 +20,17 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Meldingen" >
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="prefLockScreen"
-            android:summary="Hou mij op de hoogte van aanbiedingen"
-            android:title="Aanbiedingen" >
-        </CheckBoxPreference>
+    <PreferenceCategory android:title="Uitloggen" >
+
+
 
         <Preference
-            android:key="prefOffers"
-            android:title="Aanbiedingen"
-            android:summary="Bekijk beschikbare aanbiedingen"
+            android:key="prefDisconnectAccount"
+            android:title="Ontkoppel Account"
+            android:summary="Log uit en vergeet het account"
             />
 
-
     </PreferenceCategory>
+
 
 </PreferenceScreen>

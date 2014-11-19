@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.jeff.move4klant.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -261,6 +262,14 @@ public class DatabaseHandler {
         }, userID);
 
         return checkinstatus;
+    }
+
+    public void setLocalCheckinStatus(Context context, boolean check){
+        PrefUtils.saveToPrefs(context, context.getString(R.string.PREFS_CHECKEDIN), check);
+    }
+    public boolean getLocalCheckinStatus(Context context, boolean defaultvalue){
+        Boolean checkedin = PrefUtils.getFromPrefs(context, context.getString(R.string.PREFS_AUTO_LOGIN_KEY),  defaultvalue) ;
+        return checkedin;
     }
     public void uploadUserImage(int userID, byte[] image){
         ServerRequestHandler.uploadUserImage(new Response.Listener<JSONObject>() {
