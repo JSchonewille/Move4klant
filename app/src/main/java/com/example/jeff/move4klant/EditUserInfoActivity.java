@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,11 +23,8 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -49,6 +47,7 @@ public class EditUserInfoActivity extends Activity {
     private Button changeCategory;
     private Boolean response = false;
     private String filePath;
+    private final int REQUEST_PICK_CROP_IMAGE = 0;
 
     private ProgressDialog nDialog;
 
@@ -133,10 +132,10 @@ public class EditUserInfoActivity extends Activity {
 
                 name            = etName.getText().toString();
                 lastName        = etLastName.getText().toString();
-                street          = etStreet.getText().toString();
-                houseNumber     = etHouseNumber.getText().toString();
-                postalCode      = etPostalCode.getText().toString();
-                city            = etCity.getText().toString();
+//                street          = etStreet.getText().toString();
+//                houseNumber     = etHouseNumber.getText().toString();
+//                postalCode      = etPostalCode.getText().toString();
+//                city            = etCity.getText().toString();
                 email           = etEmail.getText().toString();
 
                 // if input is empty, get last db info
@@ -166,10 +165,10 @@ public class EditUserInfoActivity extends Activity {
                 // reset values of the user
                 user = new User(getApplicationContext(),userID, name, lastName, "", "", "", "", email);
                 user.setFilePath(filePath);
-                DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), user.getFilePath());
+                DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getFilePath());
                 user.setImage(bitmap);
                 //TODO send user to db and update server
-                DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
+                //DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
 
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -184,10 +183,35 @@ public class EditUserInfoActivity extends Activity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivProfileImageEdit:
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.putExtra("crop", "true");
-                startActivityForResult(intent, 0);
+//                Intent intent = new Intent(Intent.ACTION_PICK,
+//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                intent.putExtra("crop", "true");
+//                startActivityForResult(intent, 0);
+
+                String status = Environment.getExternalStorageState();
+                if (status.equals(Environment.MEDIA_MOUNTED)) {
+                    File tempFile = new File(                                            Environment.getExternalStorageDirectory() + "/temp.jpg");
+                    Uri tempUri = Uri.fromFile(tempFile);
+                    Intent pickCropImageIntent = new Intent(
+                            Intent.ACTION_PICK,                                           android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    pickCropImageIntent.setType("image/jpeg");
+                    pickCropImageIntent.putExtra("crop", "true")
+                            .putExtra("aspectX", 1)
+                            .putExtra("aspectY", 1)
+                            .putExtra("outputX", 200)
+                            .putExtra("outputY", 200)
+                            .putExtra("scale", "true");
+                    pickCropImageIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                            tempUri);
+                    pickCropImageIntent.putExtra("outputFormat",
+                            Bitmap.CompressFormat.JPEG.toString());
+                    startActivityForResult(pickCropImageIntent,
+                            REQUEST_PICK_CROP_IMAGE);
+                }else{
+
+                }
+
+
                 break;
             case R.id.btChangeCategory:
                 Intent intent2 = new Intent(getApplicationContext(), LikesActivity.class);
@@ -198,72 +222,84 @@ public class EditUserInfoActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        nDialog = new ProgressDialog(EditUserInfoActivity.this);
-        nDialog.setTitle("Verwerken");
-        nDialog.setMessage("Loading..");
-        nDialog.setIndeterminate(false);
-        nDialog.setCancelable(true);
-        nDialog.show();
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
 
-        // TODO Auto-generated method stub
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK){
-
-
-            Uri targetUri = data.getData();
-            // save image to sd card
-            boolean success = false;
-            File sdCardDirectory = Environment.getExternalStorageDirectory();
-            File image = new File(sdCardDirectory, "ProfileImage.jpeg");
-            FileOutputStream outStream;
-            try {
-                // get image from selection
-                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                imageView.setImageBitmap(bitmap);
-                //saveImageToSD(bitmap);
-
-                // save to sd
-                saveImageToSD(bitmap);
-
-                // if correctly saved, show message
-                if (response) {
-                    // Show a toast message on successful save
-                    Toast.makeText(getApplicationContext(), "Image Saved to SD Card",
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                // set image to this view
-                user.setImage(bitmap);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byteArray = stream.toByteArray();
-
-                //user.setImage(bitmap);
-
-
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-//            catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            if (success) {
-//                Toast.makeText(getApplicationContext(), "Image saved with success",
-//                        Toast.LENGTH_LONG).show();
-//            } else {
-//                Toast.makeText(getApplicationContext(),
-//                        "Error during image saving", Toast.LENGTH_LONG).show();
-//            }
-
-
-
+            case REQUEST_PICK_CROP_IMAGE:
+                Bitmap selectedImage = BitmapFactory.decodeFile(Environment
+                        .getExternalStorageDirectory() + "/temp.jpg");
+                imageView.setImageBitmap(selectedImage);
+                saveImageToSD(selectedImage);
+                break;
         }
     }
+
+    //@Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        nDialog = new ProgressDialog(EditUserInfoActivity.this);
+//        nDialog.setTitle("Verwerken");
+//        nDialog.setMessage("Loading..");
+//        nDialog.setIndeterminate(false);
+//        nDialog.setCancelable(true);
+//        nDialog.show();
+//
+//        // TODO Auto-generated method stub
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode == RESULT_OK){
+//
+//
+//            Uri targetUri = data.getData();
+//            // save image to sd card
+//            boolean success = false;
+//            File sdCardDirectory = Environment.getExternalStorageDirectory();
+//            File image = new File(sdCardDirectory, "ProfileImage.jpeg");
+//            FileOutputStream outStream;
+//            try {
+//                // get image from selection
+//                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+//                imageView.setImageBitmap(bitmap);
+//                //saveImageToSD(bitmap);
+//
+//                // save to sd
+//                saveImageToSD(bitmap);
+//
+//                // if correctly saved, show message
+//                if (response) {
+//                    // Show a toast message on successful save
+//                    Toast.makeText(getApplicationContext(), "Image Saved to SD Card",
+//                            Toast.LENGTH_SHORT).show();
+//                }
+//
+//                // set image to this view
+//                user.setImage(bitmap);
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//                byteArray = stream.toByteArray();
+//
+//                //user.setImage(bitmap);
+//
+//
+//            } catch (FileNotFoundException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+////            catch (IOException e) {
+////                e.printStackTrace();
+////            }
+////
+////            if (success) {
+////                Toast.makeText(getApplicationContext(), "Image saved with success",
+////                        Toast.LENGTH_LONG).show();
+////            } else {
+////                Toast.makeText(getApplicationContext(),
+////                        "Error during image saving", Toast.LENGTH_LONG).show();
+////            }
+//
+//
+//
+//        }
+//    }
 
     @Override
     public void onBackPressed(){
@@ -273,14 +309,8 @@ public class EditUserInfoActivity extends Activity {
 
     public boolean saveImageToSD(Bitmap b){
 
-            Bitmap bitmap;
+            Bitmap bitmap = b;
             OutputStream output;
-
-            // Retrieve the image from the res folder
-            bitmap = b;
-
-            // Find the SD Card path
-            File thisfilePath = Environment.getExternalStorageDirectory();
 
             // Create a new folder in SD Card
             File dir = new File(Environment.getExternalStorageDirectory()
@@ -300,7 +330,7 @@ public class EditUserInfoActivity extends Activity {
                 output = new FileOutputStream(file);
 
                 // Compress into png format image from 0% - 100%
-              //  bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
                 output.flush();
                 output.close();
                 response = true;
