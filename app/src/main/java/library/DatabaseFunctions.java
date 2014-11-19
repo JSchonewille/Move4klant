@@ -145,16 +145,13 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     /**
      * User functions
      * */
-    public void addUser(String fname, String lname, String street, String postalCode, String houseNumber, String city, String email, String filePath) {
+    public void addUser(int userID, String fname, String lname, String email, String filePath) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(KEY_USERID, userID); // User ID
         values.put(KEY_FIRSTNAME, fname); // FirstName
         values.put(KEY_LASTNAME, lname); // LastName
-        values.put(KEY_STREET, street); // Street
-        values.put(KEY_POSTALCODE, postalCode); // PostalCode
-        values.put(KEY_HOUSENUMBER, houseNumber); // HouseNumber
-        values.put(KEY_CITY, city); // City
         values.put(KEY_EMAIL, email); // Email
         values.put(KEY_FILEPATH, filePath); // filePath
         // Inserting Row
@@ -169,14 +166,11 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
+            user.setUserID(cursor.getInt(0));
             user.setName(cursor.getString(1));
             user.setLastName(cursor.getString(2));
-            user.setStreet(cursor.getString(3));
-            user.setHouseNumber(cursor.getString(4));
-            user.setPostalCode( cursor.getString(5));
-            user.setCity(cursor.getString(6));
-            user.setEmail(cursor.getString(7));
-            user.setFilePath(cursor.getString(8));
+            user.setEmail(cursor.getString(3));
+            user.setFilePath(cursor.getString(4));
         }
         cursor.close();
         db.close();
@@ -438,10 +432,6 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
                 + KEY_USERID + " INTEGER PRIMARY KEY,"
                 + KEY_FIRSTNAME + " TEXT,"
                 + KEY_LASTNAME + " TEXT,"
-                + KEY_STREET + " TEXT,"
-                + KEY_HOUSENUMBER + " TEXT,"
-                + KEY_POSTALCODE + " TEXT,"
-                + KEY_CITY + " TEXT,"
                 + KEY_EMAIL + " TEXT UNIQUE,"
                 + KEY_FILEPATH + " TEXT" + ")";
         db.execSQL(CREATE_USER_TABLE);

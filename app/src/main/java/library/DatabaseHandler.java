@@ -279,11 +279,11 @@ public class DatabaseHandler {
         }, userID, image);
     }
     public User getUser(){return db.getUser();}
-    public void addUser(String fname, String lname, String street, String postalCode, String houseNumber, String city, String email, String filePath){
+    public void addUser(int id, String fname, String lname, String email, String filePath){
         db.resetUser();
-        db.addUser(fname,  lname,  street,  postalCode,  houseNumber,  city,  email, filePath);
-
+        db.addUser(id, fname,  lname,  email, filePath);
     }
+    public void resetUser(){db.resetUser();}
 
 
     //OTHER FUNCTIONS
