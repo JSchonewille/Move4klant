@@ -41,6 +41,8 @@ public class EditUserInfoActivity extends Activity {
     private EditText etName, etLastName, etStreet, etPostalCode, etHouseNumber, etCity, etEmail;
     private Bitmap bitmap;
     private ImageView imageView;
+    private User user;
+    private int userID;
     private String name, lastName, street, postalCode, houseNumber, city, email;
     private byte[] byteArray;
     private List<Category> savedLikes;
@@ -48,20 +50,8 @@ public class EditUserInfoActivity extends Activity {
     private Boolean response = false;
     private String filePath;
 
-
-    //dummy data
-    private int db_User_ID       = 1;
-    private String db_FirstName  = "Leo";
-    private String db_LastName   = "van der Zee";
-    private String db_Street     = "Zuiderkerkstraat";
-    private String db_HouseNumber= "27F";
-    private String db_PostalCode = "8011 HE";
-    private String db_City       = "Zwolle";
-    private String db_email      = "lzee100@gmail.com";
-
     private ProgressDialog nDialog;
 
-    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +62,8 @@ public class EditUserInfoActivity extends Activity {
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         TableLayout table = (TableLayout)findViewById(R.id.tableViewCategory_EditUserInfo);
-        user = new User(getApplicationContext(), db_User_ID, db_FirstName,db_LastName,db_Street,db_HouseNumber,db_PostalCode,db_City,db_email);
-
-
-
-        User userDetails = DatabaseHandler.getInstance(getApplicationContext()).getUser();
-
-        user = userDetails;
+        user = DatabaseHandler.getInstance(getApplicationContext()).getUser();
+        userID = user.getUserID();
 
         etName          = (EditText)findViewById(R.id.etName);
         etLastName      = (EditText)findViewById(R.id.etLastName);
@@ -179,7 +164,7 @@ public class EditUserInfoActivity extends Activity {
                 Log.v("filePath: ", user.getFilePath());
 
                 // reset values of the user
-                user = new User(getApplicationContext(),db_User_ID, name, lastName, street, houseNumber, postalCode, city, email);
+                user = new User(getApplicationContext(),userID, name, lastName, street, houseNumber, postalCode, city, email);
                 user.setFilePath(filePath);
                 DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), user.getFilePath());
                 user.setImage(bitmap);

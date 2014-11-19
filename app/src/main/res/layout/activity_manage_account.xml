@@ -79,72 +79,72 @@
                 android:id="@+id/tvLastName"/>
         </LinearLayout> // last name
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutLastName"
-            android:id="@+id/linearLayoutAddress"
-            android:weightSum="1.0"
-            android:layout_marginTop="2dp"
-            android:textSize="18dp"
-            android:layout_marginBottom="2dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/labelAddress"
-                android:textSize="16dp"
-                android:layout_weight=".3"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:id="@+id/tvAdress"
-                android:textSize="16dp" />
-        </LinearLayout> // adress
+        <!--<LinearLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/linearLayoutLastName"-->
+            <!--android:id="@+id/linearLayoutAddress"-->
+            <!--android:weightSum="1.0"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:textSize="18dp"-->
+            <!--android:layout_marginBottom="2dp">-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/labelAddress"-->
+                <!--android:textSize="16dp"-->
+                <!--android:layout_weight=".3"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight=".7"-->
+                <!--android:id="@+id/tvAdress"-->
+                <!--android:textSize="16dp" />-->
+        <!--</LinearLayout> // adress-->
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutAddress"
-            android:id="@+id/linearLayoutPostalCode"
-            android:weightSum="1.0"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="@string/labelPostalCode"
-                android:layout_weight=".3"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:textSize="16dp"
-                android:id="@+id/tvPostalCode"/>
-        </LinearLayout> // postal code
+        <!--<LinearLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/linearLayoutAddress"-->
+            <!--android:id="@+id/linearLayoutPostalCode"-->
+            <!--android:weightSum="1.0"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_marginBottom="2dp">-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="16dp"-->
+                <!--android:text="@string/labelPostalCode"-->
+                <!--android:layout_weight=".3"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight=".7"-->
+                <!--android:textSize="16dp"-->
+                <!--android:id="@+id/tvPostalCode"/>-->
+        <!--</LinearLayout> // postal code-->
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutPostalCode"
-            android:id="@+id/linearLayoutCity"
-            android:weightSum="1.0"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/labelCity"
-                android:textSize="16dp"
-                android:layout_weight=".3"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:textSize="16dp"
-                android:id="@+id/tvCity"/>
-        </LinearLayout> // city
+        <!--<LinearLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/linearLayoutPostalCode"-->
+            <!--android:id="@+id/linearLayoutCity"-->
+            <!--android:weightSum="1.0"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_marginBottom="2dp">-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/labelCity"-->
+                <!--android:textSize="16dp"-->
+                <!--android:layout_weight=".3"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight=".7"-->
+                <!--android:textSize="16dp"-->
+                <!--android:id="@+id/tvCity"/>-->
+        <!--</LinearLayout> // city-->
 
         <LinearLayout
             android:layout_width="fill_parent"

@@ -27,16 +27,6 @@ public class ManageAccount extends Activity {
     private List<Category> savedLikes;
     private ImageView profileImage;
 
-
-    //dummy data
-    private String db_FirstName  = "Leo";
-    private String db_LastName   = "van der Zee";
-    private String db_Street     = "Zuiderkerkstraat";
-    private String db_HouseNumber= "27F";
-    private String db_PostalCode = "8011 HE";
-    private String db_City       = "Zwolle";
-    private String db_email      = "lzee100@gmail.com";
-
     User user ;
 
 
@@ -47,20 +37,8 @@ public class ManageAccount extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         profileImage = (ImageView) findViewById(R.id.ivImage);
 
-        try {
-            User userDetails = DatabaseHandler.getInstance(getApplicationContext()).getUser();
-            user = userDetails;
-            Log.v("Er was al een user.", "");
-        }
-        catch (Exception e){
-            user = new User(getApplicationContext(),1, db_FirstName,db_LastName,db_Street,db_HouseNumber,db_PostalCode,db_City,db_email);
-            DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), "");
-            Log.v("Er was nog geen user", ".");
-        }
-
-
-
-
+        User userDetails = DatabaseHandler.getInstance(getApplicationContext()).getUser();
+        user = userDetails;
 
         TableLayout table = (TableLayout)findViewById(R.id.table_ManageAccount_Category);
         if (user.getFilePath().equals("")){

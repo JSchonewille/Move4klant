@@ -84,91 +84,91 @@
                 android:id="@+id/etLastName"/>
         </LinearLayout> // last name
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutLastName"
-            android:id="@+id/linearLayoutAddress"
-            android:weightSum="1.0"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="@string/labelAddress"
-                android:layout_weight=".3"/>
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:id="@+id/etStreet"/>
-        </LinearLayout> // street
+        <!--<LinearLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/linearLayoutLastName"-->
+            <!--android:id="@+id/linearLayoutAddress"-->
+            <!--android:weightSum="1.0"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:layout_marginBottom="4dp">-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="16dp"-->
+                <!--android:text="@string/labelAddress"-->
+                <!--android:layout_weight=".3"/>-->
+            <!--<EditText-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight=".7"-->
+                <!--android:id="@+id/etStreet"/>-->
+        <!--</LinearLayout> // street-->
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutAddress"
-            android:id="@+id/linearLayoutHouseNumber"
-            android:weightSum="1.0"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/labelHouseNumber"
-                android:textSize="16dp"
-                android:layout_weight=".3"
-                android:layout_gravity="left|center_vertical"
-                />
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:id="@+id/etHouseNumber"/>
-        </LinearLayout> // houseNumber
+        <!--<LinearLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/linearLayoutAddress"-->
+            <!--android:id="@+id/linearLayoutHouseNumber"-->
+            <!--android:weightSum="1.0"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:layout_marginBottom="4dp">-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/labelHouseNumber"-->
+                <!--android:textSize="16dp"-->
+                <!--android:layout_weight=".3"-->
+                <!--android:layout_gravity="left|center_vertical"-->
+                <!--/>-->
+            <!--<EditText-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight=".7"-->
+                <!--android:id="@+id/etHouseNumber"/>-->
+        <!--</LinearLayout> // houseNumber-->
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutAddress"
-            android:id="@+id/linearLayoutPostalCode"
-            android:weightSum="1.0"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/labelPostalCode"
-                android:textSize="16dp"
-                android:layout_weight=".3"/>
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:id="@+id/etPostalCode"/>
-        </LinearLayout> // postal code
+        <!--<LinearLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/linearLayoutAddress"-->
+            <!--android:id="@+id/linearLayoutPostalCode"-->
+            <!--android:weightSum="1.0"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:layout_marginBottom="4dp">-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/labelPostalCode"-->
+                <!--android:textSize="16dp"-->
+                <!--android:layout_weight=".3"/>-->
+            <!--<EditText-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight=".7"-->
+                <!--android:id="@+id/etPostalCode"/>-->
+        <!--</LinearLayout> // postal code-->
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutPostalCode"
-            android:id="@+id/linearLayoutCity"
-            android:weightSum="1.0"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="@string/labelCity"
-                android:layout_weight=".3"/>
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:id="@+id/etCity"/>
-        </LinearLayout> // city
+        <!--<LinearLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/linearLayoutPostalCode"-->
+            <!--android:id="@+id/linearLayoutCity"-->
+            <!--android:weightSum="1.0"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:layout_marginBottom="4dp">-->
+            <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="16dp"-->
+                <!--android:text="@string/labelCity"-->
+                <!--android:layout_weight=".3"/>-->
+            <!--<EditText-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight=".7"-->
+                <!--android:id="@+id/etCity"/>-->
+        <!--</LinearLayout> // city-->
 
         <LinearLayout
             android:layout_width="fill_parent"
