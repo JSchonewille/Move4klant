@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,19 +67,19 @@ public class EditUserInfoActivity extends Activity {
 
         etName          = (EditText)findViewById(R.id.etName);
         etLastName      = (EditText)findViewById(R.id.etLastName);
-        etStreet        = (EditText)findViewById(R.id.etStreet);
-        etHouseNumber   = (EditText)findViewById(R.id.etHouseNumber);
-        etPostalCode    = (EditText)findViewById(R.id.etPostalCode);
-        etCity          = (EditText)findViewById(R.id.etCity);
+//        etStreet        = (EditText)findViewById(R.id.etStreet);
+//        etHouseNumber   = (EditText)findViewById(R.id.etHouseNumber);
+//        etPostalCode    = (EditText)findViewById(R.id.etPostalCode);
+//        etCity          = (EditText)findViewById(R.id.etCity);
         etEmail         = (EditText)findViewById(R.id.etEmail);
 
         // set db info in Edit text
         etName.setHint(user.getName());
         etLastName.setHint(user.getLastName());
-        etStreet.setHint(user.getStreet());
-        etHouseNumber.setHint(user.getHouseNumber());
-        etPostalCode.setHint(user.getPostalCode());
-        etCity.setHint(user.getCity());
+//        etStreet.setHint(user.getStreet());
+//        etHouseNumber.setHint(user.getHouseNumber());
+//        etPostalCode.setHint(user.getPostalCode());
+//        etCity.setHint(user.getCity());
         etEmail.setHint(user.getEmail());
 
         if (user.getFilePath().equals("")){
@@ -147,25 +146,25 @@ public class EditUserInfoActivity extends Activity {
                 if (lastName.matches("")){
                     lastName = etLastName.getHint().toString();
                 }
-                if (street.matches("")){
-                    street = etStreet.getHint().toString();
-                }
-                if (houseNumber.matches("")){
-                    houseNumber = etHouseNumber.getHint().toString();
-                }
-                if (postalCode.matches("")){
-                    postalCode = etPostalCode.getHint().toString();
-                }
-                if (city.matches("")){
-                    city = etCity.getHint().toString();
-                }
+//                if (street.matches("")){
+//                    street = etStreet.getHint().toString();
+//                }
+//                if (houseNumber.matches("")){
+//                    houseNumber = etHouseNumber.getHint().toString();
+//                }
+//                if (postalCode.matches("")){
+//                    postalCode = etPostalCode.getHint().toString();
+//                }
+//                if (city.matches("")){
+//                    city = etCity.getHint().toString();
+//                }
                 if (email.matches("")){
                     email = etEmail.getHint().toString();
                 }
                 Log.v("filePath: ", user.getFilePath());
 
                 // reset values of the user
-                user = new User(getApplicationContext(),userID, name, lastName, street, houseNumber, postalCode, city, email);
+                user = new User(getApplicationContext(),userID, name, lastName, "", "", "", "", email);
                 user.setFilePath(filePath);
                 DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getName(), user.getLastName(), user.getStreet(), user.getPostalCode(), user.getHouseNumber(), user.getCity(), user.getEmail(), user.getFilePath());
                 user.setImage(bitmap);
@@ -185,18 +184,9 @@ public class EditUserInfoActivity extends Activity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivProfileImageEdit:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                        .setType("image/*")
-                        .putExtra("crop", "true")
-                        .putExtra("aspectX", 1)
-                        .putExtra("aspectY", 1)
-                        .putExtra("outputX", 200)
-                        .putExtra("outputY", 200)
-                        .putExtra("scale", "true")
-                        .putExtra(MediaStore.EXTRA_OUTPUT, Environment.getExternalStorageDirectory()
-                                + "/Android/data/"
-                                + "/Move4Klant")
-                        .putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.putExtra("crop", "true");
                 startActivityForResult(intent, 0);
                 break;
             case R.id.btChangeCategory:
@@ -210,13 +200,18 @@ public class EditUserInfoActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        nDialog = new ProgressDialog(EditUserInfoActivity.this);
+        nDialog.setTitle("Verwerken");
+        nDialog.setMessage("Loading..");
+        nDialog.setIndeterminate(false);
+        nDialog.setCancelable(true);
+        nDialog.show();
 
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (resultCode == RESULT_OK){
+
 
             Uri targetUri = data.getData();
             // save image to sd card
@@ -268,7 +263,6 @@ public class EditUserInfoActivity extends Activity {
 
 
         }
-
     }
 
     @Override
@@ -284,6 +278,9 @@ public class EditUserInfoActivity extends Activity {
 
             // Retrieve the image from the res folder
             bitmap = b;
+
+            // Find the SD Card path
+            File thisfilePath = Environment.getExternalStorageDirectory();
 
             // Create a new folder in SD Card
             File dir = new File(Environment.getExternalStorageDirectory()
