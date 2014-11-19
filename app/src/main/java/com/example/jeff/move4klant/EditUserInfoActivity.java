@@ -24,6 +24,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -181,7 +182,7 @@ public class EditUserInfoActivity extends Activity {
                 DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getFilePath());
 
                 //TODO send user to db and update server
-                //DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
+                DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
 
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -241,6 +242,9 @@ public class EditUserInfoActivity extends Activity {
                         .getExternalStorageDirectory() + "/temp.jpg");
                 imageView.setImageBitmap(croppedImage);
                 saveImageToSD(croppedImage);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byteArray = stream.toByteArray();
                 break;
         }
     }
