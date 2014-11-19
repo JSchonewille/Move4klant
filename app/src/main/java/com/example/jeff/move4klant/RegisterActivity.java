@@ -222,7 +222,7 @@ public class RegisterActivity extends Activity {
                                  **/
                                 APIFunctions logout = APIFunctions.getInstance();
                                 logout.logoutUser(getApplicationContext());
-                                db.addUser(json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), "", "", "", "", json_user.getString(KEY_EMAIL), "");
+                               // db.addUser(json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), "", "", "", "", json_user.getString(KEY_EMAIL), "");
 
                                 //TODO get additional info from user login (street, postalcode ect)
                                 //User user = new User(getApplication(), json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), ??, ??, ??, ??, json_user.getString(KEY_EMAIL));

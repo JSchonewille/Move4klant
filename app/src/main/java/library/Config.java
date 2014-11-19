@@ -15,8 +15,8 @@ public class Config {
     public static String GETALLPRODUCTS = "http://ibeacontest.herobo.com/getproductinfo.php";
     public static String CHECKINGSTATUS = "http://ibeacontest.herobo.com/checkinstatus.php";
 
-    public static String LOGINURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
-    public static String REGISTERURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
-    public static String FORPASSURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
-    public static String CHGPASSURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
+    public static String LOGINURL = "http://ibeacontest.herobo.com/login_api/";
+    public static String REGISTERURL = "http://ibeacontest.herobo.com/login_api/";
+    public static String FORPASSURL = "http://ibeacontest.herobo.com/login_api/";
+    public static String CHGPASSURL = "http://ibeacontest.herobo.com/login_api/";
 }

@@ -28,10 +28,10 @@ public class APIFunctions {
     private static String editlikesURL = "http://ibeacontest.herobo.com/editlikes.php";
     private static String getlikesURL = "http://ibeacontest.herobo.com/getlikes.php";
 
-    private static String loginURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
-    private static String registerURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
-    private static String forpassURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
-    private static String chgpassURL = "http://supermonsieurbalzaqsmashbros.comxa.com/login_api/";
+    private static String loginURL = "http://ibeacontest.herobo.com/login_api/index.php";
+    private static String registerURL = "http://ibeacontest.herobo.com/login_api/index.php";
+    private static String forpassURL = "http://ibeacontest.herobo.com/login_api/index.php";
+    private static String chgpassURL = "http://ibeacontest.herobo.com/login_api/index.php";
 
 
     //constructor
@@ -132,8 +132,7 @@ public class APIFunctions {
      * Resets the temporary data stored in SQLite Database
      * */
     public boolean logoutUser(Context context){
-        DatabaseFunctions db = new DatabaseFunctions(context);
-        db.resetUser();
+        DatabaseHandler.getInstance(context).resetUser();
         return true;
     }
 

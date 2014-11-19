@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import library.APIFunctions;
-import library.DatabaseFunctions;
+import library.DatabaseHandler;
 import library.PrefUtils;
 
 public class LoginActivity extends Activity {
@@ -34,7 +35,7 @@ public class LoginActivity extends Activity {
     EditText inputPassword;
 
     private static String KEY_SUCCESS = "success";
-    private static String KEY_UID = "uid";
+    private static String KEY_UID = "customerID";
     private static String KEY_USERNAME = "uname";
     private static String KEY_FIRSTNAME = "fname";
     private static String KEY_LASTNAME = "lname";
@@ -219,8 +220,9 @@ public class LoginActivity extends Activity {
                             String res = json.getString(KEY_SUCCESS);
                             if (Integer.parseInt(res) == 1) {
                                 nDialog.setTitle("Getting data");
-                                DatabaseFunctions db = new DatabaseFunctions(getApplicationContext());
+                                DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
                                 JSONObject json_user = json.getJSONObject("user");
+                                Log.e("user ", json_user.toString());
                                 /**
                                  * Clear all previous data in SQlite database.
                                  **/
@@ -228,7 +230,7 @@ public class LoginActivity extends Activity {
                                 logout.logoutUser(getApplicationContext());
 
                                 // TODO add full user info to db (street, postalcode ect)
-                                db.addUser(json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), "", "", "", "",json_user.getString(KEY_EMAIL), "" );
+                                db.addUser(json_user.getInt(KEY_UID), json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), json_user.getString(KEY_EMAIL), "" );
                                 /**
                                  *If JSON array details are stored in SQlite it launches the User Panel.
                                  **/
@@ -236,7 +238,6 @@ public class LoginActivity extends Activity {
                                 nDialog.dismiss();
                                 Intent upanel = new Intent(getApplicationContext(), home.class);
                                 upanel.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                upanel.putExtra("USER_NAME", json_user.getString(KEY_USERNAME));
 
                                startActivity(upanel);
                                 /**
