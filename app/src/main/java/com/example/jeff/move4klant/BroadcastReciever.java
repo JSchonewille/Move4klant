@@ -23,7 +23,7 @@ public class BroadcastReciever extends BroadcastReceiver {
 
         AlarmManager ALS = (AlarmManager)context.getSystemService(context.ALARM_SERVICE);
         // change 20 to 80
-        ALS.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),15 * 1000 ,P);
+        ALS.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),60 * 1000 ,P);
     }
 }
 
