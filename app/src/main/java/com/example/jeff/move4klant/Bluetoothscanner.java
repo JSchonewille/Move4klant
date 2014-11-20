@@ -9,10 +9,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +25,7 @@ import java.util.List;
 import library.DatabaseHandler;
 import library.Offer;
 import library.PrefUtils;
+import library.ServerRequestHandler;
 import library.Smoothener;
 import library.User;
 import library.ibeacon;
@@ -40,6 +45,8 @@ public class Bluetoothscanner extends Service {
     private static final int INACTIVITY_TIME = 5;
     // the standard bluetooth adapter
     BluetoothAdapter bta;
+    // current user
+    User user;
     // List of offers we have already shown to the costumer
     private HashMap<Integer, Date> Usedoffers;
     // stops the scanning when false
@@ -60,15 +67,10 @@ public class Bluetoothscanner extends Service {
     private Smoothener smooth;
     // the check in time
     private Date checkInTime;
-    // current user
-    User user;
     private int NOBTACounter = 0;
-    // check if user is checked in
-    private Boolean checkedin =  false;
     // counter to check if our BLE gets results
     private int NoBLECounter = 0;
-    // shared preferences
-    private Boolean Localcheckin;
+    private Boolean CheckinoutRunning = false;
 
 
     //region bluetooth LE callback
@@ -126,20 +128,12 @@ public class Bluetoothscanner extends Service {
                         if (checkInTime != null) {
                             Date d = new Date();
                             long diffInMins = Math.abs(d.getTime() - checkInTime.getTime()) / 60000;
-
                             // if fifteen minutes have passed and counter ==> 300 and the user is checked in
                             // we check him out
                             if (diffInMins >= INACTIVITY_TIME && passivecounter > 290) {
-                                Localcheckin = DatabaseHandler.getInstance(getApplicationContext()).getLocalCheckinStatus(getApplicationContext(),false);
-                                if(Localcheckin) {
-                                    checkedin = DatabaseHandler.getInstance(getApplicationContext()).checkinstatus(user.getUserID());
-                                    if (checkedin) {
-                                        Log.d("check-out", "beacons not found, check out");
-                                        DatabaseHandler.getInstance(getApplicationContext()).checkinout(user.getUserID());
-                                        DatabaseHandler.getInstance(getApplicationContext()).setLocalCheckinStatus(getApplicationContext(),false);
-                                        checkInTime = null;
-                                    }
-                                }
+                                // we want to check the user out
+                                if(!CheckinoutRunning)
+                                Checkinout(false);
                             }
                         }
                         //Log.d("bluetooth action", "major not found , counter = " + counter);
@@ -147,22 +141,11 @@ public class Bluetoothscanner extends Service {
 
                     if (major == ACTIVEMAJOR) {
 
-                        // if there is no checkin time and the database doesnt have a checked in user
-                        // we check him in
+                    // IF THERE IS NO CHECKIN TIME, WE CHECK THE USER IN
                         if (checkInTime == null) {
-                            // when the checkin time has not been set , and the database tells us there is no checked in user
-                            Localcheckin = DatabaseHandler.getInstance(getApplicationContext()).getLocalCheckinStatus(getApplicationContext(),false);
-                            if(!Localcheckin) {
-                                checkedin = DatabaseHandler.getInstance(getApplicationContext()).checkinstatus(user.getUserID());
-                                if (!checkedin) {
-                                    Log.d("checked in status", checkedin.toString());
-                                    Log.d("check-in", "userchecked in , major found");
-                                    DatabaseHandler.getInstance(getApplicationContext()).checkinout(user.getUserID());
-                                    DatabaseHandler.getInstance(getApplicationContext()).setLocalCheckinStatus(getApplicationContext(),true);
-                                    checkInTime = new Date();
-                                }
-                            }
-                       }
+                            if(!CheckinoutRunning)
+                            Checkinout(true);
+                        }
                         SCANMODE = 1;
                         passivecounter = 0;
                         // Log.d("bluetooth action", "major found, set scan to active");
@@ -198,16 +181,12 @@ public class Bluetoothscanner extends Service {
 
                 }
             }
-
             // if we find our major, we set our mode to active
-
-
             if (passivecounter >= 300) {
                 beaconcounter++;
                 SCANMODE = 0;
                 Log.d("bluetooth action", "counter > 300 , setting scanmode to passive");
             }
-
 
             // slow down scanning if mode = passive, to conserve battery
             if (SCANMODE == 0 && beaconcounter > 10) {
@@ -223,11 +202,10 @@ public class Bluetoothscanner extends Service {
                     e.printStackTrace();
                 }
             }
-
         }
     };
     //endregion
-       //region broadcast reciever
+    //region broadcast reciever
     private BroadcastReceiver serviceReceiver = new BroadcastReceiver() {
 
         @Override
@@ -280,9 +258,6 @@ public class Bluetoothscanner extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        final BluetoothManager bluetoothManager =
-                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        bta = bluetoothManager.getAdapter();
         if (serviceReceiver != null) {
 //Create an intent filter to listen to the broadcast sent with the action "ACTION_STRING_SERVICE"
             IntentFilter intentFilter = new IntentFilter(ACTION_STRING_SERVICE);
@@ -290,13 +265,10 @@ public class Bluetoothscanner extends Service {
             registerReceiver(serviceReceiver, intentFilter);
         }
         getconfigs();
-        smooth =  new Smoothener(8);
+        smooth = new Smoothener(8);
         Usedoffers = new HashMap<Integer, Date>();
 
-        if (DatabaseHandler.getInstance(getApplicationContext()).getLocalCheckinStatus(getApplicationContext(),false) == false)
-        {
-            DatabaseHandler.getInstance(getApplicationContext()).setLocalCheckinStatus(getApplicationContext(),false);
-        }
+
     }
 
     @Override
@@ -330,59 +302,49 @@ public class Bluetoothscanner extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Localcheckin = DatabaseHandler.getInstance(getApplicationContext()).getLocalCheckinStatus(getApplicationContext(),false);
         Log.d("start command", "start command called");
-        // bluetooth is enabled --------------------------------------------------------
-        // we did not get any BLE result since our last call
+       if(bta != null){ bta.stopLeScan(mLeScanCallback);}
+
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        bta = bluetoothManager.getAdapter();
+
+        // checkintime= null;
         if (bta.isEnabled()) {
-            if(NoBLECounter > 1 && NoBLECounter < INACTIVITY_TIME)
-             {
-                 bta.stopLeScan(mLeScanCallback);
+            NoBLECounter++;
+            if (NoBLECounter >= 1 && NoBLECounter <= INACTIVITY_TIME) {
                 // we start our scan again ( maybe the scan has stopped ,which is why we dont get any results
-                 if(shouldscan) {
-                     Log.d("start command", "restarting scan");
-                     bta.startLeScan(mLeScanCallback);
-                 }
+                if (shouldscan) {
+                    Log.d("start command", "restarting scan");
+                    bta.startLeScan(mLeScanCallback);
+                }
             }
-            NoBLECounter ++;
         }
         // if we didnt get any results for 15 minutes straight.. we check if we have to checkout the user
-        if(NoBLECounter > INACTIVITY_TIME)
-        {
+        if (NoBLECounter >= INACTIVITY_TIME) {
             // reset the counter to avoid unnecesairy database calls
             NoBLECounter = 0;
+            Log.d("checkout", "user checked out from non bluetooth results");
+            if(!CheckinoutRunning)
+            Checkinout(false);
+            // restart bluetooth
+            bta.disable();
+            bta.enable();
 
-
-            // if the user is checked in we check him out
-            if(Localcheckin) {
-                checkedin = DatabaseHandler.getInstance(getApplicationContext()).checkinstatus(user.getUserID());
-                if (checkedin) {
-                    Log.d("checkout", "user checked out from non bluetooth results");
-                    DatabaseHandler.getInstance(getApplicationContext()).checkinout(user.getUserID());
-                    checkInTime = null;
-                }
-            }
         }
 
+
         // bluetooth is disabled -------------------------------------------------------
-        if(!bta.isEnabled())
-        {
+        if (!bta.isEnabled()) {
             NOBTACounter++;
             // if twenty minutes have passed  (bluetooth turned off)
-            if ( NOBTACounter > INACTIVITY_TIME)
-            {
-
+            if (NOBTACounter >= INACTIVITY_TIME) {
                 // reset the counter to avoid unnecesary database calls
-                NOBTACounter =0;
-                // if the user is checked in we check him out
-                if(Localcheckin) {
-                    checkedin = DatabaseHandler.getInstance(getApplicationContext()).checkinstatus(user.getUserID());
-                    if (checkedin) {
-                        Log.d("checkout", "user checked out from non bluetooth adapter");
-                        DatabaseHandler.getInstance(getApplicationContext()).checkinout(user.getUserID());
-                        checkInTime = null;
-                    }
-                }
+                NOBTACounter = 0;
+                Log.d("checkout", "user checked out from non bluetooth adapter");
+                if(!CheckinoutRunning)
+                Checkinout(false);
+
             }
         }
         return Service.START_STICKY;
@@ -397,9 +359,9 @@ public class Bluetoothscanner extends Service {
 
     public void getconfigs() {
         ibeaconList = DatabaseHandler.getInstance(getApplicationContext()).getAllBeacons();
-        //offerList = DatabaseHandler.getInstance(getApplicationContext()).getOfferByLikedCategories();
-        offerList = DatabaseHandler.getInstance(getApplicationContext()).getAllOffers();
-        user  = DatabaseHandler.getInstance(getApplicationContext()).getUser();
+        offerList = DatabaseHandler.getInstance(getApplicationContext()).getOfferByLikedCategories();
+        //offerList = DatabaseHandler.getInstance(getApplicationContext()).getAllOffers();
+        user = DatabaseHandler.getInstance(getApplicationContext()).getUser();
     }
 
     public boolean AppActive() {
@@ -416,7 +378,60 @@ public class Bluetoothscanner extends Service {
         }
         return false;
     }
-}
 
+    public void Checkinout(final Boolean action) {
+        CheckinoutRunning = true;
+        if(action)
+        {
+            checkInTime = new Date();
+        }
+
+        if(!action)
+        {
+            checkInTime = null;
+        }
+        ServerRequestHandler.checkinstatus(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonArray) {
+                Log.d("CHECKIN STATUS", jsonArray.toString());
+                try {
+                    boolean checkinstatus = jsonArray.getBoolean("returnvalue");
+                    // we want to check the user in
+                    if (action) {
+                        // if the user isnt checked in
+                        if (!checkinstatus) {
+                            // check in
+                            Log.d("CHECK IN", "user checked in");
+                            DatabaseHandler.getInstance(getApplicationContext()).checkinout(user.getUserID());
+                        }
+                    }
+                    // we want to check the user out
+                    if (!action) {
+                        // the user is checked in
+                        if (checkinstatus) {
+                            // we check the user out
+                            Log.d("CHECK OUT", "user checked out");
+                            DatabaseHandler.getInstance(getApplicationContext()).checkinout(user.getUserID());
+                            checkInTime = null;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError.networkResponse != null)
+                    Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
+                else
+                    Log.e("NETWORKERROR", volleyError.getMessage());
+            }
+        }, user.getUserID());
+        CheckinoutRunning = false;
+    }
+
+
+}
 
 
