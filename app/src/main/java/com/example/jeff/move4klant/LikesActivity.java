@@ -19,7 +19,8 @@ import library.DatabaseHandler;
 
 public class LikesActivity extends Activity {
     private ArrayAdapter<Category> aa;
-
+    private static final String ACTION_STRING_SERVICE = "ToService";
+    private static final String ACTION_STRING_ACTIVITY = "ToActivity";
 
     private ArrayList<Category> checkedList = new ArrayList<Category>();
     private List<Category> savedList;
@@ -119,6 +120,10 @@ public class LikesActivity extends Activity {
     public void saveLikes() {
        int id =DatabaseHandler.getInstance(getApplicationContext()).getUser().getUserID();
        DatabaseHandler.getInstance(getApplicationContext()).saveLikedCategories(id, checkedList);
+        Intent new_intent = new Intent();
+        new_intent.setAction(ACTION_STRING_SERVICE);
+        new_intent.putExtra("UPDATELIKE",true);
+        sendBroadcast(new_intent);
     }
 
 }
