@@ -180,7 +180,10 @@ public class EditUserInfoActivity extends Activity {
                 }
 
                 DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getFilePath());
-                DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
+                DatabaseHandler.getInstance(getApplicationContext()).uploadUserEditedInfo(user.getUserID(), user.getName(), user.getLastName(), user.getEmail());
+                if (byteArray != null) {
+                    DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
+                }
 
                 Intent i = new Intent(getApplicationContext(), ManageAccount.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
