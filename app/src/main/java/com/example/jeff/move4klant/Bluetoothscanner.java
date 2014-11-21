@@ -71,7 +71,8 @@ public class Bluetoothscanner extends Service {
     // counter to check if our BLE gets results
     private int NoBLECounter = 0;
     private Boolean CheckinoutRunning = false;
-
+    private Date OfferIntentTime;
+    private Date ProductIntentTime;
 
     //region bluetooth LE callback
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -151,12 +152,18 @@ public class Bluetoothscanner extends Service {
                         // Log.d("bluetooth action", "major found, set scan to active");
                         for (ibeacon i : ibeaconList) {
                             if (major == i.getMajor() && minor == i.getMinor()) {
-                                if (adjrssi > DISTANCE_CLOSE && !AppActive()) {
-                                    Log.d("bluetooth result" + tx, "Holding phone to beacon");
-                                    Intent j = new Intent(getApplicationContext(), ProductInfoActivity.class);
-                                    j.putExtra("productID", i.getProductID());
-                                    j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(j);
+                                if (adjrssi > DISTANCE_CLOSE) {
+                                    long diffInsec = Math.abs((new Date()).getTime() - ProductIntentTime.getTime()) / 1000;
+                                    if(diffInsec > 2) {
+                                        Log.d("bluetooth result" + tx, "Holding phone to beacon");
+                                        Intent j = new Intent(getApplicationContext(), ProductInfoActivity.class);
+                                        j.putExtra("productID", i.getProductID());
+                                        j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(j);
+                                        ProductIntentTime = new Date();
+                                    }
+
                                 }
                                 // far away action
                                 else {
@@ -169,6 +176,7 @@ public class Bluetoothscanner extends Service {
                                                 Intent j = new Intent(getApplicationContext(), OfferActivity.class);
                                                 j.putExtra("offerID", i.getOfferID());
                                                 j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 Usedoffers.put(i.getOfferID(), new Date());
                                                 startActivity(j);
                                             }
@@ -266,6 +274,7 @@ public class Bluetoothscanner extends Service {
         }
         getconfigs();
         smooth = new Smoothener(8);
+        ProductIntentTime = new Date();
         Usedoffers = new HashMap<Integer, Date>();
 
 
@@ -298,7 +307,6 @@ public class Bluetoothscanner extends Service {
             this.startActivity(start);
         }
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
