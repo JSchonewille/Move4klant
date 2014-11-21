@@ -159,7 +159,7 @@ public class Bluetoothscanner extends Service {
                                         Intent j = new Intent(getApplicationContext(), ProductInfoActivity.class);
                                         j.putExtra("productID", i.getProductID());
                                         j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(j);
                                         ProductIntentTime = new Date();
                                     }
@@ -176,7 +176,7 @@ public class Bluetoothscanner extends Service {
                                                 Intent j = new Intent(getApplicationContext(), OfferActivity.class);
                                                 j.putExtra("offerID", i.getOfferID());
                                                 j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                 Usedoffers.put(i.getOfferID(), new Date());
                                                 startActivity(j);
                                             }
