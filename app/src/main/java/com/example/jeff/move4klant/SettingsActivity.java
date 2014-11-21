@@ -7,6 +7,7 @@ import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import library.DatabaseHandler;
 import library.PrefUtils;
 
 /**
@@ -17,7 +18,7 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         addPreferencesFromResource(R.xml.settings);
 
 
@@ -65,10 +66,13 @@ public class SettingsActivity extends PreferenceActivity {
     public void disconnectAccount() {
         PrefUtils.saveToPrefs(SettingsActivity.this, getString(R.string.PREFS_LOGIN_USERNAME_KEY), "");
         PrefUtils.saveToPrefs(SettingsActivity.this, getString(R.string.PREFS_LOGIN_PASSWORD_KEY), "");
-        PrefUtils.saveToPrefs(SettingsActivity.this, getString(R.string.PREFS_AUTO_LOGIN_KEY), "false");
+        PrefUtils.saveToPrefs(SettingsActivity.this, getString(R.string.PREFS_AUTO_LOGIN_KEY), "");
+        DatabaseHandler.getInstance(getApplicationContext()).resetUser();
+        DatabaseHandler.getInstance(getApplicationContext()).resetCategories();
 
         Toast.makeText(getApplicationContext(),"Account ontkoppeld", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+        Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
     }

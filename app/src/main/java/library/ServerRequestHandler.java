@@ -2,7 +2,6 @@ package library;
 
 
 import android.util.Base64;
-import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -18,6 +17,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sander on 11-11-2014.
@@ -65,16 +65,40 @@ public class ServerRequestHandler {
         HashMap<String, String> params  = new HashMap<String, String>();
         params.put("customerID", Integer.toString(customerID));
         params.put("categories", Arrays.toString(categories));
-        Log.e("LIKES", Arrays.toString(categories));
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),l, el);
 
         RequestController.getInstance().addToRequestQueue(req);
     }
+    public static void getLikes(Response.Listener<JSONObject> l, Response.ErrorListener el, final int customerID){
+        String URL = Config.GETLIKESURL;
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("customerID", String.valueOf(customerID));
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,URL, new JSONObject(params), l, el);
+
+        RequestController.getInstance().addToRequestQueue(request);
+    }
+    public static void getLikesFromServer(Response.Listener<JSONArray> l, Response.ErrorListener el, final int customerID){
+        String URL = Config.GETLIKESURL;
+
+
+
+        JsonArrayRequest request = new JsonArrayRequest(URL, l, el) {
+            @Override
+            public Map<String, String> getParams()  {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("customerID", String.valueOf(customerID));
+                return params;
+            }
+        };
+
+        RequestController.getInstance().addToRequestQueue(request);
+    }
+
 
     public static void uploadUserImage(Response.Listener<JSONObject> l, Response.ErrorListener el, final int customerID,  final byte[] image){
         String URL = Config.UPLOADIMAGE;
-        Log.e("user",String.valueOf(customerID));
-        Log.e("image", encodeImage(image));
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("customerID", String.valueOf(customerID));
         params.put("image", encodeImage(image));
@@ -148,8 +172,10 @@ class CustomRequest extends Request<JSONObject> {
 }
 
 class CustomJsonArrayRequest extends com.android.volley.toolbox.JsonRequest<org.json.JSONArray> {
-    public CustomJsonArrayRequest(String url, Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
-        super(Method.POST, url, null, listener, errorListener);
+    public CustomJsonArrayRequest(String url, JSONObject jsonRequest, Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
+
+        super(Method.POST, url, (jsonRequest == null) ? null : jsonRequest.toString(),
+                listener, errorListener);
      /*   super(method, url, (jsonRequest == null) ? null : jsonRequest.toString(),
                 listener, errorListener);
     }
@@ -165,17 +191,9 @@ class CustomJsonArrayRequest extends com.android.volley.toolbox.JsonRequest<org.
         }*/
     }
 
+
     @Override
     protected Response<JSONArray> parseNetworkResponse(NetworkResponse networkResponse) {
-        try {
-            String jsonString =
-                    new String(networkResponse.data, com.android.volley.toolbox.HttpHeaderParser.parseCharset(networkResponse.headers));
-            return Response.success(new JSONArray(jsonString),
-                    com.android.volley.toolbox.HttpHeaderParser.parseCacheHeaders(networkResponse));
-        } catch (UnsupportedEncodingException e) {
-            return Response.error(new com.android.volley.ParseError(e));
-        } catch (JSONException je) {
-            return Response.error(new com.android.volley.ParseError(je));
-        }
+        return null;
     }
 }

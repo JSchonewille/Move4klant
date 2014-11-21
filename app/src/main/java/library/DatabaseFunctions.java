@@ -436,7 +436,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
                 + KEY_FILEPATH + " TEXT" + ")";
         db.execSQL(CREATE_USER_TABLE);
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
-                + KEY_CATEGORYID + " INTEGER PRIMARY KEY,"
+                + KEY_CATEGORYID + " INTEGER,"
                 + KEY_CATEGORYNAME + " TEXT,"
                 + KEY_CATEGORYLIKED + " INTEGER"+ ")";
         db.execSQL(CREATE_CATEGORY_TABLE);
