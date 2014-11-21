@@ -22,6 +22,7 @@ public class DatabaseHandler {
     private static DatabaseFunctions db;
 
     private boolean checkinstatus;
+    private String returnResponse;
 
    public DatabaseHandler() {
 
@@ -316,6 +317,33 @@ public class DatabaseHandler {
 
         return checkinstatus;
     }
+    public String uploadUserEditedInfo(int userID,  final String name, final String lastname, final String email){
+        returnResponse = "error";
+        ServerRequestHandler.uploadUserEditedInfo(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonArray) {
+                Log.d("CHECKIN STATUS", jsonArray.toString());
+                try {
+                    returnResponse = jsonArray.getString("returnvalue");
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError.networkResponse != null)
+                    Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
+                else
+                    Log.e("NETWORKERROR", volleyError.getMessage());
+            }
+        }, userID, name, lastname, email);
+
+        return returnResponse;
+    }
+
 
     public void setLocalCheckinStatus(Context context, boolean check){
         PrefUtils.saveToPrefs(context, context.getString(R.string.PREFS_CHECKEDIN), check);

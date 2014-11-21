@@ -108,6 +108,20 @@ public class ServerRequestHandler {
 
         RequestController.getInstance().addToRequestQueue(request);
     }
+    public static void uploadUserEditedInfo(Response.Listener<JSONObject> l, Response.ErrorListener el, final int customerID, final String name, final String lastname, final String email){
+        String URL = Config.EDITUSER;
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("customerID", String.valueOf(customerID));
+        params.put("name",name);
+        params.put("email",email);
+        params.put("lastname",lastname);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params), l, el);
+        //JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params), l, el);
+
+        RequestController.getInstance().addToRequestQueue(request);
+    }
+
 
 
     public static void checkinout(Response.Listener<JSONObject> l, Response.ErrorListener el, final int customerID){
