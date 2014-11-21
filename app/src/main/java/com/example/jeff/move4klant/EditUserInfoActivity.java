@@ -339,9 +339,7 @@ public class EditUserInfoActivity extends Activity {
             filePath = file.getAbsolutePath().toString();
 
             try {
-
                 output = new FileOutputStream(file);
-
                 // Compress into png format image from 0% - 100%
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
                 output.flush();

@@ -14,6 +14,7 @@ public class Config {
     public static String UPLOADIMAGE = "http://ibeacontest.herobo.com/imagecontroller.php";
     public static String GETALLPRODUCTS = "http://ibeacontest.herobo.com/getproductinfo.php";
     public static String CHECKINGSTATUS = "http://ibeacontest.herobo.com/checkinstatus.php";
+    public static String EDITUSER = "http://ibeacontest.herobo.com/editcostumer.php";
 
     public static String LOGINURL = "http://ibeacontest.herobo.com/login_api/";
     public static String REGISTERURL = "http://ibeacontest.herobo.com/login_api/";

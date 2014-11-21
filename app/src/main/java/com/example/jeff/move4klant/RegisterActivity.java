@@ -34,7 +34,7 @@ public class RegisterActivity extends Activity {
      *  JSON Response node names.
      **/
     private static String KEY_SUCCESS = "success";
-    private static String KEY_UID = "uid";
+    private static String KEY_UID = "customerID";
     private static String KEY_FIRSTNAME = "fname";
     private static String KEY_LASTNAME = "lname";
     private static String KEY_USERNAME = "uname";
@@ -46,7 +46,7 @@ public class RegisterActivity extends Activity {
      **/
     EditText inputFirstName;
     EditText inputLastName;
-    EditText inputUsername;
+    //EditText inputUsername;
     EditText inputEmail;
     EditText inputPassword;
     Button btnRegister;
@@ -64,7 +64,7 @@ public class RegisterActivity extends Activity {
          **/
         inputFirstName = (EditText) findViewById(R.id.fname);
         inputLastName = (EditText) findViewById(R.id.lname);
-        inputUsername = (EditText) findViewById(R.id.uname);
+        //inputUsername = (EditText) findViewById(R.id.uname);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.pword);
         btnRegister = (Button) findViewById(R.id.btnRegister);
@@ -92,16 +92,9 @@ public class RegisterActivity extends Activity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (  ( !inputUsername.getText().toString().equals("")) && ( !inputPassword.getText().toString().equals("")) && ( !inputFirstName.getText().toString().equals("")) && ( !inputLastName.getText().toString().equals("")) && ( !inputEmail.getText().toString().equals("")) )
+                if ( ( !inputPassword.getText().toString().equals("")) && ( !inputFirstName.getText().toString().equals("")) && ( !inputLastName.getText().toString().equals("")) && ( !inputEmail.getText().toString().equals("")) )
                 {
-                    if ( inputUsername.getText().toString().length() > 2 ){
                         NetAsync(view);
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(),
-                                "Username should be minimum 3 characters", Toast.LENGTH_SHORT).show();
-                    }
                 }
                 else
                 {
@@ -180,12 +173,12 @@ public class RegisterActivity extends Activity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                inputUsername = (EditText) findViewById(R.id.uname);
+                //inputUsername = (EditText) findViewById(R.id.uname);
                 inputPassword = (EditText) findViewById(R.id.pword);
                 fname = inputFirstName.getText().toString();
                 lname = inputLastName.getText().toString();
                 email = inputEmail.getText().toString();
-                uname= inputUsername.getText().toString();
+               // uname= inputUsername.getText().toString();
                 password = inputPassword.getText().toString();
 
                 nDialog.setTitle("Creating User");
@@ -194,7 +187,7 @@ public class RegisterActivity extends Activity {
             @Override
             protected JSONObject doInBackground(Object[] objects) {
                 APIFunctions userFunction = APIFunctions.getInstance();
-                JSONObject json = userFunction.registerUser(fname, lname, email, uname, password);
+                JSONObject json = userFunction.registerUser(fname, lname, email, password);
 
                 return json;
             }
@@ -222,12 +215,8 @@ public class RegisterActivity extends Activity {
                                  **/
                                 APIFunctions logout = APIFunctions.getInstance();
                                 logout.logoutUser(getApplicationContext());
-                               // db.addUser(json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), "", "", "", "", json_user.getString(KEY_EMAIL), "");
+                                db.addUser(json_user.getInt(KEY_UID), json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), json_user.getString(KEY_EMAIL), "");
 
-                                //TODO get additional info from user login (street, postalcode ect)
-                                //User user = new User(getApplication(), json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), ??, ??, ??, ??, json_user.getString(KEY_EMAIL));
-                                // TODO set userID after getting ID from server
-                                //user.setUserID(?????);
 
                                 PrefUtils.saveToPrefs(RegisterActivity.this, getString(R.string.PREFS_LOGIN_USERNAME_KEY), inputEmail.getText().toString());
                                 PrefUtils.saveToPrefs(RegisterActivity.this, getString(R.string.PREFS_LOGIN_PASSWORD_KEY), inputPassword.getText().toString());

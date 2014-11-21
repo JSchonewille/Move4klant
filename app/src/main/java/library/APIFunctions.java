@@ -115,14 +115,13 @@ public class APIFunctions {
     /**
      * Function to  Register
      **/
-    public JSONObject registerUser(String fname, String lname, String email, String uname, String password){
+    public JSONObject registerUser(String fname, String lname, String email, String password){
         // Building Parameters
         List params = new ArrayList();
         params.add(new BasicNameValuePair("tag", "register"));
         params.add(new BasicNameValuePair("fname", fname));
         params.add(new BasicNameValuePair("lname", lname));
         params.add(new BasicNameValuePair("email", email));
-        params.add(new BasicNameValuePair("uname", uname));
         params.add(new BasicNameValuePair("password", password));
         JSONObject json = jsonParser.getJSONFromUrl(registerURL,params);
         return json;

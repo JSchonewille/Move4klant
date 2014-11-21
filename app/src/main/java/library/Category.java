@@ -25,7 +25,7 @@ public class Category {
         try {
             this.ID = object.getInt("id");
             this.name = object.getString("name");
-            this.liked = object.getInt("liked");
+          //  this.liked = object.getInt("liked");
         } catch (JSONException e) {
             e.printStackTrace();
         }

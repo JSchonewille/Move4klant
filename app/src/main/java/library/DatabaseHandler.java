@@ -22,6 +22,7 @@ public class DatabaseHandler {
     private static DatabaseFunctions db;
 
     private boolean checkinstatus;
+    private String returnResponse;
 
    public DatabaseHandler() {
 
@@ -53,7 +54,7 @@ public class DatabaseHandler {
                     try {
                         int liked = 0;
                         for (Category c : catList) {
-                            if (c.getName().equals(cat.getName()))
+                            if (c.getID() ==cat.getID())
                             {liked = 1;}
                         }
                         db.addCategory(cat.getID(), cat.getName(), liked);
@@ -88,9 +89,7 @@ public class DatabaseHandler {
             i++;
         }
         for (Category cat : list) {
-
             try {
-
                 i++;
                 int liked = 0;
                 for (Category c : likes) {
@@ -98,12 +97,9 @@ public class DatabaseHandler {
                     {liked = 1;}
                 }
                 db.addCategory(cat.getID(), cat.getName(), liked);
-
             } catch (Exception e) {
                 Log.d("exception", e.toString());
             }
-
-
             Log.d("Like Update", "SUCCES");
         }
 
@@ -121,6 +117,60 @@ public class DatabaseHandler {
                     Log.e("NETWORKERROR" , volleyError.getMessage());
             }
         }, userID, categoryids);
+
+    }
+    public void getLikedCategoriesFromServer(int userID){
+
+
+
+        ServerRequestHandler.getLikes(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonArray) {
+                ArrayList<Category> catList = getAllCategories();
+
+                db.resetCategory();
+
+                JSONArray arr;
+                int liked = 0;
+                Log.e("Array", jsonArray.toString());
+
+                try {
+                    arr =  jsonArray.getJSONArray("returnvalue");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    arr=new JSONArray();
+                }
+
+                 String smt = arr.toString().replace("[","");
+                 smt = smt.replace("]","");
+                 smt = smt.replace(" ","");
+                 String[] split = smt.split(",");
+                for (Category cat : catList) {
+                    try {
+                        for (int i = 0; i < arr.length(); i++) {
+                            liked = 0;
+                            //Log.e("Like", String.valueOf(arr.toString()));
+                            int b = Integer.parseInt(split[i]);
+
+                            if (b == cat.getID()) {
+                                liked = 1;
+                                // }
+                            }
+                            db.addCategory(cat.getID(), cat.getName(), liked);
+                            Log.e("cat val", String.valueOf(cat.getID()) + cat.getName() + liked);
+                        }
+                    } catch (Exception e) {
+                        Log.d("exception", e.toString());
+                    }
+                    Log.d("Likes Import", "SUCCES");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.e("VOLLEY ERROR", volleyError.getMessage());
+            }
+        }, userID);
     }
 
     //OFFER FUNCTIONS
@@ -267,6 +317,33 @@ public class DatabaseHandler {
 
         return checkinstatus;
     }
+    public String uploadUserEditedInfo(int userID,  final String name, final String lastname, final String email){
+        returnResponse = "error";
+        ServerRequestHandler.uploadUserEditedInfo(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonArray) {
+                Log.d("CHECKIN STATUS", jsonArray.toString());
+                try {
+                    returnResponse = jsonArray.getString("returnvalue");
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError.networkResponse != null)
+                    Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
+                else
+                    Log.e("NETWORKERROR", volleyError.getMessage());
+            }
+        }, userID, name, lastname, email);
+
+        return returnResponse;
+    }
+
 
     public void setLocalCheckinStatus(Context context, boolean check){
         PrefUtils.saveToPrefs(context, context.getString(R.string.PREFS_CHECKEDIN), check);
@@ -303,6 +380,8 @@ public class DatabaseHandler {
     }
     public void resetUser(){db.resetUser();}
 
+
+    public void resetCategories(){db.resetCategory();}
 
     //OTHER FUNCTIONS
     public void updateAll(){

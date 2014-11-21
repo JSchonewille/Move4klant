@@ -5,11 +5,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Environment;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +22,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -40,6 +45,7 @@ public class LoginActivity extends Activity {
     private static String KEY_FIRSTNAME = "fname";
     private static String KEY_LASTNAME = "lname";
     private static String KEY_EMAIL = "email";
+    private static String KEY_PROFILEIMAGE = "profileImage";
     private static String KEY_CREATED_AT = "created_at";
    // public static final String PREFS_LOGIN_USERNAME_KEY = "__USERNAME__" ;
    // public static final String PREFS_LOGIN_PASSWORD_KEY = "__PASSWORD__" ;
@@ -57,6 +63,7 @@ public class LoginActivity extends Activity {
         inputEmail = (EditText) findViewById(R.id.inputEmail);
         inputPassword = (EditText) findViewById(R.id.inputPassword);
 
+      //  DatabaseHandler.getInstance(getApplicationContext()).resetCategories();
 
         TextView registerScreen = (TextView) findViewById(R.id.link_to_register);
 
@@ -65,7 +72,10 @@ public class LoginActivity extends Activity {
         String loggedInUserPassword = PrefUtils.getFromPrefs(LoginActivity.this, getString(R.string.PREFS_LOGIN_PASSWORD_KEY), "");
         String autoLoginState = PrefUtils.getFromPrefs(LoginActivity.this, getString(R.string.PREFS_AUTO_LOGIN_KEY), "false");
 
-        if (autoLoginState != "false" ){
+
+        DatabaseHandler.getInstance(getApplicationContext()).updateCategories();
+
+        if (autoLoginState.equals("true")){
             inputEmail.setText(loggedInUserName);
             inputPassword.setText(loggedInUserPassword);
 
@@ -81,6 +91,7 @@ public class LoginActivity extends Activity {
              **/
             finish();
         }
+        else{DatabaseHandler.getInstance(getApplicationContext()).resetCategories();}
         inputEmail.setText(loggedInUserName);
 
         // Listening to register new account link
@@ -222,19 +233,20 @@ public class LoginActivity extends Activity {
                                 nDialog.setTitle("Getting data");
                                 DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
                                 JSONObject json_user = json.getJSONObject("user");
-                                Log.e("user ", json_user.toString());
+
                                 /**
                                  * Clear all previous data in SQlite database.
                                  **/
                                 APIFunctions logout = APIFunctions.getInstance();
                                 logout.logoutUser(getApplicationContext());
+                                byte[] decoded = Base64.decode(json_user.getString("profileImage").getBytes(),Base64.DEFAULT);
+                                String path = saveImage(decoded);
+                                db.addUser(json_user.getInt(KEY_UID), json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), json_user.getString(KEY_EMAIL), path);
 
-                                // TODO add full user info to db (street, postalcode ect)
-                                db.addUser(json_user.getInt(KEY_UID), json_user.getString(KEY_FIRSTNAME), json_user.getString(KEY_LASTNAME), json_user.getString(KEY_EMAIL), "" );
+                                DatabaseHandler.getInstance(getApplicationContext()).getLikedCategoriesFromServer(json_user.getInt(KEY_UID));
                                 /**
                                  *If JSON array details are stored in SQlite it launches the User Panel.
                                  **/
-
                                 nDialog.dismiss();
                                 Intent upanel = new Intent(getApplicationContext(), home.class);
                                 upanel.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -253,6 +265,27 @@ public class LoginActivity extends Activity {
                     }catch(JSONException e){
                         e.printStackTrace();
                     }
+            }
+
+            public String saveImage(byte[] byteArray) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                File dir = new File(Environment.getExternalStorageDirectory()
+                        + "/Android/data/"
+                        + "/Move4Klant");
+                dir.mkdirs();
+
+                File mypath = new File(dir, "ProfileImage.jpeg");
+
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(mypath);
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+                    return mypath.getAbsolutePath();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return "";
+                }
             }
         }
     }
