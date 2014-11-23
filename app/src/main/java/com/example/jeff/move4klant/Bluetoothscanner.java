@@ -370,7 +370,9 @@ public class Bluetoothscanner extends Service {
         offerList = DatabaseHandler.getInstance(getApplicationContext()).getOfferByLikedCategories();
         //offerList = DatabaseHandler.getInstance(getApplicationContext()).getAllOffers();
         user = DatabaseHandler.getInstance(getApplicationContext()).getUser();
-        Usedoffers = null;
+        if(Usedoffers != null) {
+            Usedoffers.clear();
+        }
     }
 
     public boolean AppActive() {

@@ -137,58 +137,7 @@ public class EditUserInfoActivity extends Activity {
                 onBackPressed();
                 return true;
             case R.id.saveUserInfo:
-
-                name            = etName.getText().toString();
-                lastName        = etLastName.getText().toString();
-//                street          = etStreet.getText().toString();
-//                houseNumber     = etHouseNumber.getText().toString();
-//                postalCode      = etPostalCode.getText().toString();
-//                city            = etCity.getText().toString();
-                email           = etEmail.getText().toString();
-
-                // if input is empty, get last db info
-                if (name.matches("")){
-                    name = etName.getHint().toString();
-                }
-                if (lastName.matches("")){
-                    lastName = etLastName.getHint().toString();
-                }
-//                if (street.matches("")){
-//                    street = etStreet.getHint().toString();
-//                }
-//                if (houseNumber.matches("")){
-//                    houseNumber = etHouseNumber.getHint().toString();
-//                }
-//                if (postalCode.matches("")){
-//                    postalCode = etPostalCode.getHint().toString();
-//                }
-//                if (city.matches("")){
-//                    city = etCity.getHint().toString();
-//                }
-                if (email.matches("")){
-                    email = etEmail.getHint().toString();
-                }
-
-
-                // reset values of the user
-                user = new User(getApplicationContext(),userID, name, lastName, "", "", "", "", email);
-                if (imageChanged){
-                    user.setFilePath(filePath);
-                    user.setImage(croppedImage);
-                }else {
-                    user.setFilePath(oldFilePath);
-                }
-
-                DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getFilePath());
-                DatabaseHandler.getInstance(getApplicationContext()).uploadUserEditedInfo(user.getUserID(), user.getName(), user.getLastName(), user.getEmail());
-                if (byteArray != null) {
-                    DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
-                }
-
-                Intent i = new Intent(getApplicationContext(), ManageAccount.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                imageChanged = false;
-                startActivity(i);
+                saveUserDetails();
                 finish();
                 return true;
             default:
@@ -199,10 +148,6 @@ public class EditUserInfoActivity extends Activity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivProfileImageEdit:
-//                Intent intent = new Intent(Intent.ACTION_PICK,
-//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                intent.putExtra("crop", "true");
-//                startActivityForResult(intent, 0);
 
                 String status = Environment.getExternalStorageState();
                 if (status.equals(Environment.MEDIA_MOUNTED)) {
@@ -227,6 +172,7 @@ public class EditUserInfoActivity extends Activity {
                 imageChanged = true;
                 break;
             case R.id.btChangeCategory:
+                saveUserDetails();
                 Intent intent2 = new Intent(getApplicationContext(), LikesActivity.class);
                 startActivity(intent2);
                 finish();
@@ -355,6 +301,62 @@ public class EditUserInfoActivity extends Activity {
                 e.printStackTrace();
             }
         return response;
+    }
+
+    public void saveUserDetails() {
+
+        name            = etName.getText().toString();
+        lastName        = etLastName.getText().toString();
+//                street          = etStreet.getText().toString();
+//                houseNumber     = etHouseNumber.getText().toString();
+//                postalCode      = etPostalCode.getText().toString();
+//                city            = etCity.getText().toString();
+        email           = etEmail.getText().toString();
+
+        // if input is empty, get last db info
+        if (name.matches("")){
+            name = etName.getHint().toString();
+        }
+        if (lastName.matches("")){
+            lastName = etLastName.getHint().toString();
+        }
+//                if (street.matches("")){
+//                    street = etStreet.getHint().toString();
+//                }
+//                if (houseNumber.matches("")){
+//                    houseNumber = etHouseNumber.getHint().toString();
+//                }
+//                if (postalCode.matches("")){
+//                    postalCode = etPostalCode.getHint().toString();
+//                }
+//                if (city.matches("")){
+//                    city = etCity.getHint().toString();
+//                }
+        if (email.matches("")){
+            email = etEmail.getHint().toString();
+        }
+
+
+        // reset values of the user
+        user = new User(getApplicationContext(),userID, name, lastName, "", "", "", "", email);
+        if (imageChanged){
+            user.setFilePath(filePath);
+            user.setImage(croppedImage);
+        }else {
+            user.setFilePath(oldFilePath);
+        }
+
+        DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getFilePath());
+        DatabaseHandler.getInstance(getApplicationContext()).uploadUserEditedInfo(user.getUserID(), user.getName(), user.getLastName(), user.getEmail());
+        if (byteArray != null) {
+            DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
+        }
+
+        Intent i = new Intent(getApplicationContext(), ManageAccount.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        imageChanged = false;
+        startActivity(i);
+        finish();
     }
 
 }

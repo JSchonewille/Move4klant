@@ -15,7 +15,7 @@
             android:id="@+id/llTitle">
 
             <TextView
-                android:text="@string/acccountInfo"
+                android:text="@string/editUserInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="30dp"
@@ -28,16 +28,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/llTitle"
+            android:weightSum="1.0"
             android:id="@+id/llProfilePicture">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:src="@drawable/emptyprofile"
                 android:id="@+id/ivProfileImageEdit"
-                android:clickable="false"
                 android:onClick="onClick"
-                android:layout_gravity="left" />
+                android:layout_weight=".3" />
 
         </LinearLayout> // picture
 

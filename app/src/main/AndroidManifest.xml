@@ -71,7 +71,7 @@
         </activity>
         <activity
             android:name=".EditUserInfoActivity"
-            android:label="Account informatie" >
+            android:label="Wijzig Account" >
         </activity>
 
 
