@@ -102,8 +102,9 @@ public class LikesActivity extends Activity {
                 return true;
             case R.id.saveLikes:
                 saveLikes();
-                Intent i = new Intent(getApplicationContext(), ManageAccount.class);
+                Intent i = new Intent(getApplicationContext(), EditUserInfoActivity.class);
                 startActivity(i);
+                this.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
                 finish();
                 return true;
             default:

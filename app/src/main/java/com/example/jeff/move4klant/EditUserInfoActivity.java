@@ -138,7 +138,13 @@ public class EditUserInfoActivity extends Activity {
                 return true;
             case R.id.saveUserInfo:
                 saveUserDetails();
-                finish();
+
+                Intent i = new Intent(getApplicationContext(), ManageAccount.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                imageChanged = false;
+                startActivity(i);
+
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -352,11 +358,7 @@ public class EditUserInfoActivity extends Activity {
             DatabaseHandler.getInstance(getApplicationContext()).uploadUserImage(user.getUserID(), byteArray);
         }
 
-        Intent i = new Intent(getApplicationContext(), ManageAccount.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        imageChanged = false;
-        startActivity(i);
-        finish();
+
     }
 
 }

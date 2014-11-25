@@ -27,22 +27,6 @@ public class home extends Activity {
         DatabaseHandler.getInstance(getApplicationContext()).updateAll();
         getOverflowMenu();
         startService(new Intent(getApplicationContext(), Bluetoothscanner.class));
-        b4 = (Button) findViewById(R.id.button4);
-        b5 = (Button) findViewById(R.id.button5);
-
-        b4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseHandler.getInstance(getApplicationContext()).checkinout(0);
-            }
-        });
-
-        b5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseHandler.getInstance(getApplicationContext()).checkinstatus(0);
-            }
-        });
     }
 
     public void onClickManageProfile(View v)

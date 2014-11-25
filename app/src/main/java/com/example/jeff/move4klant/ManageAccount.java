@@ -106,6 +106,7 @@ public class ManageAccount extends Activity {
             case R.id.manageAccount_Change_User_Info:
                 Intent i = new Intent(getApplicationContext(), EditUserInfoActivity.class);
                 startActivity(i);
+                overridePendingTransition(R.anim.left_slide_in, R.anim.left_slide_out);
                 finish();
                 return true;
             default:
