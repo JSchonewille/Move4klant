@@ -6,9 +6,11 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_likes">LikesActivity</string>
     <string name="editUserInfo">Wijzig persoonsinformatie</string>
+    <string name="settingsTitle">Instellingen</string>
+
 
     <string name="introCategory">Dit is een overzicht van categorieen die u kunt aangeven als favoriet</string>
-    <string name="title_activity_manage_account">ManageAccount</string>
+    <string name="title_activity_manage_account">Accountbeheer</string>
     <string name="introManageAccount">Account</string>
     <string name="save">Opslaan</string>
     <string name="cancel">Annuleer</string>
