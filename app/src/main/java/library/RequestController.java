@@ -1,4 +1,4 @@
-package com.example.jeff.move4klant;
+package library;
 
 import android.app.Application;
 import android.text.TextUtils;
@@ -38,8 +38,6 @@ public class RequestController extends Application {
 
         return mRequestQueue;
     }
-
-
 
     public <T> void addToRequestQueue(Request<T> req, String tag) {
         // set the default tag if tag is empty

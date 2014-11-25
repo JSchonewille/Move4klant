@@ -1,4 +1,4 @@
-package com.example.jeff.move4klant;
+package library;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

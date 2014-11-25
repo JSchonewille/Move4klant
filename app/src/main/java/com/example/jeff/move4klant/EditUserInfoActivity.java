@@ -30,9 +30,9 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import library.Category;
+import Objects.Category;
 import library.DatabaseHandler;
-import library.User;
+import Objects.User;
 
 
 public class EditUserInfoActivity extends Activity {

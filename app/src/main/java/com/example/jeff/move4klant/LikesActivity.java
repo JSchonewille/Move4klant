@@ -13,7 +13,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import library.Category;
+import Objects.Category;
 import library.DatabaseHandler;
 
 

@@ -1,4 +1,4 @@
-package com.example.jeff.move4klant;
+package library;
 
 import android.app.ActivityManager;
 import android.app.Service;
@@ -14,6 +14,10 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.jeff.move4klant.LoginActivity;
+import com.example.jeff.move4klant.OfferActivity;
+import com.example.jeff.move4klant.ProductInfoActivity;
+import com.example.jeff.move4klant.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,12 +27,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import library.DatabaseHandler;
-import library.Offer;
+import Objects.Offer;
 import library.PrefUtils;
 import library.ServerRequestHandler;
 import library.Smoothener;
-import library.User;
-import library.ibeacon;
+import Objects.User;
+import Objects.ibeacon;
 
 public class Bluetoothscanner extends Service {
     // array used to decode BLE byte array

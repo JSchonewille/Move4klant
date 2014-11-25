@@ -13,6 +13,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import Objects.Category;
+import Objects.Offer;
+import Objects.Product;
+import Objects.User;
+import Objects.ibeacon;
+
 public class DatabaseFunctions extends SQLiteOpenHelper {
 
 

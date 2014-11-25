@@ -16,9 +16,9 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.List;
 
-import library.Category;
+import Objects.Category;
 import library.DatabaseHandler;
-import library.User;
+import Objects.User;
 
 
 public class ManageAccount extends Activity {

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
+import library.Bluetoothscanner;
 import library.DatabaseHandler;
 
 
@@ -25,7 +26,7 @@ public class home extends Activity {
         setContentView(R.layout.activity_home);
         DatabaseHandler.getInstance(getApplicationContext()).updateAll();
         getOverflowMenu();
-        startService(new Intent(getApplicationContext(),Bluetoothscanner.class));
+        startService(new Intent(getApplicationContext(), Bluetoothscanner.class));
         b4 = (Button) findViewById(R.id.button4);
         b5 = (Button) findViewById(R.id.button5);
 

@@ -14,6 +14,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import Objects.Category;
+import Objects.Offer;
+import Objects.Product;
+import Objects.User;
+import Objects.ibeacon;
+
 /**
  * Created by Sander on 7-11-2014.
  */
@@ -172,6 +178,7 @@ public class DatabaseHandler {
             }
         }, userID);
     }
+    public void resetCategories(){db.resetCategory();}
 
     //OFFER FUNCTIONS
     public void updateOffers(){
@@ -271,6 +278,12 @@ public class DatabaseHandler {
     }
 
     //USER FUNCTIONS
+    public User getUser(){return db.getUser();}
+    public void addUser(int id, String fname, String lname, String email, String filePath){
+        db.resetUser();
+        db.addUser(id, fname,  lname,  email, filePath);
+    }
+    public void resetUser(){db.resetUser();}
     public void checkinout(int userid){
         ServerRequestHandler.checkinout(new Response.Listener<JSONObject>() {
             @Override
@@ -343,8 +356,6 @@ public class DatabaseHandler {
 
         return returnResponse;
     }
-
-
     public void setLocalCheckinStatus(Context context, boolean check){
         PrefUtils.saveToPrefs(context, context.getString(R.string.PREFS_CHECKEDIN), check);
     }
@@ -373,15 +384,6 @@ public class DatabaseHandler {
             }
         }, userID, image);
     }
-    public User getUser(){return db.getUser();}
-    public void addUser(int id, String fname, String lname, String email, String filePath){
-        db.resetUser();
-        db.addUser(id, fname,  lname,  email, filePath);
-    }
-    public void resetUser(){db.resetUser();}
-
-
-    public void resetCategories(){db.resetCategory();}
 
     //OTHER FUNCTIONS
     public void updateAll(){

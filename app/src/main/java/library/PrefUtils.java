@@ -9,6 +9,8 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import Objects.Offer;
+
 /**
  * Created by Sander on 21-10-2014.
  */

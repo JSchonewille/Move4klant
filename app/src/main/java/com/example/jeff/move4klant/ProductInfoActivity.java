@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import library.DatabaseHandler;
-import library.Product;
+import Objects.Product;
 
 /**
  * Created by Sander on 7-11-2014.
