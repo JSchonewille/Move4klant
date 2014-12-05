@@ -1,6 +1,5 @@
 package library;
 
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -17,10 +16,8 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.example.jeff.move4klant.LoginActivity;
 import com.example.jeff.move4klant.OfferActivity;
 import com.example.jeff.move4klant.ProductInfoActivity;
-import com.example.jeff.move4klant.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,13 +36,9 @@ public class Bluetoothscanner extends Service {
     static final char[] hexArray = "0123456789ABCDEF".toCharArray();
     // the TX of when the phone is held to the beacon
     private Integer DISTANCE_CLOSE = -63;
-    // time passive scanning goes into sleeping mode
-    private static final Integer TIMEOUTTIME = 30 * 1000;
     // active scan time
     private static int SCAN_TIME = 20 * 1000;
     private static int SCAN_STOP_TIME = 500;
-
-
     // string used for our broadcast listener
     private static final String ACTION_STRING_SERVICE = "ToService";
     // string used for our broadcast listener
@@ -56,19 +49,17 @@ public class Bluetoothscanner extends Service {
     BluetoothAdapter bta;
     // current user
     User user;
-    Boolean Checkedin = false;
-    Boolean CheckinCallRunning = false;
+    Boolean checkedIn = false;
+    Boolean checkinCallRunning = false;
     // List of offers we have already shown to the costumer
-    private HashMap<Integer, Date> Usedoffers;
+    private HashMap<Integer, Date> usedOffers;
     // stops the scanning when false
     private boolean shouldscan = true;
     // the scanmode , 0 means pasive , 1 means active , 99 is default value
     // the major of our beacons
     private int ACTIVEMAJOR = 31690;
     // counter used for passive mode
-    private int passivecounter = 0;
-    // counter used for passive mode
-    private int beaconcounter = 0;
+    private int passiveCounter = 0;
     // list with all beacons in the database
     private List<ibeacon> ibeaconList;
     // list with all the offers related to the users likes
@@ -76,8 +67,8 @@ public class Bluetoothscanner extends Service {
     // the implementation of our bluetooth scan
     private Smoothener smooth;
     // counter to check if our BLE gets results
-    private int NoBLECounter = 0;
-    private Date ProductIntentTime;
+    private int noBLECounter = 0;
+    private Date productIntentTime;
     private Handler mHandler;
 
     //region bluetooth LE callback
@@ -87,9 +78,9 @@ public class Bluetoothscanner extends Service {
                              final byte[] scanRecord) {
             if (ibeaconList != null && !ibeaconList.isEmpty()) {
                 int startByte = 2;
-                int major = 0;
-                int minor = 0;
-                int tx = 0;
+                int major;
+                int minor;
+                int tx;
                 boolean patternFound = false;
 
                 while (startByte <= 5) {
@@ -126,22 +117,17 @@ public class Bluetoothscanner extends Service {
                     DISTANCE_CLOSE = (int) (tx * 0.83);
 
                     if (major != ACTIVEMAJOR) {
-                        passivecounter++;
+                        passiveCounter++;
                     }
 
                     if (major == ACTIVEMAJOR) {
 
-
-                        if ( minor == 7)
-                        {
-                            Log.e("magic", tx + " | " + adjrssi );
-                        }
-                        NoBLECounter = 0;
-                        passivecounter = 0;
+                        noBLECounter = 0;
+                        passiveCounter = 0;
                         // scan mode to active
                         setscanmode(0);
                         //we check the user in
-                        if (!Checkedin && !CheckinCallRunning) {
+                        if (!checkedIn && !checkinCallRunning) {
                             Checkinout(true);
                         }
                         // if somehow we dont have our configs
@@ -152,7 +138,7 @@ public class Bluetoothscanner extends Service {
                             for (ibeacon i : ibeaconList) {
                                 if (major == i.getMajor() && minor == i.getMinor()) {
                                     if (adjrssi > DISTANCE_CLOSE) {
-                                        long diffInsec = Math.abs((new Date()).getTime() - ProductIntentTime.getTime()) / 1000;
+                                        long diffInsec = Math.abs((new Date()).getTime() - productIntentTime.getTime()) / 1000;
                                         if (diffInsec > 2) {
                                             Log.d("bluetooth result" + tx, "Holding phone to beacon");
                                             Intent j = new Intent(getApplicationContext(), ProductInfoActivity.class);
@@ -160,14 +146,13 @@ public class Bluetoothscanner extends Service {
                                             j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                             j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                             startActivity(j);
-                                            ProductIntentTime = new Date();
+                                            productIntentTime = new Date();
                                         }
                                     }
                                     // far away action
                                     else {
                                         // check if we already used this offer
-                                        Date i4 = Usedoffers.get(i.getOfferID());
-                                        if (Usedoffers.get(i.getOfferID()) == null) {
+                                        if (usedOffers.get(i.getOfferID()) == null) {
                                             for (Offer o : offerList) {
                                                 if (o.getID() == i.getOfferID()) {
                                                     Log.d("bluetooth result", "far away action");
@@ -175,7 +160,7 @@ public class Bluetoothscanner extends Service {
                                                     j.putExtra("offerID", i.getOfferID());
                                                     j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                     j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                    Usedoffers.put(i.getOfferID(), new Date());
+                                                    usedOffers.put(i.getOfferID(), new Date());
                                                     startActivity(j);
                                                 }
                                             }
@@ -225,7 +210,7 @@ public class Bluetoothscanner extends Service {
             if (SCANMODE == 0) {
                 setscanmode(0);
                 Log.d("onrecieve action", "scanmode active ");
-                passivecounter = 0;
+                passiveCounter = 0;
                 // activate the thread when its in waiting mode
             }
         }
@@ -255,8 +240,8 @@ public class Bluetoothscanner extends Service {
         mHandler = new Handler();
         getconfigs();
         smooth = new Smoothener(8);
-        ProductIntentTime = new Date();
-        Usedoffers = new HashMap<Integer, Date>();
+        productIntentTime = new Date();
+        usedOffers = new HashMap<Integer, Date>();
 
 
         Context context = getApplicationContext();
@@ -278,30 +263,30 @@ public class Bluetoothscanner extends Service {
         unregisterReceiver(serviceReceiver);
     }
 
-    private void sendBroadcast(String extra) {
-
-        // if  logged in
-        String autoLoginState = PrefUtils.getFromPrefs(getApplicationContext(), getString(R.string.PREFS_AUTO_LOGIN_KEY), "false");
-        if (autoLoginState != "false") {
-            Intent new_intent = new Intent();
-            new_intent.setAction(ACTION_STRING_ACTIVITY);
-            new_intent.putExtra("returnvalue", extra);
-            sendBroadcast(new_intent);
-        } else {
-            // login and redirect
-            // TODO ADD PARAMAMETERS FOR LOGIN ACTIVITY
-            Intent start = new Intent(this, LoginActivity.class);
-            start.setAction(Intent.ACTION_MAIN);
-            start.addCategory(Intent.CATEGORY_LAUNCHER);
-            start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            this.startActivity(start);
-        }
-    }
+//    private void sendBroadcast(String extra) {
+//
+//        // if  logged in
+//        String autoLoginState = PrefUtils.getFromPrefs(getApplicationContext(), getString(R.string.PREFS_AUTO_LOGIN_KEY), "false");
+//        if (autoLoginState != "false") {
+//            Intent new_intent = new Intent();
+//            new_intent.setAction(ACTION_STRING_ACTIVITY);
+//            new_intent.putExtra("returnvalue", extra);
+//            sendBroadcast(new_intent);
+//        } else {
+//            // login and redirect
+//            //
+//            Intent start = new Intent(this, LoginActivity.class);
+//            start.setAction(Intent.ACTION_MAIN);
+//            start.addCategory(Intent.CATEGORY_LAUNCHER);
+//            start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            this.startActivity(start);
+//        }
+//    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("start command", "start command called");
-        NoBLECounter++;
+        noBLECounter++;
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bta = bluetoothManager.getAdapter();
@@ -315,17 +300,17 @@ public class Bluetoothscanner extends Service {
         }
 
         // if we didnt get any results for 5 minutes straight.. we check if we have to checkout the user
-        if (NoBLECounter >= INACTIVITY_TIME) {
+        if (noBLECounter >= INACTIVITY_TIME) {
             // reset the counter to avoid unnecessary database calls
 
-            if (!CheckinCallRunning) {
-                NoBLECounter = 0;
+            if (!checkinCallRunning) {
+                noBLECounter = 0;
                 Checkinout(false);
                 Log.d("checkout", "user checked out from non bluetooth results");
             }
         }
 
-        if(passivecounter > 300 || NoBLECounter > 5)
+        if(passiveCounter > 300 || noBLECounter > 5)
         {
             // passive scan mode after inactivity
             setscanmode(1);
@@ -345,29 +330,29 @@ public class Bluetoothscanner extends Service {
         offerList = DatabaseHandler.getInstance(getApplicationContext()).getOfferByLikedCategories();
         //offerList = DatabaseHandler.getInstance(getApplicationContext()).getAllOffers();
         user = DatabaseHandler.getInstance(getApplicationContext()).getUser();
-        if (Usedoffers != null) {
-            Usedoffers.clear();
+        if (usedOffers != null) {
+            usedOffers.clear();
         }
     }
 
-    public boolean AppActive() {
-        // checks if the app is running, so we wont refresh it if its active
-        String class1 = "com.example.jeff.move4klant.ProductInfoActivity";
-        String class2 = "";
-        String class3 = "";
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> tasks = manager.getRunningTasks(Integer.MAX_VALUE);
-        for (ActivityManager.RunningTaskInfo task : tasks) {
-            if (task.baseActivity.getClassName().equals(class1) || task.baseActivity.getClassName().equals(class2)) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public boolean AppActive() {
+//        // checks if the app is running, so we wont refresh it if its active
+//        String class1 = "com.example.jeff.move4klant.ProductInfoActivity";
+//        String class2 = "";
+//        String class3 = "";
+//        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+//        List<ActivityManager.RunningTaskInfo> tasks = manager.getRunningTasks(Integer.MAX_VALUE);
+//        for (ActivityManager.RunningTaskInfo task : tasks) {
+//            if (task.baseActivity.getClassName().equals(class1) || task.baseActivity.getClassName().equals(class2)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     // the logic for checking in or out
     public void Checkinout(final Boolean action) {
-        CheckinCallRunning = true;
+        checkinCallRunning = true;
         ServerRequestHandler.checkinstatus(new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonArray) {
@@ -382,7 +367,7 @@ public class Bluetoothscanner extends Service {
                             dbCheckInOut(true);
                         } else {
                             Log.d("CHECK IN", "user was already checked in");
-                            Checkedin = true;
+                            checkedIn = true;
                         }
                     }
                     // we want to check the user out
@@ -391,14 +376,14 @@ public class Bluetoothscanner extends Service {
                         if (checkinstatus) {
                             dbCheckInOut(false);
                         } else {
-                            Checkedin = false;
+                            checkedIn = false;
                             Log.d("CHECK OUT", "user was already checked out");
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                CheckinCallRunning = false;
+                checkinCallRunning = false;
             }
         }, new Response.ErrorListener() {
             @Override
@@ -408,7 +393,7 @@ public class Bluetoothscanner extends Service {
                 } else {
                     Log.e("NETWORKERROR", "no network");
                 }
-                CheckinCallRunning = false;
+                checkinCallRunning = false;
             }
         }, user.getUserID());
     }
@@ -422,14 +407,14 @@ public class Bluetoothscanner extends Service {
 
                 // if we wanted to checkin
                 if (action) {
-                    Checkedin = true;
+                    checkedIn = true;
                     Log.d("CHECK IN", "user checked in");
 
                 }
 
                 // if we wanted to check out
                 if (!action) {
-                    Checkedin = false;
+                    checkedIn = false;
                     Log.d("CHECK OUT", "user checked out");
                 }
 
