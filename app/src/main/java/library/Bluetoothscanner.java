@@ -457,8 +457,10 @@ public class Bluetoothscanner extends Service {
 
     public void startscan()
     {
-        bta.startLeScan(mLeScanCallback);
-        mHandler.postDelayed(mStopRunnable,SCAN_TIME);
+        if(bta.isEnabled()) {
+            bta.startLeScan(mLeScanCallback);
+            mHandler.postDelayed(mStopRunnable, SCAN_TIME);
+        }
     }
 
     public void stopscan()
