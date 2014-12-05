@@ -23,15 +23,15 @@ public class APIFunctions {
      * private static String your_API_URL = "http://example.com/your_API/";
      **/
 
-    private static String checkinoutURL = "http://ibeacontest.herobo.com/checkinout.php";
-    private static String getcategoriesURL = "http://ibeacontest.herobo.com/getcategories.php";
-    private static String editlikesURL = "http://ibeacontest.herobo.com/editlikes.php";
-    private static String getlikesURL = "http://ibeacontest.herobo.com/getlikes.php";
+    private static String checkinoutURL = "http://playground.m4mapp.com/beacons/checkinout.php";
+    private static String getcategoriesURL = "http://playground.m4mapp.com/beacons/getcategories.php";
+    private static String editlikesURL = "http://playground.m4mapp.com/beacons/editlikes.php";
+    private static String getlikesURL = "http://playground.m4mapp.com/beacons/getlikes.php";
 
-    private static String loginURL = "http://ibeacontest.herobo.com/login_api/index.php";
-    private static String registerURL = "http://ibeacontest.herobo.com/login_api/index.php";
-    private static String forpassURL = "http://ibeacontest.herobo.com/login_api/index.php";
-    private static String chgpassURL = "http://ibeacontest.herobo.com/login_api/index.php";
+    private static String loginURL = "http://playground.m4mapp.com/beacons/login_api/index.php";
+    private static String registerURL = "http://playground.m4mapp.com/beacons/login_api/index.php";
+    private static String forpassURL = "http://playground.m4mapp.com/beacons/login_api/index.php";
+    private static String chgpassURL = "http://playground.m4mapp.com/beacons/login_api/index.php";
 
 
     //constructor
