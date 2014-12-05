@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -37,9 +38,14 @@ public class Bluetoothscanner extends Service {
     // array used to decode BLE byte array
     static final char[] hexArray = "0123456789ABCDEF".toCharArray();
     // the TX of when the phone is held to the beacon
-    private static final Integer DISTANCE_CLOSE = -63;
+    private Integer DISTANCE_CLOSE = -63;
     // time passive scanning goes into sleeping mode
     private static final Integer TIMEOUTTIME = 30 * 1000;
+    // active scan time
+    private static int SCAN_TIME = 20 * 1000;
+    private static int SCAN_STOP_TIME = 500;
+
+
     // string used for our broadcast listener
     private static final String ACTION_STRING_SERVICE = "ToService";
     // string used for our broadcast listener
@@ -57,7 +63,6 @@ public class Bluetoothscanner extends Service {
     // stops the scanning when false
     private boolean shouldscan = true;
     // the scanmode , 0 means pasive , 1 means active , 99 is default value
-    private int SCANMODE = 99;
     // the major of our beacons
     private int ACTIVEMAJOR = 31690;
     // counter used for passive mode
@@ -73,6 +78,7 @@ public class Bluetoothscanner extends Service {
     // counter to check if our BLE gets results
     private int NoBLECounter = 0;
     private Date ProductIntentTime;
+    private Handler mHandler;
 
     //region bluetooth LE callback
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -114,24 +120,30 @@ public class Bluetoothscanner extends Service {
                     minor = (scanRecord[startByte + 22] & 0xff) * 0x100 + (scanRecord[startByte + 23] & 0xff);
                     tx = (scanRecord[startByte + 24]);
 
-
                     Integer adjrssi = smooth.smoothen(Irssi, major, minor);
                     // logica for beacons detected comes here
 
+                    DISTANCE_CLOSE = (int) (tx * 0.83);
+
                     if (major != ACTIVEMAJOR) {
-                        //passivecounter++;
+                        passivecounter++;
                     }
 
                     if (major == ACTIVEMAJOR) {
+
+
+                        if ( minor == 7)
+                        {
+                            Log.e("magic", tx + " | " + adjrssi );
+                        }
                         NoBLECounter = 0;
+                        passivecounter = 0;
+                        // scan mode to active
+                        setscanmode(0);
                         //we check the user in
                         if (!Checkedin && !CheckinCallRunning) {
                             Checkinout(true);
                         }
-                        // a counter which resets if we find a beacon of ours
-                        SCANMODE = 1;
-                        passivecounter = 0;
-                        // Log.d("bluetooth action", "major found, set scan to active");
                         // if somehow we dont have our configs
                         if (ibeaconList == null || offerList == null) {
                             Log.e("no config", "reloading configs");
@@ -176,26 +188,6 @@ public class Bluetoothscanner extends Service {
 
                 }
             }
-            // if we find our major, we set our mode to active
-            if (passivecounter >= 300) {
-                beaconcounter++;
-                SCANMODE = 0;
-                Log.d("bluetooth action", "counter > 300 , setting scanmode to passive");
-            }
-            // slow down scanning if mode = passive, to conserve battery
-            if (SCANMODE == 0 && beaconcounter > 10) {
-                Log.d("bluetooth action", "Passive mode entered");
-                beaconcounter = 0;
-                try {
-                    float sec = 0;
-                    while (SCANMODE == 0 && sec < TIMEOUTTIME) {
-                        Thread.sleep(1000);
-                        sec += 1000;
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     };
     //endregion
@@ -204,6 +196,7 @@ public class Bluetoothscanner extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            int SCANMODE = 99;
             try {
                 shouldscan = intent.getBooleanExtra("RUN", true);
                 SCANMODE = intent.getIntExtra("SCANMODE", 99);
@@ -220,16 +213,17 @@ public class Bluetoothscanner extends Service {
             // stops the bluetooth scanning when asked
             if (bta.isEnabled() && !shouldscan) {
                 Log.d("onrecieve action", "should not scan");
-                bta.stopLeScan(mLeScanCallback);
+                mStopRunnable.run();
             }
             // starts the scan when asked
             if (bta.isEnabled() && shouldscan) {
                 Log.d("onrecieve action", "starting scan");
-                bta.startLeScan(mLeScanCallback);
+                mStartRunnable.run();
             }
 
             // a call is made to scan actively
-            if (SCANMODE == 1) {
+            if (SCANMODE == 0) {
+                setscanmode(0);
                 Log.d("onrecieve action", "scanmode active ");
                 passivecounter = 0;
                 // activate the thread when its in waiting mode
@@ -258,6 +252,7 @@ public class Bluetoothscanner extends Service {
 //Map the intent filter to the receiver
             registerReceiver(serviceReceiver, intentFilter);
         }
+        mHandler = new Handler();
         getconfigs();
         smooth = new Smoothener(8);
         ProductIntentTime = new Date();
@@ -307,27 +302,18 @@ public class Bluetoothscanner extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("start command", "start command called");
         NoBLECounter++;
-
-        // TODO CHANGE BTA LOGIC
-        if (bta != null) {
-            bta.stopLeScan(mLeScanCallback);
-        }
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bta = bluetoothManager.getAdapter();
-        bta.startLeScan(mLeScanCallback);
 
-
-//TODO change logic for renableing BLE
-        if (bta.isEnabled()) {
-            if (NoBLECounter >= 3) {
-                // we start our scan again ( maybe the scan has stopped ,which is why we dont get any results
-                if (shouldscan) {
-                    Log.d("start command", "restarting scan");
-                    bta.startLeScan(mLeScanCallback);
-                }
-            }
+        if(bta.isEnabled() && shouldscan ) {
+            mStopRunnable.run();
+            mHandler.removeCallbacks(mStopRunnable);
+            mHandler.removeCallbacks(mStartRunnable);
+            // starting our BLE SCAN
+            mStartRunnable.run();
         }
+
         // if we didnt get any results for 5 minutes straight.. we check if we have to checkout the user
         if (NoBLECounter >= INACTIVITY_TIME) {
             // reset the counter to avoid unnecessary database calls
@@ -337,7 +323,12 @@ public class Bluetoothscanner extends Service {
                 Checkinout(false);
                 Log.d("checkout", "user checked out from non bluetooth results");
             }
-            // restart bluetooth
+        }
+
+        if(passivecounter > 300 || NoBLECounter > 5)
+        {
+            // passive scan mode after inactivity
+            setscanmode(1);
         }
         return Service.START_STICKY;
 
@@ -451,6 +442,44 @@ public class Bluetoothscanner extends Service {
         }, user.getUserID());
     }
 
+    private Runnable mStartRunnable = new Runnable() {
+        @Override
+        public void run() {
+            startscan();
+        }
+    };
+    private Runnable mStopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            stopscan();
+        }
+    };
+
+    public void startscan()
+    {
+        bta.startLeScan(mLeScanCallback);
+        mHandler.postDelayed(mStopRunnable,SCAN_TIME);
+    }
+
+    public void stopscan()
+    {
+        bta.stopLeScan(mLeScanCallback);
+        mHandler.postDelayed(mStartRunnable,SCAN_STOP_TIME);
+    }
+
+    public void setscanmode(Integer mode)
+    {
+        // set scan mode te active
+        if (mode == 0){
+            SCAN_STOP_TIME = 500;
+        }
+        // set scan mode to pasive
+        if(mode == 1)
+        {
+            SCAN_STOP_TIME = 40 * 1000;
+        }
+
+    }
 
 }
 
