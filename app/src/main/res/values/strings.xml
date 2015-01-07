@@ -30,6 +30,10 @@
 
     // Edit account
     //<string name="titleEditAccount">Accountinformatie</string>
+    <string name="titlePassword">Wachtwoord</string>
+    <string name="oldPassword">Huidig wachtwoord</string>
+    <string name="newPassword">Nieuw wachtwoord</string>
+    <string name="repeatPassword">Herhaal nieuw wachtwoord</string>
 
 
     <string name="PREFS_LOGIN_USERNAME_KEY">__USERNAME__</string>

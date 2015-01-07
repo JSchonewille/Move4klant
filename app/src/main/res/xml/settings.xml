@@ -4,8 +4,6 @@
     android:layout_height="fill_parent"
     android:title="@string/settingsTitle">
 
-    <PreferenceCategory android:title="Account" >
-
         <Preference
             android:key="prefUserPassword"
             android:title="Wachtwoord"
@@ -14,23 +12,15 @@
 
         <Preference
             android:key="prefManageAccount"
-            android:title="Manage account"
-            android:summary="Wijzig je accountgegevens"
+            android:title="Accountbeheer"
+            android:summary="Beheer hier je accountinformatie"
             />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="Uitloggen" >
-
-
 
         <Preference
             android:key="prefDisconnectAccount"
-            android:title="Ontkoppel Account"
-            android:summary="Log uit en vergeet het account"
+            android:title="Uitloggen"
+            android:summary="Ontkoppel je account"
             />
-
-    </PreferenceCategory>
 
 
 </PreferenceScreen>

@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.util.Base64;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -60,6 +61,7 @@ public class LoginActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         // set the font to helvetica neue
         Typeface font = Typeface.createFromAsset(getAssets(), "HelveticaNeue.ttf");
