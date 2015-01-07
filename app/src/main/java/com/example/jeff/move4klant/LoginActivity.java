@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ public class LoginActivity extends Activity {
     Button btnLogin;
     EditText inputEmail;
     EditText inputPassword;
+    TextView welkomBijDe, ijzerWinkelApp;
 
     private static String KEY_SUCCESS = "success";
     private static String KEY_UID = "customerID";
@@ -57,11 +60,21 @@ public class LoginActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // set the font to helvetica neue
+        Typeface font = Typeface.createFromAsset(getAssets(), "HelveticaNeue.ttf");
         // setting default screen to login.xml
         setContentView(R.layout.login);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         inputEmail = (EditText) findViewById(R.id.inputEmail);
+        inputEmail.setTypeface(font);
         inputPassword = (EditText) findViewById(R.id.inputPassword);
+        inputPassword.setTypeface(font);
+        welkomBijDe = (TextView) findViewById(R.id.tvWelkomBijDe);
+        ijzerWinkelApp = (TextView) findViewById(R.id.tvIJzerwinkelApp);
+
+        welkomBijDe.setTypeface(font);
+        ijzerWinkelApp.setTypeface(font);
 
       //  DatabaseHandler.getInstance(getApplicationContext()).resetCategories();
 
@@ -91,7 +104,10 @@ public class LoginActivity extends Activity {
              **/
             finish();
         }
-        else{DatabaseHandler.getInstance(getApplicationContext()).resetCategories();}
+        else{
+            DatabaseHandler.getInstance(getApplicationContext()).resetCategories();
+        }
+
         inputEmail.setText(loggedInUserName);
 
         // Listening to register new account link

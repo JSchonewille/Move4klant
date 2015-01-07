@@ -15,11 +15,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Ijzerhandel Winkel App"
-        android:id="@+id/textView"
+        android:text="IJzerhandel winkel app"
+        android:id="@+id/tvIJzerhandelWinkelApp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        style="@style/HomeActivity"/> // Header Homescreen
+        android:gravity="center"
+        android:textSize="46dp"
+        android:textColor="#fff" /> // Header Homescreen
 
     <LinearLayout
         android:orientation="vertical"
@@ -34,8 +36,7 @@
             android:layout_width="171dp"
             android:layout_height="170dp"
             android:id="@+id/imageView"
-            android:src="@drawable/hardware_tools_1"
-            android:background="@drawable/circel_bg_white"/>
+            android:src="@drawable/hardware_tools_1" />
 
 
     </LinearLayout>

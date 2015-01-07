@@ -2,12 +2,14 @@ package com.example.jeff.move4klant;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
@@ -19,11 +21,19 @@ import library.DatabaseHandler;
 public class home extends Activity {
     Button b4;
     Button b5;
+    TextView ijzerhandelWinkelApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        // set the font to helvetica neue
+        Typeface font = Typeface.createFromAsset(getAssets(), "HelveticaNeue.ttf");
+
+        ijzerhandelWinkelApp = (TextView) findViewById(R.id.tvIJzerhandelWinkelApp);
+        ijzerhandelWinkelApp.setTypeface(font);
+
+
         DatabaseHandler.getInstance(getApplicationContext()).updateAll();
         getOverflowMenu();
         startService(new Intent(getApplicationContext(), Bluetoothscanner.class));
@@ -48,11 +58,6 @@ public class home extends Activity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return true;
-            case R.id.ad_test:
-                showAd(1);
-                return true; case R.id.product_test:
-                checkStatus(1);
                 return true;
             case R.id.action_settings:
                 Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);

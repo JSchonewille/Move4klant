@@ -5,12 +5,4 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:showAsAction="collapseActionView" />
-    <item android:id="@+id/ad_test"
-        android:title="Melding test"
-        android:orderInCategory="100"
-        android:showAsAction="collapseActionView" />
-    <item android:id="@+id/product_test"
-    android:title="Status test"
-    android:orderInCategory="100"
-    android:showAsAction="collapseActionView" />
 </menu>

@@ -4,6 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,8 +24,8 @@ import java.io.File;
 import java.util.List;
 
 import Objects.Category;
-import library.DatabaseHandler;
 import Objects.User;
+import library.DatabaseHandler;
 
 
 public class ManageAccount extends Activity {
@@ -42,14 +49,17 @@ public class ManageAccount extends Activity {
 
         TableLayout table = (TableLayout)findViewById(R.id.table_ManageAccount_Category);
         if (user.getFilePath().equals("")){
-            profileImage.setImageResource(R.drawable.emptyprofile);
+            Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.emptyprofile);
+            Bitmap roundedDefaultImage = this.roundCornerImage(defaultImage, 15);
+            profileImage.setImageBitmap(roundedDefaultImage);
         }
         else {
             File imgFile = new  File(user.getFilePath());
 
             if(imgFile.exists()){
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                user.setImage(myBitmap);
+                Bitmap roundedB = this.roundCornerImage(myBitmap, 15);
+                user.setImage(roundedB);
                 profileImage.setImageBitmap(user.getImage());
             }
         }
@@ -118,5 +128,36 @@ public class ManageAccount extends Activity {
     public void onBackPressed(){
         finish();
         this.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
+    }
+
+    public Bitmap roundCornerImage(Bitmap src, float round) {
+        // Source image size
+        int width = src.getWidth();
+        int height = src.getHeight();
+        // create result bitmap output
+        Bitmap result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        // set canvas for painting
+        Canvas canvas = new Canvas(result);
+        canvas.drawARGB(0, 0, 0, 0);
+
+        // configure paint
+        final Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.BLACK);
+
+        // configure rectangle for embedding
+        final Rect rect = new Rect(0, 0, width, height);
+        final RectF rectF = new RectF(rect);
+
+        // draw Round rectangle to canvas
+        canvas.drawRoundRect(rectF, round, round, paint);
+
+        // create Xfer mode
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        // draw source image to canvas
+        canvas.drawBitmap(src, rect, rect, paint);
+
+        // return final image
+        return result;
     }
 }

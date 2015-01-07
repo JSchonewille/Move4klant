@@ -3,10 +3,12 @@ package com.example.jeff.move4klant;
 /**
  * Created by Sander on 7-10-2014.
  */
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -50,6 +52,7 @@ public class RegisterActivity extends Activity {
     EditText inputEmail;
     EditText inputPassword;
     Button btnRegister;
+    TextView welkomBijDe, ijzerwinkelApp, link_to_login;
 
 
     /**
@@ -59,15 +62,30 @@ public class RegisterActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
+
+        // set the font to helvetica neue
+        Typeface font = Typeface.createFromAsset(getAssets(), "HelveticaNeue.ttf");
+
         /**
          * Defining all layout items
          **/
         inputFirstName = (EditText) findViewById(R.id.fname);
+        inputFirstName.setTypeface(font);
         inputLastName = (EditText) findViewById(R.id.lname);
-        //inputUsername = (EditText) findViewById(R.id.uname);
+        inputLastName.setTypeface(font);
         inputEmail = (EditText) findViewById(R.id.email);
+        inputEmail.setTypeface(font);
         inputPassword = (EditText) findViewById(R.id.pword);
+        inputPassword.setTypeface(font);
         btnRegister = (Button) findViewById(R.id.btnRegister);
+        btnRegister.setTypeface(font);
+        welkomBijDe = (TextView) findViewById(R.id.tfWelkomBijDe);
+        ijzerwinkelApp = (TextView) findViewById(R.id.tfIJzerwinkelApp);
+        link_to_login = (TextView) findViewById(R.id.link_to_login);
+        link_to_login.setTypeface(font);
+
+        welkomBijDe.setTypeface(font);
+        ijzerwinkelApp.setTypeface(font);
 
 /**
  * Button which Switches back to the login screen on clicked

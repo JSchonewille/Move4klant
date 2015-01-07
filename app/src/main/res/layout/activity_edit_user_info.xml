@@ -47,7 +47,7 @@
             android:layout_below="@id/llProfilePicture"
             android:weightSum="1.0"
             android:id="@+id/linearLayoutName"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="4dp">
             <TextView
                 android:layout_width="0dp"
@@ -60,6 +60,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="#CCCCCC"
+                android:background="@drawable/textfield"
                 android:id="@+id/etName"/>
         </LinearLayout> // name
 
@@ -81,6 +85,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
+                android:background="@drawable/textfield"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="#CCCCCC"
                 android:id="@+id/etLastName"/>
         </LinearLayout> // last name
 
@@ -188,6 +196,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
+                android:background="@drawable/textfield"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="#CCCCCC"
                 android:id="@+id/etEmail"/>
         </LinearLayout> // email
 
@@ -195,15 +207,40 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/linearLayoutEmail"
-            android:weightSum="1.0"
+            android:orientation="horizontal"
+            android:layout_weight="1.0"
             android:id="@+id/linearLayoutCategoryTitle"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp">
-            <TextView
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/title_Category"
-                android:textSize="25dp"/>
+                android:layout_weight="0.5"
+                android:id="@+id/llPreferences"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_Category"
+                    android:textSize="25dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:id="@+id/llChangePreferences"
+                android:gravity="end">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btChangeCategory"
+                    android:text="@string/changeCategory"
+                    android:textSize="14dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="onClick"
+                    android:background="@android:color/transparent" />
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -221,27 +258,8 @@
                     android:id="@+id/tableViewCategory_EditUserInfo">
                 </TableLayout>
 
-        </LinearLayout> // table categories
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayoutTable"
-        android:weightSum="1.0"
-        android:id="@+id/linearLayoutButtonChangeCategories"
-        android:layout_weight="1"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp">
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btChangeCategory"
-            android:layout_weight=".4"
-            android:text="@string/changeCategory"
-            android:textSize="14dp"
-            android:onClick="onClick" />
-
-    </LinearLayout>
+        </LinearLayout>
+        // table categories
 
     </LinearLayout>
 </ScrollView>

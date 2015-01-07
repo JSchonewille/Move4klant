@@ -8,6 +8,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -88,7 +95,9 @@ public class EditUserInfoActivity extends Activity {
 
         if (user.getFilePath().equals("")){
             oldFilePath = "";
-            imageView.setImageResource(R.drawable.emptyprofile);
+            Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.emptyprofile);
+            Bitmap roundedDefaultImage = this.roundCornerImage(defaultImage, 15);
+            imageView.setImageBitmap(roundedDefaultImage);
         }
         else {
             File imgFile = new  File(user.getFilePath());
@@ -98,7 +107,8 @@ public class EditUserInfoActivity extends Activity {
                 user.setImage(bitmap);
                 croppedImage = bitmap;
                 oldFilePath = user.getFilePath();
-                imageView.setImageBitmap(user.getImage());
+                Bitmap userImage = this.roundCornerImage(user.getImage(), 15);
+                imageView.setImageBitmap(userImage);
             }
         }
 
@@ -359,6 +369,37 @@ public class EditUserInfoActivity extends Activity {
         }
 
 
+    }
+
+    public Bitmap roundCornerImage(Bitmap src, float round) {
+        // Source image size
+        int width = src.getWidth();
+        int height = src.getHeight();
+        // create result bitmap output
+        Bitmap result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        // set canvas for painting
+        Canvas canvas = new Canvas(result);
+        canvas.drawARGB(0, 0, 0, 0);
+
+        // configure paint
+        final Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.BLACK);
+
+        // configure rectangle for embedding
+        final Rect rect = new Rect(0, 0, width, height);
+        final RectF rectF = new RectF(rect);
+
+        // draw Round rectangle to canvas
+        canvas.drawRoundRect(rectF, round, round, paint);
+
+        // create Xfer mode
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        // draw source image to canvas
+        canvas.drawBitmap(src, rect, rect, paint);
+
+        // return final image
+        return result;
     }
 
 }
