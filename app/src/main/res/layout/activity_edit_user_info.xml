@@ -67,6 +67,7 @@
                 android:id="@+id/etName"/>
         </LinearLayout> // name
 
+        
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
