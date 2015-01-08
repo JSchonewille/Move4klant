@@ -15,6 +15,7 @@ public class Config {
     public static String GETALLPRODUCTS = "http://playground.m4mapp.com/beacons/getproductinfo.php";
     public static String CHECKINGSTATUS = "http://playground.m4mapp.com/beacons/checkinstatus.php";
     public static String EDITUSER = "http://playground.m4mapp.com/beacons/editcostumer.php";
+    public static String GETUSERIMAGES = "http://playground.m4mapp.com/beacons/getimages.php";
 
     public static String LOGINURL = "http://playground.m4mapp.com/beacons/login_api/";
     public static String REGISTERURL = "http://playground.m4mapp.com/beacons/login_api/";

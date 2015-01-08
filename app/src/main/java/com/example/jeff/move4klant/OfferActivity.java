@@ -14,13 +14,15 @@ import Objects.Offer;
  */
 public class OfferActivity extends Activity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.offer);
         Bundle bundle = getIntent().getExtras();
 
-        int offerID = bundle.getInt("offerID");
+        int offerID = getIntent().getIntExtra("offerID",-1);
         Offer offer = DatabaseHandler.getInstance(getApplicationContext()).getOfferById(offerID);
 
         TextView t = (TextView) findViewById(R.id.offerMessage);

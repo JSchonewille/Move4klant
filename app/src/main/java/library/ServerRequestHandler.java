@@ -1,6 +1,7 @@
 package library;
 
 
+import android.content.Context;
 import android.util.Base64;
 
 import com.android.volley.Request;
@@ -141,6 +142,14 @@ public class ServerRequestHandler {
     }
     public static String encodeImage(byte[] imageByteArray) {
         return Base64.encodeToString(imageByteArray, 1);
+    }
+
+    public static void getUserImages(Response.Listener<JSONArray> l, Response.ErrorListener el, Context c) {
+        String URL = Config.GETUSERIMAGES;
+
+        JsonArrayRequest req = new JsonArrayRequest(URL, l, el);
+
+        RequestController.getInstance().addToRequestQueue(req);
     }
 }
 

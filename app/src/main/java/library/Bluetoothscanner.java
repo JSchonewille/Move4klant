@@ -147,6 +147,7 @@ public class Bluetoothscanner extends Service {
                                             if (autoLoginState.equals("true")) {
                                                 Log.d("bluetooth result" + tx, "Holding phone to beacon");
                                                 Intent j = new Intent(getApplicationContext(), ProductInfoActivity.class);
+                                                j.putExtra("productID",i.getProductID());
                                                 j.putExtra("productID", i.getProductID());
                                                 j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                 j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -166,6 +167,7 @@ public class Bluetoothscanner extends Service {
                                                     if (autoLoginState.equals("true")) {
                                                         Log.d("bluetooth result", "far away action");
                                                         Intent j = new Intent(getApplicationContext(), OfferActivity.class);
+                                                        j.putExtra("offerID",o.getID());
                                                         j.putExtra("offerID", i.getOfferID());
                                                         j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                         j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

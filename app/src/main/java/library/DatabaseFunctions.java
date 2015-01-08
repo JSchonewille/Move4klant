@@ -34,6 +34,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     private static final String TABLE_BEACONS = "beacons";
     private static final String TABLE_OFFERS = "offers";
     private static final String TABLE_PRODUCTS = "products";
+    private static final String TABLE_IMAGES =  "images";
     // User Table Column names
     private static final String KEY_USERID = "id";
     private static final String KEY_FIRSTNAME = "fname";
@@ -66,12 +67,34 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     private static final String KEY_BEACON_OFFERID = "beacon_offer";
     private static final String KEY_BEACON_MAJOR = "beacon_major";
     private static final String KEY_BEACON_MINOR = "beacon_minor";
+    // images Table Column names
+    private static final String KEY_IMAGE_PATH = "image_path";
+    private static final String KEY_IMAGE_BASE64 = "image_base64";
     //endregion
-
+    private SQLiteOpenHelper sqLiteOpenHelper;
 
 
     public DatabaseFunctions(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        sqLiteOpenHelper = new SQLiteOpenHelper(context,DATABASE_NAME,null,DATABASE_VERSION) {
+            @Override
+            public void onCreate(SQLiteDatabase db) {
+                //createTables(db);
+            }
+
+            @Override
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+// Drop older table if existed
+                db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+                db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
+                // Create tables again
+                onCreate(db);
+            }
+        };
+//       sqLiteOpenHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + TABLE_USERLIKES);
+//       sqLiteOpenHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + TABLE_ALLUSERS);
+//       sqLiteOpenHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + TABLE_ALLLIKES);
+        createTables(sqLiteOpenHelper.getWritableDatabase());
     }
     // Creating Tables
     @Override
@@ -85,6 +108,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
         // Create tables again
         onCreate(db);
     }
@@ -100,6 +124,19 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         values.put(KEY_CATEGORYLIKED, liked); //
         // Inserting Row
         db.insert(TABLE_CATEGORY, null, values);
+        db.close(); // Closing database connection
+    }
+
+    public void addimage(String path, String base64)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_IMAGE_PATH, path); //
+        values.put(KEY_IMAGE_BASE64, base64); //
+        // Inserting Row
+        //db.insert(TABLE_IMAGES, null, values);
+        db.insertWithOnConflict(TABLE_IMAGES,null,values,SQLiteDatabase.CONFLICT_IGNORE);
+
         db.close(); // Closing database connection
     }
     public ArrayList<Category> getAllCategories(){
@@ -144,6 +181,29 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         // return category list
         return list;
     }
+
+    public String getimages(String path){
+        String base = "";
+        String selectQuery = "SELECT  * FROM " + TABLE_IMAGES + " WHERE " + KEY_IMAGE_PATH + " =  " + path ;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            do {
+                base = cursor.getString(1);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        // return category list
+        return base;
+    }
+
+
+
+
+
     public void saveLikedCategories (List<Category> list){
 
     }
@@ -405,6 +465,14 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
         db.delete(TABLE_USER, null, null);
         db.close();
     }
+
+    public void resetImages(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete All Rows
+        db.delete(TABLE_IMAGES, null, null);
+        db.close();
+    }
+
     public void resetBeaconTable(){
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
@@ -434,32 +502,39 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
      * Create tables
      * */
     public void createTables(SQLiteDatabase db){
-        String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
+        String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_USER + "("
                 + KEY_USERID + " INTEGER PRIMARY KEY,"
                 + KEY_FIRSTNAME + " TEXT,"
                 + KEY_LASTNAME + " TEXT,"
                 + KEY_EMAIL + " TEXT UNIQUE,"
                 + KEY_FILEPATH + " TEXT" + ")";
         db.execSQL(CREATE_USER_TABLE);
-        String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
+
+        String CREATE_IMAGE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_IMAGES + "("
+                + KEY_IMAGE_PATH + " TEXT UNIQUE,"
+                + KEY_IMAGE_BASE64 + " TEXT" + ")";
+        db.execSQL(CREATE_IMAGE_TABLE);
+
+
+        String CREATE_CATEGORY_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORY + "("
                 + KEY_CATEGORYID + " INTEGER,"
                 + KEY_CATEGORYNAME + " TEXT,"
                 + KEY_CATEGORYLIKED + " INTEGER"+ ")";
         db.execSQL(CREATE_CATEGORY_TABLE);
-        String CREATE_OFFERS_TABLE = "CREATE TABLE " + TABLE_OFFERS + "("
+        String CREATE_OFFERS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_OFFERS + "("
                 + KEY_ID_OFFER + " INTEGER PRIMARY KEY,"
                 + KEY_OFFERCATEGORY + " TEXT,"
                 + KEY_OFFERDESCRIPTION + " TEXT,"
                 + KEY_OFFERIMAGE + " TEXT" + ")";
         db.execSQL(CREATE_OFFERS_TABLE);
-        String CREATE_BEACONS_TABLE = "CREATE TABLE " + TABLE_BEACONS + "("
+        String CREATE_BEACONS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_BEACONS + "("
                 + KEY_BEACON_ID + " INTEGER PRIMARY KEY,"
                 + KEY_BEACON_PRODUCTID + " INTEGER,"
                 + KEY_BEACON_OFFERID + " INTEGER,"
                 + KEY_BEACON_MAJOR + " INTEGER,"
                 + KEY_BEACON_MINOR + " INTEGER" + ")";
         db.execSQL(CREATE_BEACONS_TABLE);
-        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
+        String CREATE_PRODUCTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_PRODUCTS + "("
                 + KEY_PRODUCT_ID + " INTEGER PRIMARY KEY,"
                 + KEY_PRODUCT_NAME + " TEXT, "
                 + KEY_PRODUCT_CATEGORYID + " INTEGER,"

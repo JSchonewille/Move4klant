@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +38,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,8 +52,10 @@ import java.io.OutputStream;
 import java.util.List;
 
 import Objects.Category;
+import library.DatabaseFunctions;
 import library.DatabaseHandler;
 import Objects.User;
+import library.ServerRequestHandler;
 
 
 public class EditUserInfoActivity extends Activity {
@@ -53,11 +64,13 @@ public class EditUserInfoActivity extends Activity {
     private Bitmap bitmap;
     private Bitmap croppedImage;
     private ImageView imageView;
+    private DatabaseFunctions db;
     private User user;
     private int userID;
     private String oldFilePath;
     private String name, lastName, street, postalCode, houseNumber, city, email;
     private byte[] byteArray;
+    private Bitmap[] output;
     private List<Category> savedLikes;
     private Boolean imageChanged = false;
     private Button changeCategory;
@@ -72,6 +85,7 @@ public class EditUserInfoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_info);
+        db = new DatabaseFunctions(getApplicationContext());
         getActionBar().setDisplayHomeAsUpEnabled(true);
         imageView = (ImageView)findViewById(R.id.ivProfileImageEdit);
         getWindow().setSoftInputMode(
@@ -167,6 +181,7 @@ public class EditUserInfoActivity extends Activity {
                     Intent i = new Intent(getApplicationContext(), ManageAccount.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     imageChanged = false;
+                    loadImages();
                     startActivity(i);
                     onBackPressed();
                 }
@@ -233,7 +248,7 @@ public class EditUserInfoActivity extends Activity {
                         .getExternalStorageDirectory() + "/temp.jpg");
                 if ( croppedImage != null) {
                     imageView.setImageBitmap(croppedImage);
-                    saveImageToSD(croppedImage);
+                   // saveImageToSD(croppedImage);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                     byteArray = stream.toByteArray();
@@ -315,39 +330,7 @@ public class EditUserInfoActivity extends Activity {
         this.overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
     }
 
-    public boolean saveImageToSD(Bitmap b){
 
-            bitmap = b;
-            OutputStream output;
-
-            // Create a new folder in SD Card
-            File dir = new File(Environment.getExternalStorageDirectory()
-                    + "/Android/data/"
-                    + "/Move4Klant");
-            dir.mkdirs();
-
-            // Create a name for the saved image
-            File file = new File(dir, "ProfileImage.jpeg");
-            Log.v("FilePath:  ", file.toString());
-            Log.v("ABSOLUUT filePath: ", file.getAbsolutePath().toString());
-            Log.v("ABSOLUUT filePath2: ", file.getPath());
-            filePath = file.getAbsolutePath().toString();
-
-            try {
-                output = new FileOutputStream(file);
-                // Compress into png format image from 0% - 100%
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
-                output.flush();
-                output.close();
-                response = true;
-            }
-
-            catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        return response;
-    }
 
     public void saveUserDetails() {
 
@@ -433,6 +416,49 @@ public class EditUserInfoActivity extends Activity {
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public void loadImages() {
+        ServerRequestHandler.getUserImages(new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                int inc = (int) Math.ceil(((50.0 / jsonArray.length())));
+                Log.d("Images array", jsonArray.toString());
+                output = new Bitmap[jsonArray.length()];
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        Log.d("Parsing", "getting image");
+                        JSONObject o = jsonArray.getJSONObject(i);
+                        //byte[] decoded = Base64.decode(o.getString("image"), Base64.DEFAULT);
+                        String path = o.getString("path");
+                        String image = o.getString("image");
+
+                        db.addimage(path,image);
+//                        byte[] decoded = Base64.decode(image, Base64.DEFAULT);
+//                        Bitmap bmp = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+//                        Log.d("Parsing", "parsed image");
+//                        //saveToInternalSorage(bmp, path);
+//                        Log.d("Parsing", "saved");
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError.networkResponse != null)
+                    Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
+                else {
+                    if (volleyError.getMessage() == null)
+                        Log.e("NETWORKERROR", "timeout");
+                    else
+                        Log.e("NETWORKERROR", volleyError.getMessage());
+                }
+            }
+        },getApplicationContext());
     }
 
 }
