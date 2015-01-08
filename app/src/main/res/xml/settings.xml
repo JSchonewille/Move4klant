@@ -4,11 +4,7 @@
     android:layout_height="fill_parent"
     android:title="@string/settingsTitle">
 
-        <Preference
-            android:key="prefUserPassword"
-            android:title="Wachtwoord"
-            android:summary="Verander je wachtwoord"
-            />
+
 
         <Preference
             android:key="prefManageAccount"
