@@ -34,9 +34,10 @@
         <ImageView
             android:layout_width="196dp"
             android:layout_height="196dp"
-            android:id="@+id/imageView"
+            android:id="@+id/i_productImage"
             android:src="@drawable/tool_kit_1"
-            android:background="@drawable/circel_bg_white"/>
+            android:background="@drawable/circel_bg_white"
+            android:focusableInTouchMode="false" />
 
 
     </LinearLayout>

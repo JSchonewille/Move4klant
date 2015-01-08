@@ -184,7 +184,7 @@ public class DatabaseFunctions extends SQLiteOpenHelper {
 
     public String getimages(String path){
         String base = "";
-        String selectQuery = "SELECT  * FROM " + TABLE_IMAGES + " WHERE " + KEY_IMAGE_PATH + " =  " + path ;
+        String selectQuery = "SELECT * FROM " + TABLE_IMAGES + " WHERE " + KEY_IMAGE_PATH + "  =  " + "'" + path + "'" ;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // Move to first row

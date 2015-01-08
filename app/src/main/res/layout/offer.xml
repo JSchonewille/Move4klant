@@ -34,7 +34,7 @@
         <ImageView
             android:layout_width="196dp"
             android:layout_height="196dp"
-            android:id="@+id/imageView"
+            android:id="@+id/i_offerImage"
             android:src="@drawable/tools"
             android:background="@drawable/circel_bg_white"/>
 

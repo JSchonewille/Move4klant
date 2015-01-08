@@ -1,11 +1,16 @@
 package com.example.jeff.move4klant;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import library.DatabaseFunctions;
 import library.DatabaseHandler;
 import Objects.Offer;
 
@@ -21,11 +26,23 @@ public class OfferActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.offer);
         Bundle bundle = getIntent().getExtras();
-
-        int offerID = getIntent().getIntExtra("offerID",-1);
+        DatabaseFunctions db = new DatabaseFunctions(getApplicationContext());
+        TextView t = (TextView) findViewById(R.id.offerMessage);
+        ImageView offerimg = (ImageView) findViewById(R.id.i_offerImage);
+        int offerID = bundle.getInt("offerID");
         Offer offer = DatabaseHandler.getInstance(getApplicationContext()).getOfferById(offerID);
 
-        TextView t = (TextView) findViewById(R.id.offerMessage);
+        String base = db.getimages(offer.getImage());
+        byte[] imgbyte = Base64.decode(base,Base64.DEFAULT);
+        Bitmap bmp = BitmapFactory.decodeByteArray(imgbyte, 0, imgbyte.length);
+        if (bmp != null)
+        {
+            offerimg.setBackground(null);
+            offerimg.setImageBitmap(bmp);
+        }
+
+
+
         t.setText(offer.getDescription());
     }
 
