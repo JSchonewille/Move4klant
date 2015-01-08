@@ -134,10 +134,10 @@
                 <TextView android:id="@+id/link_to_login"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dip"
+                    android:layout_marginTop="15dip"
                     android:text="Terug naar het inlogscherm"
                     android:gravity="center"
-                    android:textSize="20dip"
+                    android:textSize="18dip"
                     android:textColor="#fff"/>
         </LinearLayout>
         <!-- Registration Form Ends -->

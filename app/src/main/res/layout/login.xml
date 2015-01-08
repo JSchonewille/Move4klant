@@ -104,7 +104,7 @@
         <TextView android:id="@+id/link_to_register"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dip"
+            android:layout_marginTop="15dip"
             android:text="Nieuwe klant? Meld je hier aan."
             android:gravity="center"
             android:textSize="18dp"
