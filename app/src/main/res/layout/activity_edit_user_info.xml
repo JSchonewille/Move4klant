@@ -184,104 +184,16 @@
                 android:textColor="@android:color/black"
                 android:textColorHint="#CCCCCC"
                 android:id="@+id/etEmail"/>
-        </LinearLayout> // email
+        </LinearLayout>
+        // email
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/etEmail"
-            android:weightSum="1.0"
-            android:id="@+id/linearLayouttitlePassword"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="4dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="@string/titlePassword"
-                android:layout_weight=".3"/>
-        </LinearLayout> // titel wachtwoord
+        // titel wachtwoord
 
-        <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayoutEmail"
-        android:id="@+id/linearLayoutOldPassword"
-        android:weightSum="1.0"
-        android:layout_marginBottom="4dp"
-            android:orientation="vertical">
-        <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:text="@string/oldPassword"
-        android:layout_weight=".3"/>
-        <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight=".7"
-        android:background="@drawable/textfield"
-        android:paddingLeft="5dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="#CCCCCC"
-        android:id="@+id/etOldPassword"
-            android:inputType="textPassword" />
-        </LinearLayout> // oud wachtwoord
+        // oud wachtwoord
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutOldPassword"
-            android:id="@+id/linearLayoutNewPassword"
-            android:weightSum="1.0"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="@string/newPassword"
-                android:layout_weight=".3"/>
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:background="@drawable/textfield"
-                android:paddingLeft="5dp"
-                android:textColor="@android:color/black"
-                android:textColorHint="#CCCCCC"
-                android:id="@+id/etNewPassword"
-                android:inputType="textPassword" />
-        </LinearLayout> // nieuw wachtwoord
+        // nieuw wachtwoord
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutNewPassword"
-            android:id="@+id/linearLayoutNewRepeat"
-            android:weightSum="1.0"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="@string/repeatPassword"
-                android:layout_weight=".3"/>
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:background="@drawable/textfield"
-                android:paddingLeft="5dp"
-                android:textColor="@android:color/black"
-                android:textColorHint="#CCCCCC"
-                android:id="@+id/etRepeatPassword"
-                android:inputType="textPassword" />
-        </LinearLayout> // herhaal wachtwoord
+        // herhaal wachtwoord
 
         <LinearLayout
             android:layout_width="fill_parent"

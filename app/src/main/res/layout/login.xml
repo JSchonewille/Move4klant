@@ -1,125 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fillViewport="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="#58ADFE"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:orientation="vertical"
     >
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:background="#58ADFE"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        >
 
-        <!--  Header  Starts-->
-        <LinearLayout android:id="@+id/header"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="5dip"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="40dp">
-            <!-- Logo Start-->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Welkom bij de"
-                android:id="@+id/tvWelkomBijDe"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:textSize="25dp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:textColor="#fff" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="IJzerwinkel app"
-                android:id="@+id/tvIJzerwinkelApp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:textSize="46dp"
-                android:gravity="center"
-                android:textColor="#fff" />
-            <!-- Logo Ends -->
-        </LinearLayout>
-        <!--  Header Ends -->
-
-        <LinearLayout android:id="@+id/llpicture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@id/header"
-            android:layout_centerInParent="true">
-            android:paddingBottom="5dip">
-
-
-            <ImageView
-                android:layout_width="220dp"
-                android:layout_height="220dp"
-                android:id="@+id/imageView2"
-                android:src="@drawable/hardware_tools_1" />
-        </LinearLayout>
-
-        <!-- Login Form -->
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical"
+    <!--  Header  Starts-->
+    <LinearLayout android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_weight="3">
+        <!-- Logo Start-->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dip"
+            android:text="Welkom bij de"
+            android:id="@+id/tvWelkomBijDe"
+            android:textSize="25sp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textColor="#fff" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="IJzerwinkel app"
+            android:id="@+id/tvIJzerwinkelApp"
+            android:textSize="46sp"
+            android:gravity="center"
+            android:textColor="#fff" />
+        <!-- Logo Ends -->
+    </LinearLayout>
+    <!--  Header Ends -->
+
+    <LinearLayout android:id="@+id/llpicture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="5dip"
+        android:layout_weight="2.5">
+
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView2"
+            android:src="@drawable/hardware_tools_1"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <!-- Login Form -->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dip"
+        android:layout_marginTop="15dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:layout_below="@id/llpicture">
+        <!--  Email Label -->
+        <EditText android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:layout_marginBottom="10dip"
+            android:singleLine="true"
+            android:id="@+id/inputEmail"
+            android:hint="E-mailadres"
+            android:textColorHint="#CCCCCC"
+            android:background="@drawable/textfield"
+            android:autoText="true"
+            android:textSize="15dp"
+            android:padding="5dp"
+            android:textColor="@android:color/black" />
+        <!--  Password Label -->
+        <EditText android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:password="true"
+            android:id="@+id/inputPassword"
+            android:hint="Wachtwoord"
+            android:textColorHint="#CCCCCC"
+            android:background="@drawable/textfield"
+            android:textSize="15dp"
+            android:padding="5dp"
+            android:textColor="@android:color/black" />
+        <!-- Login button -->
+        <Button android:id="@+id/btnLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:layout_below="@id/llpicture">
-            <!--  Email Label -->
-            <EditText android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="10dip"
-                android:singleLine="true"
-                android:id="@+id/inputEmail"
-                android:hint="Emailadres"
-                android:textColorHint="#CCCCCC"
-                android:background="@drawable/textfield"
-                android:autoText="true"
-                android:textSize="15dp"
-                android:padding="5dp"
-                android:textColor="@android:color/black" />
-            <!--  Password Label -->
-            <EditText android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:password="true"
-                android:id="@+id/inputPassword"
-                android:hint="Wachtwoord"
-                android:textColorHint="#CCCCCC"
-                android:background="@drawable/textfield"
-                android:textSize="15dp"
-                android:padding="5dp"
-                android:textColor="@android:color/black" />
-            <!-- Login button -->
-            <Button android:id="@+id/btnLogin"
-                android:layout_width="fill_parent"
-                android:layout_height="70dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/button_rounded_corners"
-                android:text="Aanmelden"/>
-            <!-- Link to Registration Screen -->
+            android:background="@drawable/button_rounded_corners"
+            android:text="Aanmelden"/>
+        <!-- Link to Registration Screen -->
 
 
-            <TextView android:id="@+id/link_to_register"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dip"
-                android:text="Nieuwe klant? Meld je hier aan."
-                android:gravity="center"
-                android:textSize="18dp"
-                android:textColor="#fff"/>
+        <TextView android:id="@+id/link_to_register"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:text="Nieuwe klant? Meld je hier aan."
+            android:gravity="center"
+            android:textSize="18dp"
+            android:textColor="#fff"/>
 
 
 
-        </LinearLayout>
-        <!-- Login Form Ends -->
-    </RelativeLayout>
-</ScrollView>
+    </LinearLayout>
+    <!-- Login Form Ends -->
+</LinearLayout>

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import library.DatabaseHandler;
 import library.PrefUtils;
@@ -70,7 +69,6 @@ public class SettingsActivity extends PreferenceActivity {
         DatabaseHandler.getInstance(getApplicationContext()).resetUser();
         DatabaseHandler.getInstance(getApplicationContext()).resetCategories();
 
-        Toast.makeText(getApplicationContext(),"Account ontkoppeld", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);

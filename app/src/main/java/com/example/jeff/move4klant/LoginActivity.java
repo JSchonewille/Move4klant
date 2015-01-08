@@ -1,8 +1,10 @@
 package com.example.jeff.move4klant;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -44,6 +46,7 @@ public class LoginActivity extends Activity {
     TextView welkomBijDe, ijzerWinkelApp;
 
     private static String KEY_SUCCESS = "success";
+    private static String KEY_ERRORMESSAGE = "error_msg";
     private static String KEY_UID = "customerID";
     private static String KEY_USERNAME = "uname";
     private static String KEY_FIRSTNAME = "fname";
@@ -275,8 +278,18 @@ public class LoginActivity extends Activity {
                                  **/
                                 finish();
                             } else {
+                                String errorMessage = json.getString(KEY_ERRORMESSAGE);
                                 nDialog.dismiss();
-                                Toast.makeText(context, "Incorrect username/password", Toast.LENGTH_SHORT).show();
+
+                                final AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
+                                alertDialog.setTitle("Fout");
+                                alertDialog.setMessage(errorMessage);
+                                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        alertDialog.dismiss();
+                                    }
+                                });
+                                alertDialog.show();
                             }
                         }
                     }
