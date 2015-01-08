@@ -56,11 +56,18 @@ public class ManageAccount extends Activity {
         else {
             File imgFile = new  File(user.getFilePath());
 
-            if(imgFile.exists()){
+            if(imgFile.exists() && imgFile != null){
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                Bitmap roundedB = this.roundCornerImage(myBitmap, 15);
-                user.setImage(roundedB);
-                profileImage.setImageBitmap(user.getImage());
+                if (myBitmap != null) {
+                    Bitmap roundedB = this.roundCornerImage(myBitmap, 15);
+                    user.setImage(roundedB);
+                    profileImage.setImageBitmap(user.getImage());
+                }
+                else {
+                    Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.emptyprofile);
+                    Bitmap roundedDefaultImage = this.roundCornerImage(defaultImage, 15);
+                    profileImage.setImageBitmap(roundedDefaultImage);
+                }
             }
         }
 

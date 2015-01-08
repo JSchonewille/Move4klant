@@ -4,7 +4,10 @@ package com.example.jeff.move4klant;
 //<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +18,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -102,13 +107,22 @@ public class EditUserInfoActivity extends Activity {
         else {
             File imgFile = new  File(user.getFilePath());
 
-            if(imgFile.exists()){
-                bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                user.setImage(bitmap);
-                croppedImage = bitmap;
-                oldFilePath = user.getFilePath();
-                Bitmap userImage = this.roundCornerImage(user.getImage(), 15);
-                imageView.setImageBitmap(userImage);
+            if(imgFile.exists() && imgFile != null){
+                    bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                if(bitmap != null)
+                {
+                    user.setImage(bitmap);
+                    croppedImage = bitmap;
+                    oldFilePath = user.getFilePath();
+                    Bitmap userImage = this.roundCornerImage(user.getImage(), 15);
+                    imageView.setImageBitmap(userImage);
+                }
+                else
+                {
+                    Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.emptyprofile);
+                    Bitmap roundedDefaultImage = this.roundCornerImage(defaultImage, 15);
+                    imageView.setImageBitmap(roundedDefaultImage);
+                }
             }
         }
 
@@ -147,14 +161,28 @@ public class EditUserInfoActivity extends Activity {
                 onBackPressed();
                 return true;
             case R.id.saveUserInfo:
-                saveUserDetails();
+                if ( isOnline()) {
 
-                Intent i = new Intent(getApplicationContext(), ManageAccount.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                imageChanged = false;
-                startActivity(i);
+                    saveUserDetails();
+                    Intent i = new Intent(getApplicationContext(), ManageAccount.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    imageChanged = false;
+                    startActivity(i);
+                    onBackPressed();
+                }
 
-                onBackPressed();
+                else {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(EditUserInfoActivity.this);
+                    alert.setTitle("Geen connectie");
+                    alert.setMessage("Controleer uw verbinding");
+                    // Set an EditText view to get user input
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                    }});
+                    alert.show();
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -203,11 +231,13 @@ public class EditUserInfoActivity extends Activity {
             case REQUEST_PICK_CROP_IMAGE:
                 croppedImage = BitmapFactory.decodeFile(Environment
                         .getExternalStorageDirectory() + "/temp.jpg");
-                imageView.setImageBitmap(croppedImage);
-                saveImageToSD(croppedImage);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byteArray = stream.toByteArray();
+                if ( croppedImage != null) {
+                    imageView.setImageBitmap(croppedImage);
+                    saveImageToSD(croppedImage);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byteArray = stream.toByteArray();
+                }
                 break;
         }
     }
@@ -328,7 +358,6 @@ public class EditUserInfoActivity extends Activity {
 //                postalCode      = etPostalCode.getText().toString();
 //                city            = etCity.getText().toString();
         email           = etEmail.getText().toString();
-
         // if input is empty, get last db info
         if (name.matches("")){
             name = etName.getHint().toString();
@@ -351,8 +380,6 @@ public class EditUserInfoActivity extends Activity {
         if (email.matches("")){
             email = etEmail.getHint().toString();
         }
-
-
         // reset values of the user
         user = new User(getApplicationContext(),userID, name, lastName, "", "", "", "", email);
         if (imageChanged){
@@ -361,7 +388,6 @@ public class EditUserInfoActivity extends Activity {
         }else {
             user.setFilePath(oldFilePath);
         }
-
         DatabaseHandler.getInstance(getApplicationContext()).addUser(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getFilePath());
         DatabaseHandler.getInstance(getApplicationContext()).uploadUserEditedInfo(user.getUserID(), user.getName(), user.getLastName(), user.getEmail());
         if (byteArray != null) {
@@ -400,6 +426,13 @@ public class EditUserInfoActivity extends Activity {
 
         // return final image
         return result;
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }
