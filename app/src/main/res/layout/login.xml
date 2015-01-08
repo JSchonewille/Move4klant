@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" android:background="#58ADFE"
     android:paddingTop="16dp"
-    android:paddingBottom="16dp"
+    android:paddingBottom="8dp"
     android:orientation="vertical"
     >
 
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dip"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_weight="2"
         android:layout_gravity="center"
         android:layout_below="@id/llpicture">
@@ -94,7 +94,7 @@
         <!-- Login button -->
         <Button android:id="@+id/btnLogin"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/button_rounded_corners"
             android:text="Aanmelden"/>
@@ -104,7 +104,7 @@
         <TextView android:id="@+id/link_to_register"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
+            android:layout_marginTop="8dip"
             android:text="Nieuwe klant? Meld je hier aan."
             android:gravity="center"
             android:textSize="18dp"
