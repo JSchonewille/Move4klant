@@ -43,7 +43,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingBottom="5dip"
-        android:layout_weight="2.5">
+        android:layout_weight="2.2">
 
 
         <ImageView
@@ -94,10 +94,11 @@
         <!-- Login button -->
         <Button android:id="@+id/btnLogin"
             android:layout_width="fill_parent"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/button_rounded_corners"
-            android:text="Aanmelden"/>
+            android:text="Aanmelden"
+            android:textColor="#FFF"/>
         <!-- Link to Registration Screen -->
 
 

@@ -6,5 +6,7 @@
     <color name="pink">#FF00FF</color>
     <color name="red">#FF0000</color>
     <color name="purple">#B200B2</color>
+    <color name="white_opaque">#FFFFFF</color>
+    <color name="pitch_black">#000000</color>
 
 </resources>
