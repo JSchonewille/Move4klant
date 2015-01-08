@@ -16,8 +16,10 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.jeff.move4klant.LoginActivity;
 import com.example.jeff.move4klant.OfferActivity;
 import com.example.jeff.move4klant.ProductInfoActivity;
+import com.example.jeff.move4klant.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,13 +142,17 @@ public class Bluetoothscanner extends Service {
                                     if (adjrssi > DISTANCE_CLOSE) {
                                         long diffInsec = Math.abs((new Date()).getTime() - productIntentTime.getTime()) / 1000;
                                         if (diffInsec > 2) {
-                                            Log.d("bluetooth result" + tx, "Holding phone to beacon");
-                                            Intent j = new Intent(getApplicationContext(), ProductInfoActivity.class);
-                                            j.putExtra("productID", i.getProductID());
-                                            j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            startActivity(j);
-                                            productIntentTime = new Date();
+                                            String autoLoginState = PrefUtils.getFromPrefs(getApplicationContext(), getString(R.string.PREFS_AUTO_LOGIN_KEY), "false");
+                                            // check if user is logged in
+                                            if (autoLoginState.equals("true")) {
+                                                Log.d("bluetooth result" + tx, "Holding phone to beacon");
+                                                Intent j = new Intent(getApplicationContext(), ProductInfoActivity.class);
+                                                j.putExtra("productID", i.getProductID());
+                                                j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivity(j);
+                                                productIntentTime = new Date();
+                                            }
                                         }
                                     }
                                     // far away action
@@ -155,13 +161,17 @@ public class Bluetoothscanner extends Service {
                                         if (usedOffers.get(i.getOfferID()) == null) {
                                             for (Offer o : offerList) {
                                                 if (o.getID() == i.getOfferID()) {
-                                                    Log.d("bluetooth result", "far away action");
-                                                    Intent j = new Intent(getApplicationContext(), OfferActivity.class);
-                                                    j.putExtra("offerID", i.getOfferID());
-                                                    j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                    usedOffers.put(i.getOfferID(), new Date());
-                                                    startActivity(j);
+                                                    // check if user is logged in
+                                                    String autoLoginState = PrefUtils.getFromPrefs(getApplicationContext(), getString(R.string.PREFS_AUTO_LOGIN_KEY), "false");
+                                                    if (autoLoginState.equals("true")) {
+                                                        Log.d("bluetooth result", "far away action");
+                                                        Intent j = new Intent(getApplicationContext(), OfferActivity.class);
+                                                        j.putExtra("offerID", i.getOfferID());
+                                                        j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                        j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                        usedOffers.put(i.getOfferID(), new Date());
+                                                        startActivity(j);
+                                                    }
                                                 }
                                             }
                                         }
