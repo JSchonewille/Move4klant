@@ -8,5 +8,6 @@
     <color name="purple">#B200B2</color>
     <color name="white_opaque">#FFFFFF</color>
     <color name="pitch_black">#000000</color>
+    <color name="productColor">#FF7391</color>
 
 </resources>
