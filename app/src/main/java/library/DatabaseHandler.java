@@ -1,6 +1,7 @@
 package library;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.android.volley.Response;
@@ -26,6 +27,8 @@ import Objects.ibeacon;
 public class DatabaseHandler {
     private static DatabaseHandler _instance = null;
     private static DatabaseFunctions db;
+    private byte[] byteArray;
+    private Bitmap[] output;
 
     private boolean checkinstatus;
     private String returnResponse;
@@ -383,6 +386,49 @@ public class DatabaseHandler {
                 }
             }
         }, userID, image);
+    }
+
+    public void loadImages() {
+        ServerRequestHandler.getUserImages(new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                int inc = (int) Math.ceil(((50.0 / jsonArray.length())));
+                Log.d("Images array", jsonArray.toString());
+                output = new Bitmap[jsonArray.length()];
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        Log.d("Parsing", "getting image");
+                        JSONObject o = jsonArray.getJSONObject(i);
+                        //byte[] decoded = Base64.decode(o.getString("image"), Base64.DEFAULT);
+                        String path = o.getString("path");
+                        String image = o.getString("image");
+
+                        db.addimage(path,image);
+//                        byte[] decoded = Base64.decode(image, Base64.DEFAULT);
+//                        Bitmap bmp = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+//                        Log.d("Parsing", "parsed image");
+//                        //saveToInternalSorage(bmp, path);
+//                        Log.d("Parsing", "saved");
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError.networkResponse != null)
+                    Log.e("NETWORKERROR", volleyError.networkResponse.statusCode + " " + new String(volleyError.networkResponse.data));
+                else {
+                    if (volleyError.getMessage() == null)
+                        Log.e("NETWORKERROR", "timeout");
+                    else
+                        Log.e("NETWORKERROR", volleyError.getMessage());
+                }
+            }
+        });
     }
 
     //OTHER FUNCTIONS

@@ -144,7 +144,7 @@ public class ServerRequestHandler {
         return Base64.encodeToString(imageByteArray, 1);
     }
 
-    public static void getUserImages(Response.Listener<JSONArray> l, Response.ErrorListener el, Context c) {
+    public static void getUserImages(Response.Listener<JSONArray> l, Response.ErrorListener el) {
         String URL = Config.GETUSERIMAGES;
 
         JsonArrayRequest req = new JsonArrayRequest(URL, l, el);

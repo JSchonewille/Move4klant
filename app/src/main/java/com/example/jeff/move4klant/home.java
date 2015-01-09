@@ -2,8 +2,10 @@ package com.example.jeff.move4klant;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,16 +14,27 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
 
 import library.Bluetoothscanner;
+import library.DatabaseFunctions;
 import library.DatabaseHandler;
+import library.ServerRequestHandler;
 
 
 public class home extends Activity {
     Button b4;
     Button b5;
     TextView ijzerhandelWinkelApp;
+    private DatabaseFunctions db;
+    private Bitmap[] output;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +48,7 @@ public class home extends Activity {
 
 
         DatabaseHandler.getInstance(getApplicationContext()).updateAll();
+        DatabaseHandler.getInstance(getApplicationContext()).loadImages();
         getOverflowMenu();
         startService(new Intent(getApplicationContext(), Bluetoothscanner.class));
     }
@@ -112,4 +126,5 @@ public class home extends Activity {
             e.printStackTrace();
         }
     }
+
 }

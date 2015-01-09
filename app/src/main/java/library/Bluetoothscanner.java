@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -37,7 +38,8 @@ public class Bluetoothscanner extends Service {
     // array used to decode BLE byte array
     static final char[] hexArray = "0123456789ABCDEF".toCharArray();
     // the TX of when the phone is held to the beacon
-    private Integer DISTANCE_CLOSE = -63;
+    private Integer DISTANCE_CLOSE = -70;
+    private Integer DISTANCE_FAR = -90;
     // active scan time
     private static int SCAN_TIME = 20 * 1000;
     private static int SCAN_STOP_TIME = 500;
@@ -116,8 +118,6 @@ public class Bluetoothscanner extends Service {
                     Integer adjrssi = smooth.smoothen(Irssi, major, minor);
                     // logica for beacons detected comes here
 
-                    DISTANCE_CLOSE = (int) (tx * 0.83);
-
                     if (major != ACTIVEMAJOR) {
                         passiveCounter++;
                     }
@@ -139,7 +139,7 @@ public class Bluetoothscanner extends Service {
                         } else {
                             for (ibeacon i : ibeaconList) {
                                 if (major == i.getMajor() && minor == i.getMinor()) {
-                                    if (adjrssi > DISTANCE_CLOSE) {
+                                    if (adjrssi > -74) {
                                         long diffInsec = Math.abs((new Date()).getTime() - productIntentTime.getTime()) / 1000;
                                         if (diffInsec > 2) {
                                             String autoLoginState = PrefUtils.getFromPrefs(getApplicationContext(), getString(R.string.PREFS_AUTO_LOGIN_KEY), "false");
@@ -151,13 +151,14 @@ public class Bluetoothscanner extends Service {
                                                 j.putExtra("productID", i.getProductID());
                                                 j.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                 j.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                               Log.e("test",adjrssi.toString());
                                                 startActivity(j);
                                                 productIntentTime = new Date();
                                             }
                                         }
                                     }
                                     // far away action
-                                    else {
+                                    else if ( adjrssi > -93 ) {
                                         // check if we already used this offer
                                         if (usedOffers.get(i.getOfferID()) == null) {
                                             for (Offer o : offerList) {
