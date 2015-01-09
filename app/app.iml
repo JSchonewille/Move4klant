@@ -83,8 +83,22 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="commons-beanutils-1.8.0" level="project" />
+    <orderEntry type="library" exported="" name="org.eclipse.jgit-3.6.0.201412230720-r" level="project" />
+    <orderEntry type="library" exported="" name="json-lib-2.3-jdk15" level="project" />
+    <orderEntry type="library" exported="" name="xercesImpl-2.9.1" level="project" />
+    <orderEntry type="library" exported="" name="xml-resolver-1.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-collections-3.2.1" level="project" />
+    <orderEntry type="library" exported="" name="nekohtml-1.9.16" level="project" />
+    <orderEntry type="library" exported="" name="JavaEWAH-0.7.9" level="project" />
+    <orderEntry type="library" exported="" name="jsch-0.1.50" level="project" />
+    <orderEntry type="library" exported="" name="httpmime-4.3" level="project" />
+    <orderEntry type="library" exported="" name="ezmorph-1.0.6" level="project" />
+    <orderEntry type="library" exported="" name="commons-lang-2.4" level="project" />
+    <orderEntry type="library" exported="" name="http-builder-0.7.1" level="project" />
     <orderEntry type="library" exported="" name="volley-2014.10.9" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
+    <orderEntry type="library" exported="" name="coveralls-gradle-plugin-2.1.0" level="project" />
   </component>
 </module>
 

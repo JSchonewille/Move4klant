@@ -44,7 +44,7 @@
         </activity>
         <activity
             android:name="com.example.jeff.move4klant.LikesActivity"
-            android:label="@string/title_activity_likes" >
+            android:label="Interesses" >
         </activity>
         <activity
             android:name="com.example.jeff.move4klant.ManageAccount"

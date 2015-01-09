@@ -14,6 +14,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:id="@+id/list_Category"
         android:layout_below="@id/tvIntroCategory"
         android:layout_above="@id/linearLayout"/>

@@ -2,13 +2,16 @@ package com.example.jeff.move4klant;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +45,7 @@ public class LikesActivity extends Activity {
         final ArrayList<Category> list = (ArrayList) DatabaseHandler.getInstance(getApplicationContext()).getAllCategories();
         // dummy data
 
-        aa = new ArrayAdapter<Category>(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice, list);
+        aa = new ArrayAdapter<Category>(getApplicationContext(), R.layout.likes_simple_list_item_multiple_choice, list);
         listView.setAdapter(aa);
 
         // Check if there are already some prefs
